@@ -1,27 +1,31 @@
 # wochenplan
-, ein dynamisches Website-Projekt mit PHP, MySQL und Git aufzusetzen. Der Plan umfasst folgende Schritte:
+Ein dynamisches Website-Projekt mit PHP, MySQL und Git aufzusetzen. Der Plan umfasst folgende Schritte:
 
-1. Projektstruktur aufsetzen
+## 1. Projektstruktur aufsetzen
 
 Zuerst erstellen wir die Grundstruktur für deine Website:
 
-	•	Ordnerstruktur:
+Ordnerstruktur:
 
 /wochenplan
-├── /public          (Für die öffentlich zugänglichen Dateien)
-├── /src             (PHP-Quellcode)
-├── /config          (Datenbank- und andere Konfigurationen)
-├── /templates       (HTML-Templates für Frontend)
-├── /assets          (CSS/JS für Frontend)
-└── /sql             (Datenbankschema)
+├── /public
+(Für die öffentlich zugänglichen Dateien)
+├── /src
+(PHP-Quellcode)
+├── /config
+(Datenbank- und andere Konfigurationen)
+├── /templates
+(HTML-Templates für Frontend)
+├── /assets
+(CSS/JS für Frontend)
+└── /sql
+(Datenbankschema)
 
+## 2. Datenbankdesign
 
+eine MySQL-Datenbank wird erstellt, welche die folgende Tabellen enthalten:
 
-2. Datenbankdesign
-
-Wir werden eine MySQL-Datenbank erstellen, die folgende Tabellen enthalten könnte:
-
-	•	recipes (Rezept-Daten)
+recipes (Rezept-Daten)
 
 CREATE TABLE recipes (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,8 +36,7 @@ CREATE TABLE recipes (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-	•	meal_plan (Verknüpfung der Rezepte mit Tagen)
+meal_plan (Verknüpfung der Rezepte mit Tagen)
 
 CREATE TABLE meal_plan (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,13 +45,11 @@ CREATE TABLE meal_plan (
   FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
 
+## 3. PHP-Backend
 
+Für das PHP-Backend wird eine einfache CRUD (Create, Read, Update, Delete)-Funktionen angewendet:
 
-3. PHP-Backend entwickeln
-
-Für das PHP-Backend könnten wir einfache CRUD (Create, Read, Update, Delete)-Funktionen entwickeln:
-
-	•	Datenbankverbindung (/config/db.php):
+Datenbankverbindung (/config/db.php):
 
 <?php
 class Database {
@@ -71,8 +72,7 @@ class Database {
 }
 ?>
 
-
-	•	Rezepte hinzufügen (/src/add_recipe.php):
+Rezepte hinzufügen (/src/add_recipe.php):
 
 <?php
 require_once '../config/db.php';
@@ -87,11 +87,9 @@ if ($_POST) {
 }
 ?>
 
+## 4. Frontend
 
-
-4. Frontend entwickeln
-
-	•	HTML-Formular zum Hinzufügen eines Rezepts (/templates/add_recipe.html):
+HTML-Formular zum Hinzufügen eines Rezepts (/templates/add_recipe.html):
 
 <form method="POST" action="../src/add_recipe.php">
   <label for="title">Titel:</label>
@@ -109,8 +107,7 @@ if ($_POST) {
   <input type="submit" value="Rezept hinzufügen">
 </form>
 
-
-	•	Wochenansicht der Mahlzeiten (/public/index.php):
+Wochenansicht der Mahlzeiten (/public/index.php):
 
 <?php
 require_once '../config/db.php';
@@ -135,32 +132,28 @@ $meal_plan = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php endforeach; ?>
 </table>
 
-
-
-5. Git-Versionierung
+## 5. Git-Versionierung
 
 Du kannst dein Projekt versionieren, indem du ein Git-Repository erstellst:
 
-	•	Initialisiere das Git-Repository:
+Initialisiere das Git-Repository:
 
 git init
 git add .
 git commit -m "Initial commit"
 
-
-	•	GitHub Repository hinzufügen:
-	1.	Erstelle ein neues Repository auf GitHub.
-	2.	Füge das Remote-Repository hinzu:
+GitHub Repository hinzufügen:
+1.	Erstelle ein neues Repository auf GitHub.
+2.	Füge das Remote-Repository hinzu:
 
 git remote add origin https://github.com/username/repository.git
 git push -u origin master
 
+## 6. Deployment (z. B. auf einem Webserver wie Heroku oder AWS)
 
+Um die Seite live zu stellen, kannst du entweder einen Webhoster wie Heroku, AWS oder einen eigenen Webserver verwenden.
 
-6. Deployment (z. B. auf einem Webserver wie Heroku oder AWS)
+Stelle sicher, dass die Datenbankkonfiguration auf dem Server korrekt ist.
 
-	•	Um die Seite live zu stellen, kannst du entweder einen Webhoster wie Heroku, AWS oder einen eigenen Webserver verwenden.
-	•	Stelle sicher, dass die Datenbankkonfiguration auf dem Server korrekt ist.
-	•	Du kannst für das Deployment auch Git-Hooks verwenden, um automatisch von GitHub zu deployen.
+Für das Deployment auch Git-Hooks verwenden, um automatisch von GitHub zu deployen.
 
-Ich hoffe, das hilft dir als erster Überblick! Welche spezifischen Bereiche sollen wir detaillierter behandeln?
