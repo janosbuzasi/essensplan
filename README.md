@@ -21,7 +21,7 @@ eine MySQL-Datenbank wird erstellt, welche die folgende Tabellen enthalten:
 
 recipes (Rezept-Daten)
 
-''
+```
 CREATE TABLE recipes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -30,18 +30,18 @@ CREATE TABLE recipes (
   instructions TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-''
+```
 
 meal_plan (Verknüpfung der Rezepte mit Tagen)
 
-''
+```
 CREATE TABLE meal_plan (
   id INT AUTO_INCREMENT PRIMARY KEY,
   recipe_id INT,
   day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
   FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
-''
+```
 
 ## 3. PHP-Backend
 
@@ -49,6 +49,7 @@ Für das PHP-Backend wird eine einfache CRUD (Create, Read, Update, Delete)-Funk
 
 Datenbankverbindung (/config/db.php):
 
+```
 <?php
 class Database {
   private $host = "localhost";
@@ -69,9 +70,11 @@ class Database {
   }
 }
 ?>
+```
 
 Rezepte hinzufügen (/src/add_recipe.php):
 
+```
 <?php
 require_once '../config/db.php';
 if ($_POST) {
@@ -84,11 +87,13 @@ if ($_POST) {
   header('Location: ../public/index.php');
 }
 ?>
+```
 
 ## 4. Frontend
 
 HTML-Formular zum Hinzufügen eines Rezepts (/templates/add_recipe.html):
 
+```
 <form method="POST" action="../src/add_recipe.php">
   <label for="title">Titel:</label>
   <input type="text" name="title" required>
@@ -104,9 +109,11 @@ HTML-Formular zum Hinzufügen eines Rezepts (/templates/add_recipe.html):
   <br>
   <input type="submit" value="Rezept hinzufügen">
 </form>
+```
 
 Wochenansicht der Mahlzeiten (/public/index.php):
 
+```
 <?php
 require_once '../config/db.php';
 $db = new Database();
@@ -129,6 +136,7 @@ $meal_plan = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </tr>
   <?php endforeach; ?>
 </table>
+```
 
 ## 5. Git-Versionierung
 
@@ -136,16 +144,20 @@ Du kannst dein Projekt versionieren, indem du ein Git-Repository erstellst:
 
 Initialisiere das Git-Repository:
 
+```
 git init
 git add .
 git commit -m "Initial commit"
+```
 
 GitHub Repository hinzufügen:
 1.	Erstelle ein neues Repository auf GitHub.
 2.	Füge das Remote-Repository hinzu:
 
+```
 git remote add origin https://github.com/username/repository.git
 git push -u origin master
+```
 
 ## 6. Deployment (z. B. auf einem Webserver wie Heroku oder AWS)
 
