@@ -2,8 +2,8 @@
 class Database {
   private $host = "localhost";
   private $db_name = "wochenplan";
-  private $username = "root";
-  private $password = "";
+  private $username = "wochenplan";
+  private $password = "password";
   public $conn;
   
   public function getConnection() {
