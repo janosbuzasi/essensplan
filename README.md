@@ -7,19 +7,13 @@ Zuerst erstellen wir die Grundstruktur für deine Website:
 
 Ordnerstruktur:
 
-/wochenplan
-├── /public
-(Für die öffentlich zugänglichen Dateien)
-├── /src
-(PHP-Quellcode)
-├── /config
-(Datenbank- und andere Konfigurationen)
-├── /templates
-(HTML-Templates für Frontend)
-├── /assets
-(CSS/JS für Frontend)
-└── /sql
-(Datenbankschema)
+/wochenplan<br>
+├── /public (Für die öffentlich zugänglichen Dateien)<br>
+├── /src (PHP-Quellcode)<br>
+├── /config (Datenbank- und andere Konfigurationen)<br>
+├── /templates (HTML-Templates für Frontend)<br>
+├── /assets (CSS/JS für Frontend)<br>
+└── /sql (Datenbankschema)<br>
 
 ## 2. Datenbankdesign
 
