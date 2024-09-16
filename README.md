@@ -21,6 +21,7 @@ eine MySQL-Datenbank wird erstellt, welche die folgende Tabellen enthalten:
 
 recipes (Rezept-Daten)
 
+''
 CREATE TABLE recipes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -29,15 +30,18 @@ CREATE TABLE recipes (
   instructions TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+''
 
 meal_plan (Verknüpfung der Rezepte mit Tagen)
 
+''
 CREATE TABLE meal_plan (
   id INT AUTO_INCREMENT PRIMARY KEY,
   recipe_id INT,
   day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
   FOREIGN KEY (recipe_id) REFERENCES recipes(id)
 );
+''
 
 ## 3. PHP-Backend
 
