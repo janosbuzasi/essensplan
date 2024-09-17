@@ -1,8 +1,24 @@
-
 <?php
 // Error Reporting aktivieren
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+// Passwortschutz
+$valid_password = "deinSicheresPasswort";  // Setze hier dein gewünschtes Passwort
+
+// Wenn kein Passwort eingegeben wurde oder das falsche Passwort übermittelt wurde
+if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
+    // Einfaches HTML-Formular zur Passwortabfrage
+    echo '<form method="POST">
+            <h2>Admin Setup - Passwort erforderlich</h2>
+            <label>Passwort:</label>
+            <input type="password" name="password">
+            <input type="submit" value="Login">
+          </form>';
+    exit;  // Stoppt die weitere Ausführung, bis das Passwort korrekt ist
+}
+
+// Wenn das Passwort korrekt ist, wird das Setup ausgeführt
 
 // Datenbankkonfiguration
 $host = 'localhost';
