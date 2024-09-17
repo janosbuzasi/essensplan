@@ -1,169 +1,92 @@
-# wochenplan
-Ein dynamisches Website-Projekt mit PHP, MySQL und Git aufzusetzen. Der Plan umfasst folgende Schritte:
+# Wochenplan für Essen
 
-## 1. Projektstruktur aufsetzen
+Dies ist eine dynamische PHP-Webanwendung, mit der du einen Wochenplan für Rezepte anzeigen und verwalten kannst. Das Projekt nutzt PHP und MySQL als Datenbank, und alle Änderungen können über Git versioniert werden.
 
-Zuerst erstellen wir die Grundstruktur für deine Website:
+## Ordnerstruktur
 
-Ordnerstruktur:
-
-/wochenplan<br>
-├── /public (Für die öffentlich zugänglichen Dateien)<br>
-├── /src (PHP-Quellcode)<br>
-├── /config (Datenbank- und andere Konfigurationen)<br>
-├── /templates (HTML-Templates für Frontend)<br>
-├── /assets (CSS/JS für Frontend)<br>
-└── /sql (Datenbankschema)<br>
-
-## 2. Datenbankdesign
-
-eine MySQL-Datenbank wird erstellt, welche die folgende Tabellen enthalten:
-
-recipes (Rezept-Daten)
+Die Anwendung hat folgende Ordnerstruktur:
 
 ```
-CREATE TABLE recipes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  ingredients TEXT,
-  instructions TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+/wochenplan
+├── /admin          (Verzeichnis für administrative Aufgaben, z. B. Datenbank-Setup)
+│   └── setup.php   (Skript für das einmalige Setup der Datenbank)
+├── /src            (PHP-Quellcode und Logik)
+│   └── add_recipe.php (Script zum Hinzufügen eines Rezepts)
+├── /config         (Konfigurationsdateien, z. B. für die Datenbank)
+│   └── db.php      (Datenbankverbindungs-Skript)
+├── /templates      (HTML-Templates für das Frontend)
+│   └── add_recipe.html (Formular für das Hinzufügen eines Rezepts)
+├── /assets         (CSS, JS und andere Ressourcen für das Frontend)
+│   └── style.css   (CSS-Datei für das Styling der Seite)
+└── index.php       (Startseite, die den Wochenplan anzeigt)
 ```
 
-meal_plan (Verknüpfung der Rezepte mit Tagen)
+## Voraussetzungen
 
-```
-CREATE TABLE meal_plan (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  recipe_id INT,
-  day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
-  FOREIGN KEY (recipe_id) REFERENCES recipes(id)
-);
-```
+Um die Anwendung lokal oder auf einem Server auszuführen, benötigst du:
 
-## 3. PHP-Backend
+- PHP (Version 7.4 oder höher)
+- MySQL-Datenbank
+- Webserver (Apache, Nginx, etc.)
+- Composer (falls du zusätzliche PHP-Bibliotheken installieren möchtest)
+- Git zur Versionierung des Projekts
 
-Für das PHP-Backend wird eine einfache CRUD (Create, Read, Update, Delete)-Funktionen angewendet:
+## Installation
 
-Datenbankverbindung (/config/db.php):
+### 1. Repository klonen
 
-```
-<?php
-class Database {
-  private $host = "localhost";
-  private $db_name = "wochenplan";
-  private $username = "root";
-  private $password = "";
-  public $conn;
-  
-  public function getConnection() {
-    $this->conn = null;
-    try {
-      $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-      $this->conn->exec("set names utf8");
-    } catch (PDOException $exception) {
-      echo "Connection error: " . $exception->getMessage();
-    }
-    return $this->conn;
-  }
-}
-?>
+Klonen des Repositories in ein lokales Verzeichnis:
+
+```bash
+git clone https://github.com/dein-benutzername/wochenplan.git
 ```
 
-Rezepte hinzufügen (/src/add_recipe.php):
+### 2. Datenbank einrichten
 
-```
-<?php
-require_once '../config/db.php';
-if ($_POST) {
-  $db = new Database();
-  $conn = $db->getConnection();
-  
-  $stmt = $conn->prepare("INSERT INTO recipes (title, description, ingredients, instructions) VALUES (?, ?, ?, ?)");
-  $stmt->execute([$_POST['title'], $_POST['description'], $_POST['ingredients'], $_POST['instructions']]);
-  
-  header('Location: ../public/index.php');
-}
-?>
-```
+- Stelle sicher, dass MySQL auf deinem Rechner läuft.
+- Führe das Setup-Skript aus, um die Datenbank und die notwendigen Tabellen zu erstellen:
 
-## 4. Frontend
+   1. Öffne die Datei `/config/db.php` und passe die Datenbankkonfiguration (Benutzername, Passwort, etc.) an.
+   
+   2. Führe das Setup-Skript über deinen Browser aus:
+   
+   ```bash
+   http://localhost/wochenplan/admin/setup.php
+   ```
+   
+   Dies erstellt die MySQL-Datenbank und die notwendigen Tabellen (`recipes` und `meal_plan`).
 
-HTML-Formular zum Hinzufügen eines Rezepts (/templates/add_recipe.html):
+### 3. Website starten
 
-```
-<form method="POST" action="../src/add_recipe.php">
-  <label for="title">Titel:</label>
-  <input type="text" name="title" required>
-  <br>
-  <label for="description">Beschreibung:</label>
-  <textarea name="description"></textarea>
-  <br>
-  <label for="ingredients">Zutaten:</label>
-  <textarea name="ingredients"></textarea>
-  <br>
-  <label for="instructions">Anleitung:</label>
-  <textarea name="instructions"></textarea>
-  <br>
-  <input type="submit" value="Rezept hinzufügen">
-</form>
-```
+1. Stelle sicher, dass dein Webserver auf das Verzeichnis `/wochenplan` verweist. Wenn du `localhost` verwendest, solltest du die Seite unter `http://localhost/wochenplan` aufrufen können.
 
-Wochenansicht der Mahlzeiten (/public/index.php):
+2. Du solltest den Wochenplan sehen. Wenn du Rezepte hinzufügen möchtest, erstelle eine entsprechende Logik (siehe `add_recipe.php` und `add_recipe.html`).
 
-```
-<?php
-require_once '../config/db.php';
-$db = new Database();
-$conn = $db->getConnection();
+### 4. Styling anpassen
 
-$stmt = $conn->query("SELECT * FROM meal_plan INNER JOIN recipes ON meal_plan.recipe_id = recipes.id");
-$meal_plan = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+Im Ordner `/assets` findest du die Datei `style.css`, die das grundlegende Styling der Seite definiert. Passe diese nach deinen Bedürfnissen an.
 
-<h1>Wochenplan für Essen</h1>
-<table>
-  <tr>
-    <th>Tag</th>
-    <th>Rezept</th>
-  </tr>
-  <?php foreach ($meal_plan as $meal): ?>
-  <tr>
-    <td><?php echo $meal['day_of_week']; ?></td>
-    <td><?php echo $meal['title']; ?></td>
-  </tr>
-  <?php endforeach; ?>
-</table>
-```
+## Deployment
 
-## 5. Git-Versionierung
+Wenn du die Anwendung live schalten möchtest, folge diesen Schritten:
 
-Du kannst dein Projekt versionieren, indem du ein Git-Repository erstellst:
+1. Lade alle Dateien auf deinen Webserver.
+2. Achte darauf, dass die Datenbank-Informationen in `config/db.php` korrekt sind.
+3. Stelle sicher, dass der Server die PHP-Dateien ausführt und MySQL-Verbindungen erlaubt.
+4. Optional: Richte HTTPS auf deinem Server ein, um die Sicherheit der Datenübertragung zu gewährleisten.
 
-Initialisiere das Git-Repository:
+## Mitwirken
 
-```
-git init
-git add .
-git commit -m "Initial commit"
-```
+Beiträge sind willkommen! Forke das Repository, erstelle einen neuen Branch, führe deine Änderungen durch und erstelle eine Pull-Request.
 
-GitHub Repository hinzufügen:
-1.	Erstelle ein neues Repository auf GitHub.
-2.	Füge das Remote-Repository hinzu:
+### Beispiel:
 
-```
-git remote add origin https://github.com/username/repository.git
-git push -u origin master
-```
+1. Forke das Repository
+2. Erstelle einen Feature-Branch (`git checkout -b feature-neues-feature`)
+3. Committe deine Änderungen (`git commit -am 'Füge ein neues Feature hinzu'`)
+4. Pushe zum Branch (`git push origin feature-neues-feature`)
+5. Erstelle eine Pull-Request
 
-## 6. Deployment (z. B. auf einem Webserver wie Heroku oder AWS)
+## Lizenz
 
-Um die Seite live zu stellen, kannst du entweder einen Webhoster wie Heroku, AWS oder einen eigenen Webserver verwenden.
-
-Stelle sicher, dass die Datenbankkonfiguration auf dem Server korrekt ist.
-
-Für das Deployment auch Git-Hooks verwenden, um automatisch von GitHub zu deployen.
-
+Dieses Projekt steht unter der MIT-Lizenz – weitere Informationen findest du in der `LICENSE`-Datei.
