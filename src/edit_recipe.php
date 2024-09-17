@@ -59,4 +59,5 @@ if ($_POST) {
 
     <input type="submit" value="Rezept aktualisieren">
 </form>
-<a href="view_recipes.php">ZurÃ¼ck zu den Rezepten</a>
+<a href="view_recipes.php">Zurück zu den Rezepten</a>
+<a href="../index.php">Zurück zur Hauptseite</a>
