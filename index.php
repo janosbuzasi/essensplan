@@ -1,3 +1,4 @@
+
 <?php
 // Datenbankverbindung einbinden
 require_once 'config/db.php';
@@ -10,7 +11,7 @@ $query = "
     SELECT meal_plan.day_of_week, recipes.title 
     FROM meal_plan 
     INNER JOIN recipes ON meal_plan.recipe_id = recipes.id 
-    ORDER BY FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+    ORDER BY FIELD(day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag');
 ";
 $stmt = $conn->prepare($query);
 $stmt->execute();
