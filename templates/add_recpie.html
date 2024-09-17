@@ -1,15 +1,20 @@
-<form method="POST" action="../src/add_recipe.php">
-  <label for="title">Titel:</label>
-  <input type="text" name="title" required>
-  <br>
-  <label for="description">Beschreibung:</label>
-  <textarea name="description"></textarea>
-  <br>
-  <label for="ingredients">Zutaten:</label>
-  <textarea name="ingredients"></textarea>
-  <br>
-  <label for="instructions">Anleitung:</label>
-  <textarea name="instructions"></textarea>
-  <br>
-  <input type="submit" value="Rezept hinzufügen">
+
+<form method="POST" action="src/add_recipe.php">
+    <label for="title">Titel des Rezepts:</label>
+    <input type="text" name="title" required>
+    <br>
+
+    <label for="description">Beschreibung:</label>
+    <textarea name="description" required></textarea>
+    <br>
+
+    <label for="ingredients">Zutaten:</label>
+    <textarea name="ingredients" required></textarea>
+    <br>
+
+    <label for="instructions">Anleitung:</label>
+    <textarea name="instructions" required></textarea>
+    <br>
+
+    <input type="submit" value="Rezept hinzufügen">
 </form>
