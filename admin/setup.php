@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Passwortschutz
-$valid_password = "MeinPasswort";  // Setze hier dein gewünschtes Passwort
+$valid_password = "deinSicheresPasswort";  // Setze hier dein gewünschtes Passwort
 
 // Wenn kein Passwort eingegeben wurde oder das falsche Passwort übermittelt wurde
 if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
@@ -22,7 +22,7 @@ if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
 // Datenbankkonfiguration
 $host = 'localhost';
 $dbname = 'wochenplan';
-$username = 'wochenplan';  // Ersetze mit deinem DB-Benutzernamen
+$username = 'root';  // Ersetze mit deinem DB-Benutzernamen
 $password = '';      // Ersetze mit deinem DB-Passwort
 
 try {
@@ -77,6 +77,33 @@ try {
     ";
     $conn->exec($sqlMealPlan);
     echo "Tabelle 'meal_plan' wurde erfolgreich erstellt oder existierte bereits.<br>";
+
+    // Standardrezepte einfügen
+    $conn->exec("
+        INSERT INTO recipes (title, description, ingredients, instructions) VALUES
+        ('Frühstück', 'Ein leckeres Frühstück.', 'Brot, Butter, Marmelade', 'Serviere das Frühstück.'),
+        ('Mittagessen', 'Ein köstliches Mittagessen.', 'Reis, Hähnchen, Gemüse', 'Bereite das Mittagessen zu.'),
+        ('Abendessen', 'Ein schmackhaftes Abendessen.', 'Kartoffeln, Fisch, Salat', 'Bereite das Abendessen vor.')
+    ");
+    echo "Standardrezepte wurden hinzugefügt.<br>";
+
+    // Standard-Wochenplan erstellen (z.B. Woche 1 im aktuellen Jahr)
+    $currentYear = date('Y');
+    $conn->exec("INSERT INTO week_plan (week_number, year) VALUES (1, $currentYear)");
+    $weekPlanId = $conn->lastInsertId();
+    echo "Standard-Wochenplan (Woche 1) wurde erstellt.<br>";
+
+    // Mahlzeiten für Montag bis Sonntag hinzufügen
+    $daysOfWeek = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    $mealTypes = ['Frühstück', 'Mittagessen', 'Abendessen'];
+
+    foreach ($daysOfWeek as $day) {
+        foreach ($mealTypes as $index => $mealType) {
+            $recipeId = $index + 1;  // Frühstück -> Rezept 1, Mittagessen -> Rezept 2, Abendessen -> Rezept 3
+            $conn->exec("INSERT INTO meal_plan (week_plan_id, recipe_id, day_of_week, meal_type) VALUES ($weekPlanId, $recipeId, '$day', '$mealType')");
+        }
+    }
+    echo "Mahlzeiten für Woche 1 wurden hinzugefügt.<br>";
 
     echo "<br>Setup erfolgreich abgeschlossen!<br>";
 
