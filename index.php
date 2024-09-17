@@ -1,6 +1,6 @@
 
 <?php
-require_once '../config/db.php';  // Anpassung des Pfads für die Datenbankverbindung
+require_once 'config/db.php';  // Anpassung des Pfads für die Datenbankverbindung
 
 $db = new Database();
 $conn = $db->getConnection();
