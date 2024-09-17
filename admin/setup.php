@@ -7,8 +7,8 @@ error_reporting(E_ALL);
 // Datenbankkonfiguration
 $host = 'localhost';
 $dbname = 'wochenplan';
-$username = 'wochenplan';  // Ersetze mit deinem DB-Benutzernamen
-$password = '!Wochenplan';      // Ersetze mit deinem DB-Passwort
+$username = '';  // Ersetze mit deinem DB-Benutzernamen
+$password = '';      // Ersetze mit deinem DB-Passwort
 
 try {
     // Verbindung zur MySQL-Datenbank aufbauen
