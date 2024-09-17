@@ -37,11 +37,12 @@ try {
     // Verbindung zur neu erstellten Datenbank herstellen
     $conn->exec("USE $dbname");
 
-    // Tabelle für Rezepte erstellen, falls sie nicht existiert
+    // Tabelle für Rezepte erstellen oder ändern, falls sie nicht existiert
     $sqlRecipes = "
         CREATE TABLE IF NOT EXISTS recipes (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
+            category VARCHAR(100),  /* Kategorie-Feld hinzugefügt */
             description TEXT,
             ingredients TEXT,
             instructions TEXT,
@@ -49,7 +50,11 @@ try {
         ) ENGINE=InnoDB;
     ";
     $conn->exec($sqlRecipes);
-    echo "Tabelle 'recipes' wurde erfolgreich erstellt oder existierte bereits.<br>";
+    echo "Tabelle 'recipes' wurde erfolgreich erstellt oder aktualisiert.<br>";
+
+    // Rezeptkategorien hinzufügen
+    $conn->exec("ALTER TABLE recipes ADD COLUMN IF NOT EXISTS category VARCHAR(100);");
+    echo "Rezeptkategorie wurde zur Tabelle 'recipes' hinzugefügt.<br>";
 
     // Tabelle für Wochenpläne erstellen, falls sie nicht existiert
     $sqlWeekPlan = "
@@ -57,35 +62,21 @@ try {
             id INT AUTO_INCREMENT PRIMARY KEY,
             week_number INT NOT NULL,
             year INT NOT NULL,
+            archived TINYINT(1) DEFAULT 0, /* Archivierungs-Feld hinzugefügt */
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB;
     ";
     $conn->exec($sqlWeekPlan);
-    echo "Tabelle 'week_plan' wurde erfolgreich erstellt oder existierte bereits.<br>";
-
-    // Tabelle für den Wochenplan mit Mahlzeiten erstellen, falls sie nicht existiert
-    $sqlMealPlan = "
-        CREATE TABLE IF NOT EXISTS meal_plan (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            week_plan_id INT,
-            recipe_id INT,
-            day_of_week ENUM('Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
-            meal_type ENUM('Frühstück', 'Mittagessen', 'Abendessen'),
-            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-            FOREIGN KEY (week_plan_id) REFERENCES week_plan(id) ON DELETE CASCADE
-        ) ENGINE=InnoDB;
-    ";
-    $conn->exec($sqlMealPlan);
-    echo "Tabelle 'meal_plan' wurde erfolgreich erstellt oder existierte bereits.<br>";
+    echo "Tabelle 'week_plan' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
     // Standardrezepte einfügen
     $conn->exec("
-        INSERT INTO recipes (title, description, ingredients, instructions) VALUES
-        ('Frühstück', 'Ein leckeres Frühstück.', 'Brot, Butter, Marmelade', 'Serviere das Frühstück.'),
-        ('Mittagessen', 'Ein köstliches Mittagessen.', 'Reis, Hähnchen, Gemüse', 'Bereite das Mittagessen zu.'),
-        ('Abendessen', 'Ein schmackhaftes Abendessen.', 'Kartoffeln, Fisch, Salat', 'Bereite das Abendessen vor.')
+        INSERT INTO recipes (title, category, description, ingredients, instructions) VALUES
+        ('Frühstück', 'Vegetarisch', 'Ein leckeres Frühstück.', 'Brot, Butter, Marmelade', 'Serviere das Frühstück.'),
+        ('Mittagessen', 'Fleischgericht', 'Ein köstliches Mittagessen.', 'Reis, Hähnchen, Gemüse', 'Bereite das Mittagessen zu.'),
+        ('Abendessen', 'Vegetarisch', 'Ein schmackhaftes Abendessen.', 'Kartoffeln, Fisch, Salat', 'Bereite das Abendessen vor.')
     ");
-    echo "Standardrezepte wurden hinzugefügt.<br>";
+    echo "Standardrezepte wurden mit Kategorien hinzugefügt.<br>";
 
     // Standard-Wochenplan erstellen (z.B. Woche 1 im aktuellen Jahr)
     $currentYear = date('Y');
