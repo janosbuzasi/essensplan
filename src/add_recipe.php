@@ -48,3 +48,4 @@ if ($_POST) {
     <input type="submit" value="Rezept hinzufügen">
 </form>
 <a href="view_recipes.php">Zurück zu den Rezepten</a>
+<a href="../index.php">Zurück zur Hauptseite</a>
