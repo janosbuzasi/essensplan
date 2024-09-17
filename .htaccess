@@ -1,4 +1,0 @@
-<Directory /httpdocs/wochenplan/config>
-    Order allow,deny
-    Deny from all
-</Directory>
