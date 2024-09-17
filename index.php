@@ -58,6 +58,7 @@ $weekPlans = $conn->query("SELECT * FROM week_plan ORDER BY year, week_number")-
         <li>
             Woche <?php echo $plan['week_number']; ?> (Jahr <?php echo $plan['year']; ?>) - 
             <a href="src/view_week.php?week_plan_id=<?php echo $plan['id']; ?>">Ansehen</a> | 
+            <a href="src/edit_week.php?week_plan_id=<?php echo $plan['id']; ?>">Bearbeiten</a> | 
             <a href="src/delete_week.php?week_plan_id=<?php echo $plan['id']; ?>">Löschen</a>
         </li>
     <?php endforeach; ?>
