@@ -1,6 +1,6 @@
 
 <?php
-require_once 'config/db.php';  // Anpassung des Pfads für die Datenbankverbindung
+require_once 'config/db.php';  // Korrigierter Pfad zur Datenbankverbindung
 
 $db = new Database();
 $conn = $db->getConnection();
@@ -38,7 +38,13 @@ $weekPlans = $conn->query("SELECT * FROM week_plan ORDER BY year, week_number")-
 <!-- Wochenplan erstellen -->
 <form method="POST">
     <label for="week_number">Kalenderwoche:</label>
-    <input type="number" name="week_number" required>
+    <select name="week_number">
+        <?php for ($i = 1; $i <= 52; $i++): ?>
+            <option value="<?php echo $i; ?>">
+                Woche <?php echo $i; ?>
+            </option>
+        <?php endfor; ?>
+    </select>
 
     <label for="year">Jahr:</label>
     <input type="number" name="year" value="<?php echo date('Y'); ?>" required>
@@ -52,8 +58,8 @@ $weekPlans = $conn->query("SELECT * FROM week_plan ORDER BY year, week_number")-
     <?php foreach ($weekPlans as $plan): ?>
         <li>
             Woche <?php echo $plan['week_number']; ?> (Jahr <?php echo $plan['year']; ?>) - 
-            <a href="view_week.php?week_plan_id=<?php echo $plan['id']; ?>">Ansehen</a> | 
-            <a href="delete_week.php?week_plan_id=<?php echo $plan['id']; ?>">Löschen</a>
+            <a href="src/view_week.php?week_plan_id=<?php echo $plan['id']; ?>">Ansehen</a> | 
+            <a href="src/delete_week.php?week_plan_id=<?php echo $plan['id']; ?>">Löschen</a>
         </li>
     <?php endforeach; ?>
 </ul>
