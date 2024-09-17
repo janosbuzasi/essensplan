@@ -1,10 +1,11 @@
+
 <?php
 // Error Reporting aktivieren
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Passwortschutz
-$valid_password = "deinSicheresPasswort";  // Setze hier dein gewünschtes Passwort
+$valid_password = "MeinPasswort";  // Setze hier dein gewünschtes Passwort
 
 // Wenn kein Passwort eingegeben wurde oder das falsche Passwort übermittelt wurde
 if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
@@ -18,12 +19,10 @@ if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
     exit;  // Stoppt die weitere Ausführung, bis das Passwort korrekt ist
 }
 
-// Wenn das Passwort korrekt ist, wird das Setup ausgeführt
-
 // Datenbankkonfiguration
 $host = 'localhost';
 $dbname = 'wochenplan';
-$username = '';  // Ersetze mit deinem DB-Benutzernamen
+$username = 'wochenplan';  // Ersetze mit deinem DB-Benutzernamen
 $password = '';      // Ersetze mit deinem DB-Passwort
 
 try {
@@ -52,13 +51,28 @@ try {
     $conn->exec($sqlRecipes);
     echo "Tabelle 'recipes' wurde erfolgreich erstellt oder existierte bereits.<br>";
 
-    // Tabelle für den Wochenplan erstellen, falls sie nicht existiert
+    // Tabelle für Wochenpläne erstellen, falls sie nicht existiert
+    $sqlWeekPlan = "
+        CREATE TABLE IF NOT EXISTS week_plan (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            week_number INT NOT NULL,
+            year INT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+    ";
+    $conn->exec($sqlWeekPlan);
+    echo "Tabelle 'week_plan' wurde erfolgreich erstellt oder existierte bereits.<br>";
+
+    // Tabelle für den Wochenplan mit Mahlzeiten erstellen, falls sie nicht existiert
     $sqlMealPlan = "
         CREATE TABLE IF NOT EXISTS meal_plan (
             id INT AUTO_INCREMENT PRIMARY KEY,
+            week_plan_id INT,
             recipe_id INT,
             day_of_week ENUM('Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
-            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+            meal_type ENUM('Frühstück', 'Mittagessen', 'Abendessen'),
+            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+            FOREIGN KEY (week_plan_id) REFERENCES week_plan(id) ON DELETE CASCADE
         ) ENGINE=InnoDB;
     ";
     $conn->exec($sqlMealPlan);
