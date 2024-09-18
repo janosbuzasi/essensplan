@@ -1,10 +1,11 @@
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
     margin: 20px;
 }
 
-h1, h2 {
+h1 {
     color: #333;
 }
 
@@ -27,7 +28,6 @@ input, select {
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: auto;
 }
 
 input[type="submit"] {
@@ -69,34 +69,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-/* Responsive Design für mobile Geräte */
-@media (max-width: 768px) {
-    body {
-        margin: 10px;
-        font-size: 14px;
-    }
-
-    h1, h2 {
-        font-size: 18px;
-    }
-
-    form {
-        width: 100%;
-        padding: 10px;
-    }
-
-    input, select {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    table {
-        font-size: 12px;
-    }
-
-    th, td {
-        padding: 8px;
-    }
 }
