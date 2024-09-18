@@ -1,14 +1,16 @@
-
+/* Body styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
     margin: 20px;
 }
 
-h1 {
+/* Headings */
+h1, h2 {
     color: #333;
 }
 
+/* Form styling */
 form {
     margin-bottom: 20px;
     padding: 15px;
@@ -23,13 +25,16 @@ label {
     font-weight: bold;
 }
 
+/* Inputs and select elements */
 input, select {
     padding: 8px;
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: auto;
 }
 
+/* Submit button */
 input[type="submit"] {
     background-color: #28a745;
     color: white;
@@ -41,6 +46,7 @@ input[type="submit"]:hover {
     background-color: #218838;
 }
 
+/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -62,6 +68,7 @@ th {
     background-color: #f4f4f4;
 }
 
+/* Link styling */
 a {
     text-decoration: none;
     color: #007bff;
@@ -69,4 +76,49 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Debugging: Ensuring list visibility */
+ul {
+    list-style-type: disc;
+    margin: 20px 0;
+    padding-left: 40px;
+    display: block !important; /* Ensure list display */
+}
+
+li {
+    margin-bottom: 10px;
+    color: black !important; /* Force black text */
+    display: list-item !important; /* Force list item display */
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+        font-size: 14px;
+    }
+
+    h1, h2 {
+        font-size: 18px;
+    }
+
+    form {
+        width: 100%;
+        padding: 10px;
+    }
+
+    input, select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
 }
