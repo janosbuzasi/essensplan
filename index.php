@@ -36,15 +36,16 @@
 
     <!-- Vorhandene Wochenpläne anzeigen -->
     <h2>Vorhandene Wochenpläne</h2>
-    <ul>
-        <?php foreach ($weekPlans as $plan): ?>
-            <li>
-                Woche <?php echo $plan['week_number']; ?> (Jahr <?php echo $plan['year']; ?>) - 
-                <a href="src/view_week.php?week_plan_id=<?php echo $plan['id']; ?>">Ansehen</a> | 
-                <a href="src/edit_week.php?week_plan_id=<?php echo $plan['id']; ?>">Bearbeiten</a> | 
-                <a href="src/delete_week.php?week_plan_id=<?php echo $plan['id']; ?>" onclick="return confirm('Möchtest du diesen Wochenplan wirklich löschen?');">Löschen</a>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+<ul>
+    <?php foreach ($weekPlans as $plan): ?>
+        <?php echo "Wochenplan ID: " . $plan['id'] . " - Woche: " . $plan['week_number'] . " - Jahr: " . $plan['year']; ?>
+        <li>
+            Woche <?php echo $plan['week_number']; ?> (Jahr <?php echo $plan['year']; ?>) - 
+            <a href="src/view_week.php?week_plan_id=<?php echo $plan['id']; ?>">Ansehen</a> | 
+            <a href="src/edit_week.php?week_plan_id=<?php echo $plan['id']; ?>">Bearbeiten</a> | 
+            <a href="src/delete_week.php?week_plan_id=<?php echo $plan['id']; ?>" onclick="return confirm('Möchtest du diesen Wochenplan wirklich löschen?');">Löschen</a>
+        </li>
+    <?php endforeach; ?>
+</ul>
 </body>
 </html>
