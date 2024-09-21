@@ -46,7 +46,7 @@
             <li>
                 <a href="#">Wochenpläne</a>
                 <ul>
-                    <li><a href="/essensplan/src/index.php">Alle Wochenpläne anzeigen</a></li> <!-- Angepasster Pfad -->
+                    <li><a href="/essensplan/index.php">Alle Wochenpläne anzeigen</a></li> <!-- Angepasster Pfad zu /essensplan/index.php -->
                     <li><a href="/essensplan/src/add_week.php">Neuen Wochenplan hinzufügen</a></li> <!-- Angepasster Pfad -->
                 </ul>
             </li>
