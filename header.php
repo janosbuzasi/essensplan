@@ -25,9 +25,6 @@ $css_file = isset($_SESSION['css_file']) ? $_SESSION['css_file'] : 'style.css'; 
                 <li><a href="index.php">Home</a></li>
                 <li><a href="view_recipes.php">Rezepte anzeigen</a></li>
                 <li><a href="add_recipe.php">Neues Rezept hinzufügen</a></li>
-                <li><a href="change_style.php">Style ändern</a></li>
-                <li><a href="about_us.php">Über uns</a></li>
-                <li><a href="contact.php">Kontakt</a></li>
             </ul>
         </nav>
     </header>
