@@ -1,6 +1,6 @@
 <?php
 $title = "Essenspläne Übersicht"; 
-require '../header.php';  // Inkludiere den Header
+require 'header.php';  // Inkludiere den Header
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -39,5 +39,5 @@ require '../header.php';  // Inkludiere den Header
     <a href="add_week.php">Neuen Essensplan hinzufügen</a>
 </main>
 <?php
-include '../footer.php';
+include 'footer.php';
 ?>
