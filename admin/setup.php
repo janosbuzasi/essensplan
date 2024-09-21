@@ -22,8 +22,8 @@ if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
 // Datenbankkonfiguration
 $host = 'localhost';
 $dbname = 'essensplan';  // Neuer Name der Datenbank
-$username = 'root';  // Ersetze mit deinem DB-Benutzernamen
-$password = '';      // Ersetze mit deinem DB-Passwort
+$username = 'essensplan';  // Ersetze mit deinem DB-Benutzernamen
+$password = 'essensplan';      // Ersetze mit deinem DB-Passwort
 
 try {
     // Verbindung zur MySQL-Datenbank aufbauen
