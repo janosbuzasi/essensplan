@@ -1,92 +1,67 @@
-# Wochenplan für Essen
 
-Dies ist eine dynamische PHP-Webanwendung, mit der du einen Wochenplan für Rezepte anzeigen und verwalten kannst. Das Projekt nutzt PHP und MySQL als Datenbank, und alle Änderungen können über Git versioniert werden.
+# Essensplan für Mahlzeiten
 
-## Ordnerstruktur
+Dieses Projekt ermöglicht die Verwaltung eines wöchentlichen Essensplans, einschließlich der Möglichkeit, Rezepte hinzuzufügen, zu bearbeiten und zu löschen.<br>
+Benutzer können zwischen verschiedenen CSS-Stilen wechseln und jederzeit zur ursprünglichen Version zurückkehren.
 
-Die Anwendung hat folgende Ordnerstruktur:
+## Projektstruktur
 
 ```
-/wochenplan
-├── /admin          (Verzeichnis für administrative Aufgaben, z. B. Datenbank-Setup)
-│   └── setup.php   (Skript für das einmalige Setup der Datenbank)
-├── /src            (PHP-Quellcode und Logik)
-│   └── add_recipe.php (Script zum Hinzufügen eines Rezepts)
-├── /config         (Konfigurationsdateien, z. B. für die Datenbank)
-│   └── db.php      (Datenbankverbindungs-Skript)
-├── /templates      (HTML-Templates für das Frontend)
-│   └── add_recipe.html (Formular für das Hinzufügen eines Rezepts)
-├── /assets         (CSS, JS und andere Ressourcen für das Frontend)
-│   └── style.css   (CSS-Datei für das Styling der Seite)
-└── index.php       (Startseite, die den Wochenplan anzeigt)
+essensplan/
+│
+├── assets/
+│   ├── style.css             # Standard-CSS-Stil
+│   ├── classic_style.css     # Classic-CSS-Stil
+│   └── yellow_style.css      # Gelber CSS-Stil
+│
+├── config/
+│   └── db.php                # Datenbankverbindungsdatei
+│
+├── src/
+│   ├── index.php             # Hauptseite zur Essensplan-Verwaltung
+│   ├── view_recipes.php      # Seite zum Anzeigen aller Rezepte
+│   ├── add_recipe.php        # Seite zum Hinzufügen neuer Rezepte
+│   ├── edit_recipe.php       # Seite zum Bearbeiten bestehender Rezepte
+│   └── delete_recipe.php     # Seite zum Löschen von Rezepten
+│
+├── admin/
+│   └── setup.php             # Initiale Datenbankeinrichtung
+│
+├── change_style.php          # Seite zum Ändern des CSS-Stils
+├── contact.php               # Kontaktseite
+├── about_us.php              # Über uns Seite
+├── header.php                # Gemeinsamer Header für alle Seiten
+├── footer.php                # Gemeinsamer Footer für alle Seiten
+└── README.md                 # Diese Datei
 ```
-
-## Voraussetzungen
-
-Um die Anwendung lokal oder auf einem Server auszuführen, benötigst du:
-
-- PHP (Version 7.4 oder höher)
-- MySQL-Datenbank
-- Webserver (Apache, Nginx, etc.)
-- Composer (falls du zusätzliche PHP-Bibliotheken installieren möchtest)
-- Git zur Versionierung des Projekts
 
 ## Installation
 
-### 1. Repository klonen
-
-Klonen des Repositories in ein lokales Verzeichnis:
-
-```bash
-git clone https://github.com/dein-benutzername/wochenplan.git
-```
-
-### 2. Datenbank einrichten
-
-- Stelle sicher, dass MySQL auf deinem Rechner läuft.
-- Führe das Setup-Skript aus, um die Datenbank und die notwendigen Tabellen zu erstellen:
-
-   1. Öffne die Datei `/config/db.php` und passe die Datenbankkonfiguration (Benutzername, Passwort, etc.) an.
-   
-   2. Führe das Setup-Skript über deinen Browser aus:
-   
+1. **Projekt klonen:**
    ```bash
-   http://localhost/wochenplan/admin/setup.php
+   git clone <repository-url>
    ```
-   
-   Dies erstellt die MySQL-Datenbank und die notwendigen Tabellen (`recipes` und `meal_plan`).
+2. **Datenbank einrichten:**
+   Führe `admin/setup.php` aus, um die Datenbanktabellen zu erstellen.
+3. **Datenbankverbindung konfigurieren:**
+   Passe die Datei `config/db.php` an deine Datenbankeinstellungen an.
+4. **CSS-Stile anpassen:**
+   Füge deine eigenen CSS-Stile in das Verzeichnis `assets/` hinzu oder passe die vorhandenen an.
 
-### 3. Website starten
+## Nutzung
 
-1. Stelle sicher, dass dein Webserver auf das Verzeichnis `/wochenplan` verweist. Wenn du `localhost` verwendest, solltest du die Seite unter `http://localhost/wochenplan` aufrufen können.
+- **Essensplan erstellen:** Über die `index.php` kannst du neue Wochenpläne erstellen, anzeigen, bearbeiten und löschen.
+- **Rezepte verwalten:** Auf der Seite `view_recipes.php` kannst du alle vorhandenen Rezepte anzeigen, neue hinzufügen oder bestehende bearbeiten und löschen.
+- **CSS-Stil ändern:** Besuche `change_style.php`, um den Stil der Webseite zu ändern.
 
-2. Du solltest den Wochenplan sehen. Wenn du Rezepte hinzufügen möchtest, erstelle eine entsprechende Logik (siehe `add_recipe.php` und `add_recipe.html`).
+## Rückkehr zum Standardstil
 
-### 4. Styling anpassen
+Falls du zu `style.css` zurückkehren möchtest, kannst du auf der Seite `change_style.php` die Option "Zurücksetzen" wählen.
 
-Im Ordner `/assets` findest du die Datei `style.css`, die das grundlegende Styling der Seite definiert. Passe diese nach deinen Bedürfnissen an.
+## Bekannte Probleme
 
-## Deployment
-
-Wenn du die Anwendung live schalten möchtest, folge diesen Schritten:
-
-1. Lade alle Dateien auf deinen Webserver.
-2. Achte darauf, dass die Datenbank-Informationen in `config/db.php` korrekt sind.
-3. Stelle sicher, dass der Server die PHP-Dateien ausführt und MySQL-Verbindungen erlaubt.
-4. Optional: Richte HTTPS auf deinem Server ein, um die Sicherheit der Datenübertragung zu gewährleisten.
-
-## Mitwirken
-
-Beiträge sind willkommen! Forke das Repository, erstelle einen neuen Branch, führe deine Änderungen durch und erstelle eine Pull-Request.
-
-### Beispiel:
-
-1. Forke das Repository
-2. Erstelle einen Feature-Branch (`git checkout -b feature-neues-feature`)
-3. Committe deine Änderungen (`git commit -am 'Füge ein neues Feature hinzu'`)
-4. Pushe zum Branch (`git push origin feature-neues-feature`)
-5. Erstelle eine Pull-Request
+- **CSS-Anzeigeprobleme:** Falls der Essensplan nicht korrekt angezeigt wird, überprüfe die Einstellungen in `style.css` und stelle sicher, dass keine anderen Stile die Anzeige beeinflussen.
 
 ## Lizenz
 
-Dieses Projekt steht unter der MIT-Lizenz – weitere Informationen findest du in der `LICENSE`-Datei.
+Dieses Projekt ist unter der MIT-Lizenz lizenziert.
