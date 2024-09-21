@@ -1,75 +1,48 @@
 <?php
-require_once '../config/db.php'; // Verbindung zur Datenbank herstellen
-
-$db = new Database();
-$conn = $db->getConnection();
-
-if (!isset($_GET['week_plan_id'])) {
-    echo "Wochenplan-ID nicht angegeben.";
-    exit;
-}
-
-$week_plan_id = $_GET['week_plan_id'];
-
-// Wochenplan abrufen
-$stmt = $conn->prepare("SELECT * FROM week_plan WHERE id = ?");
-$stmt->execute([$week_plan_id]);
-$weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$weekPlan) {
-    echo "Wochenplan nicht gefunden.";
-    exit;
-}
-
-// Alle Rezepte abrufen
-$allRecipes = $conn->query("SELECT * FROM recipes")->fetchAll(PDO::FETCH_ASSOC);
-
-// Mahlzeiten abrufen
-$mealPlan = $conn->prepare("
-    SELECT meal_plan.id, meal_plan.day_of_week, meal_plan.meal_type, recipes.title 
-    FROM meal_plan 
-    INNER JOIN recipes ON meal_plan.recipe_id = recipes.id 
-    WHERE meal_plan.week_plan_id = ?
-    ORDER BY FIELD(meal_plan.day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag')
-");
-$mealPlan->execute([$week_plan_id]);
-$meals = $mealPlan->fetchAll(PDO::FETCH_ASSOC);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Daten aktualisieren
-    foreach ($_POST['meals'] as $meal_id => $new_recipe_id) {
-        $updateStmt = $conn->prepare("UPDATE meal_plan SET recipe_id = ? WHERE id = ?");
-        $updateStmt->execute([$new_recipe_id, $meal_id]);
-    }
-    echo "Wochenplan erfolgreich aktualisiert!";
-    // Optional: Seite neu laden, um die aktualisierten Daten anzuzeigen
-    header("Location: edit_week.php?week_plan_id=" . $week_plan_id);
-    exit;
-}
+$title = "Essensplan bearbeiten"; 
+require '../header.php';  // Inkludiere den Header
 ?>
+<main>
+    <h2><?php echo $title; ?></h2>
+    <?php
+    if (isset($_GET['id'])) {
+        require_once '../config/db.php';
+        $db = new Database();
+        $conn = $db->getConnection();
 
-<h1>Wochenplan bearbeiten - Woche <?php echo $weekPlan['week_number']; ?></h1>
+        $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
+        $stmt->execute([$_GET['id']]);
+        $plan = $stmt->fetch(PDO::FETCH_ASSOC);
 
-<?php if (empty($meals)): ?>
-    <p>Keine Mahlzeiten vorhanden.</p>
-<?php else: ?>
-    <form method="POST">
-        <input type="hidden" name="week_plan_id" value="<?php echo $week_plan_id; ?>">
+        if ($plan) {
+            ?>
+            <form action="edit_week.php?id=<?php echo $plan['id']; ?>" method="post">
+                <label for="week_number">Kalenderwoche:</label>
+                <input type="number" name="week_number" value="<?php echo $plan['week_number']; ?>" required><br>
+                <label for="year">Jahr:</label>
+                <input type="number" name="year" value="<?php echo $plan['year']; ?>" required><br>
+                <label for="week_name">Name des Essensplans:</label>
+                <input type="text" name="week_name" value="<?php echo $plan['week_name']; ?>"><br>
+                <label for="description">Beschreibung:</label>
+                <textarea name="description"><?php echo $plan['description']; ?></textarea><br>
+                <input type="submit" value="Essensplan speichern">
+            </form>
+            <?php
+        } else {
+            echo "<p>Essensplan nicht gefunden.</p>";
+        }
+    }
 
-        <?php foreach ($meals as $meal): ?>
-            <div>
-                <label><?php echo $meal['day_of_week']; ?> - <?php echo $meal['meal_type']; ?>:</label>
-                <select name="meals[<?php echo $meal['id']; ?>]">
-                    <?php foreach ($allRecipes as $recipe): ?>
-                        <option value="<?php echo $recipe['id']; ?>" <?php if ($recipe['title'] == $meal['title']) echo 'selected'; ?>>
-                            <?php echo $recipe['title']; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        <?php endforeach; ?>
-
-        <input type="submit" value="Wochenplan aktualisieren">
-    </form>
-<?php endif; ?>
-<a href="../index.php">Zurück zum Wochenplan</a>
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $stmt = $conn->prepare("UPDATE essensplan SET week_number = ?, year = ?, week_name = ?, description = ? WHERE id = ?");
+        if ($stmt->execute([$_POST['week_number'], $_POST['year'], $_POST['week_name'], $_POST['description'], $_GET['id']])) {
+            echo "<p>Essensplan erfolgreich aktualisiert!</p>";
+        } else {
+            echo "<p>Fehler beim Aktualisieren des Essensplans.</p>";
+        }
+    }
+    ?>
+</main>
+<?php
+include '../footer.php';
+?>
