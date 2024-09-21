@@ -1,33 +1,31 @@
 <?php
-require_once '../config/db.php';
-
-$db = new Database();
-$conn = $db->getConnection();
-
-// Alle Rezepte abrufen
-$stmt = $conn->query("SELECT * FROM recipes ORDER BY title");
-$recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$title = "Rezepte anzeigen"; 
+require '../header.php';  // Inkludiere den Header
 ?>
+<main>
+    <h2><?php echo $title; ?></h2>
+    <p>Hier werden alle vorhandenen Rezepte angezeigt:</p>
+    <ul>
+        <?php
+        require_once '../config/db.php';
+        $db = new Database();
+        $conn = $db->getConnection();
 
-<h1>Rezepte</h1>
+        // Abruf der vorhandenen Rezepte
+        $stmt = $conn->query("SELECT * FROM recipes ORDER BY title");
+        $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-<a href="add_recipe.php">Neues Rezept hinzufügen</a>
-
-<table border="1">
-    <tr>
-        <th>Titel</th>
-        <th>Kategorie</th>
-        <th>Aktionen</th>
-    </tr>
-    <?php foreach ($recipes as $recipe): ?>
-        <tr>
-            <td><?php echo $recipe['title']; ?></td>
-            <td><?php echo $recipe['category']; ?></td>
-            <td>
-                <a href="edit_recipe.php?recipe_id=<?php echo $recipe['id']; ?>">Bearbeiten</a> | 
-                <a href="delete_recipe.php?recipe_id=<?php echo $recipe['id']; ?>" onclick="return confirm('Möchtest du dieses Rezept wirklich löschen?');">Löschen</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
-<a href="../index.php">Zurück zur Hauptseite</a>
+        if (!empty($recipes)) {
+            foreach ($recipes as $recipe) {
+                echo "<li>" . $recipe['title'] . " - <a href='edit_recipe.php?id=" . $recipe['id'] . "'>Bearbeiten</a> | <a href='delete_recipe.php?id=" . $recipe['id'] . "' onclick=\"return confirm('Möchtest du dieses Rezept wirklich löschen?');\">Löschen</a></li>";
+            }
+        } else {
+            echo "<li>Keine Rezepte vorhanden.</li>";
+        }
+        ?>
+    </ul>
+    <a href="add_recipe.php">Neues Rezept hinzufügen</a>
+</main>
+<?php
+include '../footer.php';
+?>
