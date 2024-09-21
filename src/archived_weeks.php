@@ -1,28 +1,30 @@
 <?php
-require_once '../config/db.php';  // Verbindung zur Datenbank herstellen
-
-$db = new Database();
-$conn = $db->getConnection();
-
-// Archivierte Wochenpläne abrufen
-$query = "SELECT * FROM week_plan WHERE archived = 1 ORDER BY year, week_number";
-$stmt = $conn->query($query);
-$archivedWeeks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$title = "Archivierte Essenspläne"; 
+require '../header.php';  // Inkludiere den Header
 ?>
+<main>
+    <h2><?php echo $title; ?></h2>
+    <p>Hier werden alle archivierten Essenspläne angezeigt:</p>
+    <ul>
+        <?php
+        require_once '../config/db.php';
+        $db = new Database();
+        $conn = $db->getConnection();
 
-<h1>Archivierte Wochenpläne</h1>
+        // Abruf der archivierten Essenspläne
+        $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'archiviert' ORDER BY year, week_number");
+        $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-<ul>
-    <?php if (empty($archivedWeeks)): ?>
-        <li>Keine archivierten Wochenpläne gefunden.</li>
-    <?php else: ?>
-        <?php foreach ($archivedWeeks as $week): ?>
-            <li>
-                Woche <?php echo $week['week_number']; ?> (Jahr <?php echo $week['year']; ?>) - 
-                <a href="view_week.php?week_plan_id=<?php echo $week['id']; ?>">Ansehen</a>
-            </li>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</ul>
-
-<a href="../index.php">Zurück zum Wochenplan</a>
+        if (!empty($plans)) {
+            foreach ($plans as $plan) {
+                echo "<li>Woche " . $plan['week_number'] . " im Jahr " . $plan['year'] . " - <a href='view_week.php?id=" . $plan['id'] . "'>Ansehen</a> | <a href='edit_week.php?id=" . $plan['id'] . "'>Bearbeiten</a> | <a href='delete_week.php?id=" . $plan['id'] . "' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\">Löschen</a></li>";
+            }
+        } else {
+            echo "<li>Keine archivierten Essenspläne vorhanden.</li>";
+        }
+        ?>
+    </ul>
+</main>
+<?php
+include '../footer.php';
+?>
