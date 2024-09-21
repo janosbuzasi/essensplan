@@ -12,7 +12,7 @@
     </title>
     <!-- Dynamisch das Standard-Stylesheet einbinden -->
     <?php
-    echo '<link rel="stylesheet" href="styles/style.css">';
+    echo '<link rel="stylesheet" href="/essensplan/styles/style.css">'; // Korrigierter Pfad
     ?>
 </head>
 <body>
@@ -28,26 +28,26 @@
     <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div> <!-- Burger-Icon -->
     <nav id="menu"> <!-- ID sollte "menu" sein, damit JavaScript es steuert -->
         <ul>
-            <li><a href="index.php">Home</a></li>
+            <li><a href="/essensplan/index.php">Home</a></li> <!-- Angepasster Pfad -->
             <li>
                 <a href="#">Rezepte</a>
                 <ul>
-                    <li><a href="src/view_recipes.php">Alle Rezepte anzeigen</a></li>
-                    <li><a href="src/add_recipe.php">Neues Rezept hinzufügen</a></li>
+                    <li><a href="/essensplan/src/view_recipes.php">Alle Rezepte anzeigen</a></li> <!-- Angepasster Pfad -->
+                    <li><a href="/essensplan/src/add_recipe.php">Neues Rezept hinzufügen</a></li> <!-- Angepasster Pfad -->
                 </ul>
             </li>
             <li>
                 <a href="#">Kategorien</a>
                 <ul>
-                    <li><a href="src/view_categories.php">Alle Kategorien anzeigen</a></li>
-                    <li><a href="src/add_category.php">Neue Kategorie hinzufügen</a></li>
+                    <li><a href="/essensplan/src/view_categories.php">Alle Kategorien anzeigen</a></li> <!-- Angepasster Pfad -->
+                    <li><a href="/essensplan/src/add_category.php">Neue Kategorie hinzufügen</a></li> <!-- Angepasster Pfad -->
                 </ul>
             </li>
             <li>
                 <a href="#">Wochenpläne</a>
                 <ul>
-                    <li><a href="src/index.php">Alle Wochenpläne anzeigen</a></li>
-                    <li><a href="src/add_week.php">Neuen Wochenplan hinzufügen</a></li>
+                    <li><a href="/essensplan/src/index.php">Alle Wochenpläne anzeigen</a></li> <!-- Angepasster Pfad -->
+                    <li><a href="/essensplan/src/add_week.php">Neuen Wochenplan hinzufügen</a></li> <!-- Angepasster Pfad -->
                 </ul>
             </li>
         </ul>
