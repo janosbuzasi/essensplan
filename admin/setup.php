@@ -21,7 +21,7 @@ if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
 
 // Datenbankkonfiguration
 $host = 'localhost';
-$dbname = 'wochenplan';
+$dbname = 'essensplan';  // Neuer Name der Datenbank
 $username = 'root';  // Ersetze mit deinem DB-Benutzernamen
 $password = '';      // Ersetze mit deinem DB-Passwort
 
@@ -37,64 +37,90 @@ try {
     // Verbindung zur neu erstellten Datenbank herstellen
     $conn->exec("USE $dbname");
 
+    // Tabelle für Essenspläne erstellen oder ändern, falls sie nicht existiert
+    $sqlEssensplan = "
+        CREATE TABLE IF NOT EXISTS essensplan (
+            id INT(11) AUTO_INCREMENT PRIMARY KEY,
+            week_number INT(2) NOT NULL,
+            year INT(4) NOT NULL,
+            week_name VARCHAR(50),
+            description TEXT,
+            status VARCHAR(20) DEFAULT 'aktiv',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+    ";
+    $conn->exec($sqlEssensplan);
+    echo "Tabelle 'essensplan' wurde erfolgreich erstellt oder aktualisiert.<br>";
+
     // Tabelle für Rezepte erstellen oder ändern, falls sie nicht existiert
     $sqlRecipes = "
         CREATE TABLE IF NOT EXISTS recipes (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
-            category VARCHAR(100),  /* Kategorie-Feld hinzugefügt */
-            description TEXT,
-            ingredients TEXT,
-            instructions TEXT,
+            ingredients TEXT NOT NULL,
+            instructions TEXT NOT NULL,
+            category VARCHAR(50) NOT NULL,
+            prep_time INT(4),
+            cook_time INT(4),
+            difficulty VARCHAR(20),
+            servings INT(4),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB;
     ";
     $conn->exec($sqlRecipes);
     echo "Tabelle 'recipes' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Rezeptkategorien hinzufügen
-    $conn->exec("ALTER TABLE recipes ADD COLUMN IF NOT EXISTS category VARCHAR(100);");
-    echo "Rezeptkategorie wurde zur Tabelle 'recipes' hinzugefügt.<br>";
-
-    // Tabelle für Wochenpläne erstellen, falls sie nicht existiert
-    $sqlWeekPlan = "
-        CREATE TABLE IF NOT EXISTS week_plan (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            week_number INT NOT NULL,
-            year INT NOT NULL,
-            archived TINYINT(1) DEFAULT 0, /* Archivierungs-Feld hinzugefügt */
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    // Tabelle für Kategorien erstellen
+    $sqlCategories = "
+        CREATE TABLE IF NOT EXISTS categories (
+            id INT(11) AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            description TEXT
         ) ENGINE=InnoDB;
     ";
-    $conn->exec($sqlWeekPlan);
-    echo "Tabelle 'week_plan' wurde erfolgreich erstellt oder aktualisiert.<br>";
+    $conn->exec($sqlCategories);
+    echo "Tabelle 'categories' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Standardrezepte einfügen
-    $conn->exec("
-        INSERT INTO recipes (title, category, description, ingredients, instructions) VALUES
-        ('Frühstück', 'Vegetarisch', 'Ein leckeres Frühstück.', 'Brot, Butter, Marmelade', 'Serviere das Frühstück.'),
-        ('Mittagessen', 'Fleischgericht', 'Ein köstliches Mittagessen.', 'Reis, Hähnchen, Gemüse', 'Bereite das Mittagessen zu.'),
-        ('Abendessen', 'Vegetarisch', 'Ein schmackhaftes Abendessen.', 'Kartoffeln, Fisch, Salat', 'Bereite das Abendessen vor.')
-    ");
-    echo "Standardrezepte wurden mit Kategorien hinzugefügt.<br>";
+    // Tabelle für Zuordnung Essensplan zu Rezepten
+    $sqlEssensplanRecipes = "
+        CREATE TABLE IF NOT EXISTS essensplan_recipes (
+            id INT(11) AUTO_INCREMENT PRIMARY KEY,
+            essensplan_id INT(11) NOT NULL,
+            recipe_id INT(11) NOT NULL,
+            day_of_week ENUM('Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
+            meal_type ENUM('Frühstück', 'Mittagessen', 'Abendessen'),
+            FOREIGN KEY (essensplan_id) REFERENCES essensplan(id),
+            FOREIGN KEY (recipe_id) REFERENCES recipes(id)
+        ) ENGINE=InnoDB;
+    ";
+    $conn->exec($sqlEssensplanRecipes);
+    echo "Tabelle 'essensplan_recipes' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Standard-Wochenplan erstellen (z.B. Woche 1 im aktuellen Jahr)
-    $currentYear = date('Y');
-    $conn->exec("INSERT INTO week_plan (week_number, year) VALUES (1, $currentYear)");
-    $weekPlanId = $conn->lastInsertId();
-    echo "Standard-Wochenplan (Woche 1) wurde erstellt.<br>";
+    // Standardwerte für Essenspläne hinzufügen
+    $conn->exec("INSERT INTO essensplan (week_number, year, week_name, description, status) VALUES
+        (1, 2024, 'Woche 1', 'Plan für die erste Woche des Jahres', 'aktiv'),
+        (2, 2024, 'Woche 2', 'Plan für die zweite Woche des Jahres', 'aktiv')");
+    echo "Standardwerte für 'essensplan' wurden hinzugefügt.<br>";
 
-    // Mahlzeiten für Montag bis Sonntag hinzufügen
-    $daysOfWeek = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-    $mealTypes = ['Frühstück', 'Mittagessen', 'Abendessen'];
+    // Standardwerte für Kategorien hinzufügen
+    $conn->exec("INSERT INTO categories (name, description) VALUES
+        ('Hauptgericht', 'Herzhafte Gerichte als Hauptmahlzeit'),
+        ('Dessert', 'Süße Nachspeisen'),
+        ('Vorspeise', 'Kleine Gerichte vor der Hauptspeise'),
+        ('Getränke', 'Erfrischungen und Getränke')");
+    echo "Standardwerte für 'categories' wurden hinzugefügt.<br>";
 
-    foreach ($daysOfWeek as $day) {
-        foreach ($mealTypes as $index => $mealType) {
-            $recipeId = $index + 1;  // Frühstück -> Rezept 1, Mittagessen -> Rezept 2, Abendessen -> Rezept 3
-            $conn->exec("INSERT INTO meal_plan (week_plan_id, recipe_id, day_of_week, meal_type) VALUES ($weekPlanId, $recipeId, '$day', '$mealType')");
-        }
-    }
-    echo "Mahlzeiten für Woche 1 wurden hinzugefügt.<br>";
+    // Standardwerte für Rezepte hinzufügen
+    $conn->exec("INSERT INTO recipes (title, ingredients, instructions, category, prep_time, cook_time, difficulty, servings) VALUES
+        ('Spaghetti Bolognese', 'Spaghetti, Tomaten, Hackfleisch, Zwiebeln, Knoblauch', '1. Hackfleisch anbraten. 2. Tomaten hinzufügen. 3. Spaghetti kochen. 4. Zusammen servieren.', 'Hauptgericht', 15, 30, 'mittel', 4),
+        ('Panna Cotta', 'Sahne, Zucker, Gelatine, Vanille', '1. Sahne erhitzen. 2. Gelatine einrühren. 3. In Formen gießen und kühlen.', 'Dessert', 10, 120, 'leicht', 6)");
+    echo "Standardwerte für 'recipes' wurden hinzugefügt.<br>";
+
+    // Zuordnung von Rezepten zu Essensplänen hinzufügen
+    $conn->exec("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_type) VALUES
+        (1, 1, 'Montag', 'Mittagessen'),
+        (1, 2, 'Dienstag', 'Dessert')");
+    echo "Zuordnung von Rezepten zu Essensplänen wurde hinzugefügt.<br>";
 
     echo "<br>Setup erfolgreich abgeschlossen!<br>";
 
