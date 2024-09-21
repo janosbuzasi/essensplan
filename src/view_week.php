@@ -1,70 +1,48 @@
 <?php
-require_once '../config/db.php';  // Pfad zur Datenbankverbindung
-
-$db = new Database();
-$conn = $db->getConnection();
-
-if (!isset($_GET['week_plan_id'])) {
-    echo "Wochenplan-ID nicht angegeben.";
-    exit;
-}
-
-$week_plan_id = $_GET['week_plan_id'];
-
-// Wochenplan abrufen
-$stmt = $conn->prepare("SELECT * FROM week_plan WHERE id = ?");
-$stmt->execute([$week_plan_id]);
-$weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$weekPlan) {
-    echo "Wochenplan nicht gefunden.";
-    exit;
-}
-
-// Mahlzeiten für diese Woche abrufen
-$query = "
-    SELECT meal_plan.day_of_week, meal_plan.meal_type, recipes.title 
-    FROM meal_plan 
-    INNER JOIN recipes ON meal_plan.recipe_id = recipes.id 
-    WHERE meal_plan.week_plan_id = ?
-    ORDER BY FIELD(day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag');
-";
-$stmt = $conn->prepare($query);
-$stmt->execute([$week_plan_id]);
-$meal_plan = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+$title = "Essensplan Details"; 
+require '../header.php';  // Inkludiere den Header
 ?>
+<main>
+    <h2><?php echo $title; ?></h2>
+    <?php
+    if (isset($_GET['id'])) {
+        require_once '../config/db.php';
+        $db = new Database();
+        $conn = $db->getConnection();
 
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wochenplan - Woche <?php echo $weekPlan['week_number']; ?> im Jahr <?php echo $weekPlan['year']; ?></title>
-    <link rel="stylesheet" href="../assets/style.css"> <!-- Optionales CSS -->
-</head>
-<body>
-    <h1>Wochenplan für Woche <?php echo $weekPlan['week_number']; ?> (Jahr <?php echo $weekPlan['year']; ?>)</h1>
+        // Abruf des spezifischen Essensplans
+        $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
+        $stmt->execute([$_GET['id']]);
+        $plan = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    <?php if (empty($meal_plan)): ?>
-        <p>Keine Mahlzeiten für diese Woche gefunden.</p>
-    <?php else: ?>
-        <table border="1">
-            <tr>
-                <th>Tag</th>
-                <th>Mahlzeit</th>
-                <th>Rezept</th>
-            </tr>
-            <?php foreach ($meal_plan as $meal): ?>
-                <tr>
-                    <td><?php echo $meal['day_of_week']; ?></td>
-                    <td><?php echo $meal['meal_type']; ?></td>
-                    <td><?php echo $meal['title']; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
+        if ($plan) {
+            echo "<h3>Essensplan: Woche " . $plan['week_number'] . " im Jahr " . $plan['year'] . "</h3>";
+            echo "<p>Beschreibung: " . $plan['description'] . "</p>";
 
-    <a href="../index.php">Zurück zum Wochenplan</a>
-</body>
-</html>
+            // Rezepte anzeigen, die diesem Essensplan zugeordnet sind
+            echo "<h4>Zugeordnete Rezepte:</h4>";
+            $stmt = $conn->prepare("SELECT er.*, r.title FROM essensplan_recipes er JOIN recipes r ON er.recipe_id = r.id WHERE er.essensplan_id = ?");
+            $stmt->execute([$_GET['id']]);
+            $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($recipes)) {
+                echo "<ul>";
+                foreach ($recipes as $recipe) {
+                    echo "<li>" . $recipe['day_of_week'] . " - " . $recipe['meal_type'] . ": " . $recipe['title'] . "</li>";
+                }
+                echo "</ul>";
+            } else {
+                echo "<p>Keine Rezepte zugeordnet.</p>";
+            }
+            echo "<a href='assign_recipe_to_week.php?id=" . $plan['id'] . "'>Rezept zuordnen</a>";
+        } else {
+            echo "<p>Essensplan nicht gefunden.</p>";
+        }
+    } else {
+        echo "<p>Kein Essensplan ausgewählt.</p>";
+    }
+    ?>
+</main>
+<?php
+include '../footer.php';
+?>
