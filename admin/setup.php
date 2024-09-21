@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Passwortschutz
-$valid_password = "deinSicheresPasswort";  // Setze hier dein gewünschtes Passwort
+$valid_password = "Passwort";  // Setze hier dein gewünschtes Passwort
 
 // Wenn kein Passwort eingegeben wurde oder das falsche Passwort übermittelt wurde
 if (!isset($_POST['password']) || $_POST['password'] !== $valid_password) {
