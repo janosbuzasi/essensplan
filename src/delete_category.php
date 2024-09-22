@@ -1,6 +1,6 @@
 <?php
-$title = "Kategorie löschen"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Mahlzeitenkategorie löschen";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -10,27 +10,37 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
-        $stmt = $conn->prepare("SELECT * FROM categories WHERE id = ?");
+        // Überprüfung, ob die Kategorie existiert
+        $stmt = $conn->prepare("SELECT * FROM meal_categories WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($category) {
-            if (isset($_POST['confirm_delete'])) {
-                $stmt = $conn->prepare("DELETE FROM categories WHERE id = ?");
-                $stmt->execute([$_GET['id']]);
-                echo "<p>Kategorie wurde gelöscht.</p>";
-            } else {
-                ?>
-                <form action="delete_category.php?id=<?php echo $category['id']; ?>" method="post">
-                    <p>Bist du sicher, dass du die Kategorie '<?php echo $category['name']; ?>' löschen möchtest?</p>
-                    <input type="submit" name="confirm_delete" value="Ja, löschen">
-                    <a href="view_categories.php">Abbrechen</a>
-                </form>
-                <?php
+            // Bestätigungsabfrage anzeigen
+            echo "<p>Möchtest du die Mahlzeitenkategorie <strong>" . $category['name'] . "</strong> wirklich löschen?</p>";
+            echo '<form action="delete_category.php?id=' . $category['id'] . '" method="post">
+                    <button type="submit" name="confirm_delete" value="yes">Ja, löschen</button>
+                    <button type="submit" name="confirm_delete" value="no">Nein, abbrechen</button>
+                  </form>';
+
+            // Verarbeitung der Benutzerentscheidung
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if ($_POST['confirm_delete'] === 'yes') {
+                    $stmt = $conn->prepare("DELETE FROM meal_categories WHERE id = ?");
+                    if ($stmt->execute([$_GET['id']])) {
+                        echo "<p>Kategorie erfolgreich gelöscht!</p>";
+                    } else {
+                        echo "<p>Fehler beim Löschen der Kategorie.</p>";
+                    }
+                } else {
+                    echo "<p>Löschvorgang abgebrochen.</p>";
+                }
             }
         } else {
             echo "<p>Kategorie nicht gefunden.</p>";
         }
+    } else {
+        echo "<p>Keine Kategorie ausgewählt.</p>";
     }
     ?>
 </main>
