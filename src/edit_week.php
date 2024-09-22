@@ -1,6 +1,6 @@
 <?php
-$title = "Essensplan bearbeiten"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Wochenplan bearbeiten";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -12,33 +12,33 @@ require '../header.php';  // Inkludiere den Header
 
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
         $stmt->execute([$_GET['id']]);
-        $plan = $stmt->fetch(PDO::FETCH_ASSOC);
+        $weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($plan) {
+        if ($weekPlan) {
             ?>
-            <form action="edit_week.php?id=<?php echo $plan['id']; ?>" method="post">
+            <form action="edit_week.php?id=<?php echo $weekPlan['id']; ?>" method="post">
                 <label for="week_number">Kalenderwoche:</label>
-                <input type="number" name="week_number" value="<?php echo $plan['week_number']; ?>" required><br>
+                <input type="number" name="week_number" min="1" max="52" value="<?php echo $weekPlan['week_number']; ?>" required><br>
                 <label for="year">Jahr:</label>
-                <input type="number" name="year" value="<?php echo $plan['year']; ?>" required><br>
-                <label for="week_name">Name des Essensplans:</label>
-                <input type="text" name="week_name" value="<?php echo $plan['week_name']; ?>"><br>
+                <input type="number" name="year" value="<?php echo $weekPlan['year']; ?>" required><br>
+                <label for="week_name">Name der Woche:</label>
+                <input type="text" name="week_name" value="<?php echo $weekPlan['week_name']; ?>" required><br>
                 <label for="description">Beschreibung:</label>
-                <textarea name="description"><?php echo $plan['description']; ?></textarea><br>
-                <input type="submit" value="Essensplan speichern">
+                <textarea name="description"><?php echo $weekPlan['description']; ?></textarea><br>
+                <input type="submit" value="Wochenplan speichern">
             </form>
             <?php
         } else {
-            echo "<p>Essensplan nicht gefunden.</p>";
+            echo "<p>Wochenplan nicht gefunden.</p>";
         }
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("UPDATE essensplan SET week_number = ?, year = ?, week_name = ?, description = ? WHERE id = ?");
         if ($stmt->execute([$_POST['week_number'], $_POST['year'], $_POST['week_name'], $_POST['description'], $_GET['id']])) {
-            echo "<p>Essensplan erfolgreich aktualisiert!</p>";
+            echo "<p>Wochenplan erfolgreich aktualisiert!</p>";
         } else {
-            echo "<p>Fehler beim Aktualisieren des Essensplans.</p>";
+            echo "<p>Fehler beim Aktualisieren des Wochenplans.</p>";
         }
     }
     ?>
