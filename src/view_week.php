@@ -26,7 +26,8 @@ require '../header.php';
                 JOIN recipes r ON er.recipe_id = r.id
                 JOIN meal_categories mc ON er.meal_category_id = mc.id
                 WHERE er.essensplan_id = ?
-                ORDER BY er.day_of_week, mc.name
+                ORDER BY er.day_of_week, 
+                         FIELD(mc.name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')
             ");
             $stmt->execute([$weekPlan['id']]);
             $meals = $stmt->fetchAll(PDO::FETCH_ASSOC);
