@@ -17,7 +17,6 @@ require '../header.php';
 
         if ($weekPlan) {
             echo "<h3>Wochenplan: Woche " . $weekPlan['week_number'] . " im Jahr " . $weekPlan['year'] . "</h3>";
-            echo "<p><strong>Name:</strong> " . $weekPlan['week_name'] . "</p>";
             echo "<p><strong>Beschreibung:</strong> " . $weekPlan['description'] . "</p>";
 
             // Mahlzeiten für den Wochenplan abrufen
@@ -61,7 +60,9 @@ require '../header.php';
         if ($weekPlans) {
             echo "<ul>";
             foreach ($weekPlans as $plan) {
-                echo "<li><a href='view_week.php?id=" . $plan['id'] . "'>Woche " . $plan['week_number'] . " im Jahr " . $plan['year'] . " - " . $plan['week_name'] . "</a></li>";
+                // Einheitliches Format für die Anzeige ohne week_name
+                $weekDisplayName = "Woche " . $plan['week_number'] . " im Jahr " . $plan['year'];
+                echo "<li><a href='view_week.php?id=" . $plan['id'] . "'>" . $weekDisplayName . "</a></li>";
             }
             echo "</ul>";
         } else {
