@@ -10,22 +10,31 @@ require '../header.php';
     $conn = $db->getConnection();
 
     // Vorhandene Wochenpläne abrufen
-    $weekPlans = $conn->query("SELECT * FROM essensplan ORDER BY year, week_number")->fetchAll(PDO::FETCH_ASSOC);
+    $weekPlans = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC")->fetchAll(PDO::FETCH_ASSOC);
     $recipes = $conn->query("SELECT * FROM recipes ORDER BY title")->fetchAll(PDO::FETCH_ASSOC);
     $mealCategories = $conn->query("SELECT * FROM meal_categories ORDER BY FIELD(name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Formular zur Zuordnung eines Rezepts anzeigen
+    // Bestimme die standardmäßig ausgewählte Woche (die neueste)
+    $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
+
     if ($weekPlans && $recipes && $mealCategories) {
         ?>
-        <form action="assign_recipe_to_week.php" method="post">
+        <!-- Dropdown-Menü zur Auswahl der Woche -->
+        <form method="get" action="assign_recipe_to_week.php">
             <label for="week_plan_id">Woche:</label>
-            <select name="week_plan_id" required>
+            <select name="week_plan_id" onchange="this.form.submit()" required>
                 <?php foreach ($weekPlans as $plan): ?>
-                    <option value="<?php echo $plan['id']; ?>">
+                    <option value="<?php echo $plan['id']; ?>" <?php echo ($plan['id'] == $selectedWeekPlanId) ? 'selected' : ''; ?>>
                         Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
                     </option>
                 <?php endforeach; ?>
-            </select><br>
+            </select>
+        </form>
+        <br>
+
+        <!-- Formular zur Zuordnung eines Rezepts -->
+        <form action="assign_recipe_to_week.php" method="post">
+            <input type="hidden" name="week_plan_id" value="<?php echo $selectedWeekPlanId; ?>">
             
             <label for="day_of_week">Tag:</label>
             <select name="day_of_week" required>
@@ -90,32 +99,37 @@ require '../header.php';
 
     // Bestehende Zuordnungen anzeigen
     echo "<h3>Bestehende Zuordnungen</h3>";
-    $stmt = $conn->query("
-        SELECT er.id, wp.week_number, wp.year, er.day_of_week, mc.name AS meal_category, r.title AS recipe_title
-        FROM essensplan_recipes er
-        JOIN essensplan wp ON er.essensplan_id = wp.id
-        JOIN recipes r ON er.recipe_id = r.id
-        JOIN meal_categories mc ON er.meal_category_id = mc.id
-        ORDER BY wp.year, wp.week_number, FIELD(er.day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
-                 FIELD(mc.name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')
-    ");
-    $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($selectedWeekPlanId) {
+        $stmt = $conn->prepare("
+            SELECT er.id, wp.week_number, wp.year, er.day_of_week, mc.name AS meal_category, r.title AS recipe_title
+            FROM essensplan_recipes er
+            JOIN essensplan wp ON er.essensplan_id = wp.id
+            JOIN recipes r ON er.recipe_id = r.id
+            JOIN meal_categories mc ON er.meal_category_id = mc.id
+            WHERE er.essensplan_id = ?
+            ORDER BY FIELD(er.day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
+                     FIELD(mc.name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')
+        ");
+        $stmt->execute([$selectedWeekPlanId]);
+        $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($assignments) {
-        echo "<table border='1'>";
-        echo "<tr><th>Woche</th><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr>";
-        foreach ($assignments as $assignment) {
-            echo "<tr>
-                    <td>Woche " . $assignment['week_number'] . " im Jahr " . $assignment['year'] . "</td>
-                    <td>" . $assignment['day_of_week'] . "</td>
-                    <td>" . $assignment['meal_category'] . "</td>
-                    <td>" . $assignment['recipe_title'] . "</td>
-                    <td><a href='edit_assignment.php?id=" . $assignment['id'] . "'>Bearbeiten</a></td>
-                  </tr>";
+        if ($assignments) {
+            echo "<table border='1'>";
+            echo "<tr><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr>";
+            foreach ($assignments as $assignment) {
+                echo "<tr>
+                        <td>" . $assignment['day_of_week'] . "</td>
+                        <td>" . $assignment['meal_category'] . "</td>
+                        <td>" . $assignment['recipe_title'] . "</td>
+                        <td><a href='edit_assignment.php?id=" . $assignment['id'] . "'>Bearbeiten</a></td>
+                      </tr>";
+            }
+            echo "</table>";
+        } else {
+            echo "<p>Keine Zuordnungen für diese Woche gefunden.</p>";
         }
-        echo "</table>";
     } else {
-        echo "<p>Keine Zuordnungen gefunden.</p>";
+        echo "<p>Keine Woche ausgewählt.</p>";
     }
     ?>
 </main>
