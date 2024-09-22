@@ -5,11 +5,11 @@ require '../header.php';
 <main>
     <h2><?php echo $title; ?></h2>
     <?php
-    if (isset($_GET['id'])) {
-        require_once '../config/db.php';
-        $db = new Database();
-        $conn = $db->getConnection();
+    require_once '../config/db.php';
+    $db = new Database();
+    $conn = $db->getConnection();
 
+    if (isset($_GET['id'])) {
         // Wochenplan abrufen
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
         $stmt->execute([$_GET['id']]);
@@ -52,6 +52,21 @@ require '../header.php';
         }
     } else {
         echo "<p>Kein Wochenplan ausgewählt.</p>";
+
+        // Liste aller Wochenpläne anzeigen
+        echo "<h3>Verfügbare Wochenpläne</h3>";
+        $stmt = $conn->query("SELECT * FROM essensplan ORDER BY year, week_number");
+        $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($weekPlans) {
+            echo "<ul>";
+            foreach ($weekPlans as $plan) {
+                echo "<li><a href='view_week.php?id=" . $plan['id'] . "'>Woche " . $plan['week_number'] . " im Jahr " . $plan['year'] . " - " . $plan['week_name'] . "</a></li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<p>Keine Wochenpläne verfügbar.</p>";
+        }
     }
     ?>
 </main>
