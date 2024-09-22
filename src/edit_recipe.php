@@ -1,6 +1,6 @@
 <?php
-$title = "Rezept bearbeiten"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Rezept bearbeiten";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -17,35 +17,26 @@ require '../header.php';  // Inkludiere den Header
         if ($recipe) {
             ?>
             <form action="edit_recipe.php?id=<?php echo $recipe['id']; ?>" method="post">
-                <label for="title">Titel:</label>
+                <label for="title">Titel des Rezepts:</label>
                 <input type="text" name="title" value="<?php echo $recipe['title']; ?>" required><br>
                 <label for="ingredients">Zutaten:</label>
                 <textarea name="ingredients" required><?php echo $recipe['ingredients']; ?></textarea><br>
-                <label for="instructions">Anleitung:</label>
+                <label for="instructions">Zubereitung:</label>
                 <textarea name="instructions" required><?php echo $recipe['instructions']; ?></textarea><br>
                 <label for="category">Kategorie:</label>
-                <select name="category">
-                    <?php
-                    $stmt = $conn->query("SELECT * FROM categories ORDER BY name");
-                    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($categories as $category) {
-                        $selected = ($recipe['category'] == $category['name']) ? 'selected' : '';
-                        echo "<option value='" . $category['name'] . "' $selected>" . $category['name'] . "</option>";
-                    }
-                    ?>
-                </select><br>
-                <label for="prep_time">Zubereitungszeit (Minuten):</label>
-                <input type="number" name="prep_time" value="<?php echo $recipe['prep_time']; ?>"><br>
+                <input type="text" name="category" value="<?php echo $recipe['category']; ?>" required><br>
+                <label for="prep_time">Vorbereitungszeit (Minuten):</label>
+                <input type="number" name="prep_time" value="<?php echo $recipe['prep_time']; ?>" required><br>
                 <label for="cook_time">Kochzeit (Minuten):</label>
-                <input type="number" name="cook_time" value="<?php echo $recipe['cook_time']; ?>"><br>
+                <input type="number" name="cook_time" value="<?php echo $recipe['cook_time']; ?>" required><br>
                 <label for="difficulty">Schwierigkeitsgrad:</label>
                 <select name="difficulty">
-                    <option value="leicht" <?php echo ($recipe['difficulty'] == 'leicht') ? 'selected' : ''; ?>>Leicht</option>
-                    <option value="mittel" <?php echo ($recipe['difficulty'] == 'mittel') ? 'selected' : ''; ?>>Mittel</option>
-                    <option value="schwer" <?php echo ($recipe['difficulty'] == 'schwer') ? 'selected' : ''; ?>>Schwer</option>
+                    <option value="leicht" <?php echo $recipe['difficulty'] === 'leicht' ? 'selected' : ''; ?>>Leicht</option>
+                    <option value="mittel" <?php echo $recipe['difficulty'] === 'mittel' ? 'selected' : ''; ?>>Mittel</option>
+                    <option value="schwer" <?php echo $recipe['difficulty'] === 'schwer' ? 'selected' : ''; ?>>Schwer</option>
                 </select><br>
                 <label for="servings">Portionen:</label>
-                <input type="number" name="servings" value="<?php echo $recipe['servings']; ?>"><br>
+                <input type="number" name="servings" value="<?php echo $recipe['servings']; ?>" required><br>
                 <input type="submit" value="Rezept speichern">
             </form>
             <?php
