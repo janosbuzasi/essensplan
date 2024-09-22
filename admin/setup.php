@@ -4,9 +4,71 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Datenbankverbindung herstellen
-require_once '../config/db.php';
+require_once '../config/db.php'; // Korrigierter Pfad zur Datenbankkonfiguration
 $db = new Database();
 $conn = $db->getConnection();
+
+// Überprüfen, ob die Datenbank und Tabellen bereits existieren
+$databaseExists = false;
+try {
+    $result = $conn->query("SHOW TABLES LIKE 'essensplan'");
+    if ($result->rowCount() > 0) {
+        $databaseExists = true;
+    }
+} catch (PDOException $e) {
+    echo "Fehler beim Überprüfen der Datenbank: " . $e->getMessage();
+    exit;
+}
+
+// Wenn die Datenbank existiert, nach Bestätigung fragen
+if ($databaseExists) {
+    echo '<h2>Datenbank "essensplan" existiert bereits!</h2>';
+    echo '<p>Möchtest du alle bestehenden Tabellen löschen und das Setup neu starten?</p>';
+    echo '<form method="POST">
+            <input type="hidden" name="confirm_reset" value="yes">
+            <button type="submit">Ja, alle Tabellen löschen und neu erstellen</button>
+          </form>';
+    echo '<form method="POST">
+            <input type="hidden" name="confirm_reset" value="no">
+            <button type="submit">Nein, Setup abbrechen</button>
+          </form>';
+
+    // Verarbeitung der Benutzerentscheidung
+    if (isset($_POST['confirm_reset'])) {
+        if ($_POST['confirm_reset'] === 'no') {
+            echo 'Setup wurde abgebrochen.';
+            exit;
+        } elseif ($_POST['confirm_reset'] === 'yes') {
+            // Passwortabfrage
+            if (!isset($_POST['password'])) {
+                echo '<form method="POST">
+                        <input type="hidden" name="confirm_reset" value="yes">
+                        <label>Bitte Passwort eingeben:</label>
+                        <input type="password" name="password">
+                        <button type="submit">Bestätigen</button>
+                      </form>';
+                exit; // Abbruch bis Passwort eingegeben wird
+            }
+
+            // Überprüfen, ob das richtige Passwort eingegeben wurde
+            if ($_POST['password'] !== 'essensplan') {
+                echo 'Falsches Passwort. Setup wurde abgebrochen.';
+                exit;
+            }
+
+            try {
+                // Löschen der bestehenden Tabellen
+                $conn->exec("DROP TABLE IF EXISTS essensplan_recipes, recipes, meal_categories, essensplan");
+                echo "Alle bestehenden Tabellen wurden gelöscht.<br>";
+            } catch (PDOException $e) {
+                echo "Fehler beim Löschen der Tabellen: " . $e->getMessage();
+                exit;
+            }
+        }
+    } else {
+        exit; // Abbruch, wenn keine Auswahl getroffen wurde
+    }
+}
 
 try {
     // Tabelle für Essenspläne erstellen oder ändern, falls sie nicht existiert
