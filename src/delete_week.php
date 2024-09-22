@@ -1,6 +1,6 @@
 <?php
-$title = "Essensplan löschen"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Wochenplan löschen";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -10,27 +10,37 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
+        // Überprüfung, ob der Wochenplan existiert
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
         $stmt->execute([$_GET['id']]);
-        $plan = $stmt->fetch(PDO::FETCH_ASSOC);
+        $weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($plan) {
-            if (isset($_POST['confirm_delete'])) {
-                $stmt = $conn->prepare("DELETE FROM essensplan WHERE id = ?");
-                $stmt->execute([$_GET['id']]);
-                echo "<p>Essensplan wurde gelöscht.</p>";
-            } else {
-                ?>
-                <form action="delete_week.php?id=<?php echo $plan['id']; ?>" method="post">
-                    <p>Bist du sicher, dass du den Essensplan 'Woche <?php echo $plan['week_number']; ?> im Jahr <?php echo $plan['year']; ?>' löschen möchtest?</p>
-                    <input type="submit" name="confirm_delete" value="Ja, löschen">
-                    <a href="index.php">Abbrechen</a>
-                </form>
-                <?php
+        if ($weekPlan) {
+            // Bestätigungsabfrage anzeigen
+            echo "<p>Möchtest du den Wochenplan <strong>Woche " . $weekPlan['week_number'] . " im Jahr " . $weekPlan['year'] . "</strong> wirklich löschen?</p>";
+            echo '<form action="delete_week.php?id=' . $weekPlan['id'] . '" method="post">
+                    <button type="submit" name="confirm_delete" value="yes">Ja, löschen</button>
+                    <button type="submit" name="confirm_delete" value="no">Nein, abbrechen</button>
+                  </form>';
+
+            // Verarbeitung der Benutzerentscheidung
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if ($_POST['confirm_delete'] === 'yes') {
+                    $stmt = $conn->prepare("DELETE FROM essensplan WHERE id = ?");
+                    if ($stmt->execute([$_GET['id']])) {
+                        echo "<p>Wochenplan erfolgreich gelöscht!</p>";
+                    } else {
+                        echo "<p>Fehler beim Löschen des Wochenplans.</p>";
+                    }
+                } else {
+                    echo "<p>Löschvorgang abgebrochen.</p>";
+                }
             }
         } else {
-            echo "<p>Essensplan nicht gefunden.</p>";
+            echo "<p>Wochenplan nicht gefunden.</p>";
         }
+    } else {
+        echo "<p>Kein Wochenplan ausgewählt.</p>";
     }
     ?>
 </main>
