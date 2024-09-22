@@ -1,6 +1,6 @@
 <?php
-$title = "Essensplan Details"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Wochenplan anzeigen";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -10,36 +10,48 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
-        // Abruf des spezifischen Essensplans
+        // Wochenplan abrufen
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
         $stmt->execute([$_GET['id']]);
-        $plan = $stmt->fetch(PDO::FETCH_ASSOC);
+        $weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($plan) {
-            echo "<h3>Essensplan: Woche " . $plan['week_number'] . " im Jahr " . $plan['year'] . "</h3>";
-            echo "<p>Beschreibung: " . $plan['description'] . "</p>";
+        if ($weekPlan) {
+            echo "<h3>Wochenplan: Woche " . $weekPlan['week_number'] . " im Jahr " . $weekPlan['year'] . "</h3>";
+            echo "<p><strong>Name:</strong> " . $weekPlan['week_name'] . "</p>";
+            echo "<p><strong>Beschreibung:</strong> " . $weekPlan['description'] . "</p>";
 
-            // Rezepte anzeigen, die diesem Essensplan zugeordnet sind
-            echo "<h4>Zugeordnete Rezepte:</h4>";
-            $stmt = $conn->prepare("SELECT er.*, r.title FROM essensplan_recipes er JOIN recipes r ON er.recipe_id = r.id WHERE er.essensplan_id = ?");
-            $stmt->execute([$_GET['id']]);
-            $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Mahlzeiten für den Wochenplan abrufen
+            $stmt = $conn->prepare("
+                SELECT er.day_of_week, mc.name AS meal_category, r.title AS recipe_title 
+                FROM essensplan_recipes er
+                JOIN recipes r ON er.recipe_id = r.id
+                JOIN meal_categories mc ON er.meal_category_id = mc.id
+                WHERE er.essensplan_id = ?
+                ORDER BY er.day_of_week, mc.name
+            ");
+            $stmt->execute([$weekPlan['id']]);
+            $meals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if (!empty($recipes)) {
-                echo "<ul>";
-                foreach ($recipes as $recipe) {
-                    echo "<li>" . $recipe['day_of_week'] . " - " . $recipe['meal_type'] . ": " . $recipe['title'] . "</li>";
+            if ($meals) {
+                echo "<h3>Mahlzeitenplan</h3>";
+                echo "<table border='1'>";
+                echo "<tr><th>Tag</th><th>Kategorie</th><th>Rezept</th></tr>";
+                foreach ($meals as $meal) {
+                    echo "<tr>
+                            <td>" . $meal['day_of_week'] . "</td>
+                            <td>" . $meal['meal_category'] . "</td>
+                            <td>" . $meal['recipe_title'] . "</td>
+                          </tr>";
                 }
-                echo "</ul>";
+                echo "</table>";
             } else {
-                echo "<p>Keine Rezepte zugeordnet.</p>";
+                echo "<p>Keine Mahlzeiten für diesen Wochenplan gefunden.</p>";
             }
-            echo "<a href='assign_recipe_to_week.php?id=" . $plan['id'] . "'>Rezept zuordnen</a>";
         } else {
-            echo "<p>Essensplan nicht gefunden.</p>";
+            echo "<p>Wochenplan nicht gefunden.</p>";
         }
     } else {
-        echo "<p>Kein Essensplan ausgewählt.</p>";
+        echo "<p>Kein Wochenplan ausgewählt.</p>";
     }
     ?>
 </main>
