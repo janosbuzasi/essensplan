@@ -16,11 +16,11 @@
 
     // Dynamisch das Stylesheet basierend auf dem Cookie einbinden
     if ($current_style === 'classic') {
-        echo '<link rel="stylesheet" href="styles/classic_style.css">';
+        echo '<link rel="stylesheet" href="/essensplan/styles/classic_style.css">';
     } elseif ($current_style === 'yellow') {
-        echo '<link rel="stylesheet" href="styles/yellow_style.css">';
+        echo '<link rel="stylesheet" href="/essensplan/styles/yellow_style.css">';
     } else {
-        echo '<link rel="stylesheet" href="styles/style.css">';
+        echo '<link rel="stylesheet" href="/essensplan/styles/style.css">';
     }
     ?>
 </head>
@@ -32,27 +32,27 @@
     <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div> <!-- Burger-Icon für mobile Navigation -->
     <nav id="menu">
         <ul>
-            <li><a href="../index.php">Home</a></li>
-            <li><a href="../src/view_recipes.php">Rezeptverwaltung</a>
+            <li><a href="/essensplan/index.php">Home</a></li>
+            <li><a href="/essensplan/src/view_recipes.php">Rezeptverwaltung</a>
                 <ul>
-                    <li><a href="../src/add_recipe.php">Neues Rezept hinzufügen</a></li>
-                    <li><a href="../src/view_recipes.php">Rezepte anzeigen</a></li>
+                    <li><a href="/essensplan/src/add_recipe.php">Neues Rezept hinzufügen</a></li>
+                    <li><a href="/essensplan/src/view_recipes.php">Rezepte anzeigen</a></li>
                 </ul>
             </li>
-            <li><a href="../src/view_categories.php">Mahlzeitenkategorienverwaltung</a>
+            <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorienverwaltung</a>
                 <ul>
-                    <li><a href="../src/add_category.php">Neue Kategorie hinzufügen</a></li>
-                    <li><a href="../src/view_categories.php">Kategorien anzeigen</a></li>
+                    <li><a href="/essensplan/src/add_category.php">Neue Kategorie hinzufügen</a></li>
+                    <li><a href="/essensplan/src/view_categories.php">Kategorien anzeigen</a></li>
                 </ul>
             </li>
-            <li><a href="../src/view_weeks.php">Wochenplanverwaltung</a>
+            <li><a href="/essensplan/src/view_weeks.php">Wochenplanverwaltung</a>
                 <ul>
-                    <li><a href="../src/add_week.php">Neue Woche hinzufügen</a></li>
-                    <li><a href="../src/view_weeks.php">Wochenpläne anzeigen</a></li>
-                    <li><a href="../src/archived_weeks.php">Archivierte Wochen anzeigen</a></li>
+                    <li><a href="/essensplan/src/add_week.php">Neue Woche hinzufügen</a></li>
+                    <li><a href="/essensplan/src/view_weeks.php">Wochenpläne anzeigen</a></li>
+                    <li><a href="/essensplan/src/archived_weeks.php">Archivierte Wochen anzeigen</a></li>
                 </ul>
             </li>
-            <li><a href="../src/assign_recipe_to_week.php">Rezepte zu Wochenplänen</a></li>
+            <li><a href="/essensplan/src/assign_recipe_to_week.php">Rezepte zu Wochenplänen</a></li>
         </ul>
     </nav>
 </header>
