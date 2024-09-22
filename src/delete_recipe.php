@@ -1,6 +1,6 @@
 <?php
-$title = "Rezept löschen"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Rezept löschen";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -10,27 +10,37 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
+        // Überprüfung, ob das Rezept existiert
         $stmt = $conn->prepare("SELECT * FROM recipes WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($recipe) {
-            if (isset($_POST['confirm_delete'])) {
-                $stmt = $conn->prepare("DELETE FROM recipes WHERE id = ?");
-                $stmt->execute([$_GET['id']]);
-                echo "<p>Rezept '" . $recipe['title'] . "' wurde gelöscht.</p>";
-            } else {
-                ?>
-                <form action="delete_recipe.php?id=<?php echo $recipe['id']; ?>" method="post">
-                    <p>Bist du sicher, dass du das Rezept '<?php echo $recipe['title']; ?>' löschen möchtest?</p>
-                    <input type="submit" name="confirm_delete" value="Ja, löschen">
-                    <a href="view_recipes.php">Abbrechen</a>
-                </form>
-                <?php
+            // Bestätigungsabfrage anzeigen
+            echo "<p>Möchtest du das Rezept <strong>" . $recipe['title'] . "</strong> wirklich löschen?</p>";
+            echo '<form action="delete_recipe.php?id=' . $recipe['id'] . '" method="post">
+                    <button type="submit" name="confirm_delete" value="yes">Ja, löschen</button>
+                    <button type="submit" name="confirm_delete" value="no">Nein, abbrechen</button>
+                  </form>';
+
+            // Verarbeitung der Benutzerentscheidung
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if ($_POST['confirm_delete'] === 'yes') {
+                    $stmt = $conn->prepare("DELETE FROM recipes WHERE id = ?");
+                    if ($stmt->execute([$_GET['id']])) {
+                        echo "<p>Rezept erfolgreich gelöscht!</p>";
+                    } else {
+                        echo "<p>Fehler beim Löschen des Rezepts.</p>";
+                    }
+                } else {
+                    echo "<p>Löschvorgang abgebrochen.</p>";
+                }
             }
         } else {
             echo "<p>Rezept nicht gefunden.</p>";
         }
+    } else {
+        echo "<p>Kein Rezept ausgewählt.</p>";
     }
     ?>
 </main>
