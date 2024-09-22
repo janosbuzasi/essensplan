@@ -77,7 +77,6 @@ try {
             id INT AUTO_INCREMENT PRIMARY KEY,
             week_number INT NOT NULL,
             year INT NOT NULL,
-            week_name VARCHAR(255),
             description TEXT,
             status ENUM('aktiv', 'archiviert') DEFAULT 'aktiv',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -148,27 +147,31 @@ try {
     $conn->exec("
         INSERT INTO recipes (title, ingredients, instructions, category, prep_time, cook_time, difficulty, servings) VALUES
         ('Pancakes', 'Mehl, Milch, Eier, Zucker, Salz, Backpulver', 'Alle Zutaten vermischen und in einer Pfanne ausbacken.', 'Frühstück', 10, 15, 'leicht', 4),
-        ('Salat mit Hähnchenbrust', 'Hähnchenbrust, Salat, Tomaten, Gurken, Olivenöl, Essig', 'Hähnchenbrust anbraten und auf den Salat geben.', 'Mittagessen', 15, 20, 'mittel', 2),
-        ('Spaghetti Bolognese', 'Spaghetti, Hackfleisch, Tomaten, Zwiebeln, Knoblauch, Olivenöl', 'Hackfleisch anbraten, Zwiebeln und Knoblauch hinzufügen, mit Tomaten köcheln lassen.', 'Abendessen', 10, 30, 'leicht', 4)
+        ('Obstsalat', 'Äpfel, Bananen, Orangen, Honig', 'Alles in Stücke schneiden und vermischen.', 'Znüni', 5, 0, 'leicht', 2),
+        ('Spaghetti Bolognese', 'Spaghetti, Hackfleisch, Tomaten, Zwiebeln, Knoblauch, Olivenöl', 'Hackfleisch anbraten, Zwiebeln und Knoblauch hinzufügen, mit Tomaten köcheln lassen.', 'Mittagessen', 10, 30, 'leicht', 4),
+        ('Käsebrot', 'Brot, Butter, Käse, Gurkenscheiben', 'Brot mit Butter bestreichen, Käse und Gurkenscheiben belegen.', 'Zvieri', 5, 0, 'leicht', 1),
+        ('Hähnchenbrust mit Gemüse', 'Hähnchenbrust, Brokkoli, Karotten, Olivenöl, Salz, Pfeffer', 'Hähnchenbrust braten und mit gedünstetem Gemüse servieren.', 'Abendessen', 15, 20, 'mittel', 2)
     ");
     echo "Standardrezepte wurden hinzugefügt.<br>";
 
     // Beispiel-Wochenplan hinzufügen
-    $conn->exec("INSERT INTO essensplan (week_number, year, week_name, description) VALUES (1, 2024, 'Woche 1', 'Beispielhafter Essensplan für Woche 1')");
+    $conn->exec("INSERT INTO essensplan (week_number, year, description) VALUES (1, 2024, 'Beispielhafter Essensplan für Woche 1')");
     $weekPlanId = $conn->lastInsertId();
     echo "Beispiel-Wochenplan wurde erstellt.<br>";
 
     // Mahlzeiten für Montag bis Sonntag hinzufügen
     $daysOfWeek = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
     $mealCategories = $conn->query("SELECT * FROM meal_categories")->fetchAll(PDO::FETCH_ASSOC);
+    $recipes = $conn->query("SELECT * FROM recipes")->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($daysOfWeek as $day) {
-        foreach ($mealCategories as $index => $category) {
-            $recipeId = ($index % 3) + 1; // Weist die ersten drei Rezepte zu (Pancakes, Salat, Spaghetti)
+    // Verteilt die Rezepte auf die Mahlzeitenkategorien und Wochentage
+    foreach ($daysOfWeek as $dayIndex => $day) {
+        foreach ($mealCategories as $categoryIndex => $category) {
+            $recipeId = $recipes[($dayIndex + $categoryIndex) % count($recipes)]['id']; // Gleichmäßige Verteilung der Rezepte
             $conn->exec("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES ($weekPlanId, $recipeId, '$day', " . $category['id'] . ")");
         }
     }
-    echo "Beispielmahlzeiten für Woche 1 wurden hinzugefügt.<br>";
+    echo "Mahlzeiten für Woche 1 wurden hinzugefügt.<br>";
 
     echo "<br>Setup erfolgreich abgeschlossen!<br>";
 
