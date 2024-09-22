@@ -1,6 +1,6 @@
 <?php
-$title = "Kategorie bearbeiten"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Mahlzeitenkategorie bearbeiten";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -10,7 +10,7 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
-        $stmt = $conn->prepare("SELECT * FROM categories WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM meal_categories WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -30,7 +30,7 @@ require '../header.php';  // Inkludiere den Header
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $stmt = $conn->prepare("UPDATE categories SET name = ?, description = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE meal_categories SET name = ?, description = ? WHERE id = ?");
         if ($stmt->execute([$_POST['name'], $_POST['description'], $_GET['id']])) {
             echo "<p>Kategorie erfolgreich aktualisiert!</p>";
         } else {
