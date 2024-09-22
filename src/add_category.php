@@ -1,6 +1,6 @@
 <?php
-$title = "Neue Kategorie hinzufügen"; 
-require '../header.php';  // Inkludiere den Header
+$title = "Neue Mahlzeitenkategorie hinzufügen";
+require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -17,7 +17,7 @@ require '../header.php';  // Inkludiere den Header
         $db = new Database();
         $conn = $db->getConnection();
 
-        $stmt = $conn->prepare("INSERT INTO categories (name, description) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO meal_categories (name, description) VALUES (?, ?)");
         if ($stmt->execute([$_POST['name'], $_POST['description']])) {
             echo "<p>Kategorie erfolgreich hinzugefügt!</p>";
         } else {
