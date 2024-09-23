@@ -14,26 +14,29 @@ require '../header.php';
     $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($weekPlans) {
-        echo "<table border='1'>";
-        echo "<tr><th>Woche</th><th>Jahr</th><th>Beschreibung</th><th>Status</th><th>Aktionen</th></tr>";
+        echo "<table class='styled-table'>"; // CSS-Klasse für Styling
+        echo "<thead><tr><th>Woche</th><th>Jahr</th><th>Beschreibung</th><th>Status</th><th>Aktionen</th></tr></thead><tbody>";
         foreach ($weekPlans as $plan) {
             echo "<tr>";
             echo "<td>Woche " . $plan['week_number'] . "</td>";
             echo "<td>" . $plan['year'] . "</td>";
             echo "<td>" . $plan['description'] . "</td>";
-            echo "<td>" . $plan['status'] . "</td>";
+            echo "<td>" . ucfirst($plan['status']) . "</td>"; // Status mit erstem Buchstaben groß
             echo "<td>";
-            echo "<a href='view_week.php?id=" . $plan['id'] . "'>Ansehen</a> | ";
-            echo "<a href='edit_week.php?id=" . $plan['id'] . "'>Bearbeiten</a> | ";
-            echo "<a href='delete_week.php?id=" . $plan['id'] . "' onclick=\"return confirm('Möchtest du diesen Wochenplan wirklich löschen?');\">Löschen</a>";
+            echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view'>Ansehen</a> ";
+            echo "<a href='edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit'>Bearbeiten</a> ";
+            echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' onclick=\"return confirm('Möchtest du diesen Wochenplan wirklich löschen?');\">Löschen</a>";
             echo "</td>";
             echo "</tr>";
         }
-        echo "</table>";
+        echo "</tbody></table>";
     } else {
         echo "<p>Keine Wochenpläne gefunden.</p>";
     }
     ?>
+
+    <!-- Link zum Hinzufügen eines neuen Wochenplans -->
+    <a href="add_week.php" class="btn btn-add">Neuen Essensplan hinzufügen</a>
 </main>
 <?php
 include '../footer.php';
