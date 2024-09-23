@@ -23,7 +23,9 @@ if ($_POST) {
     $difficulty = $_POST['difficulty'];
     $servings = $_POST['servings'];
 
-    // Validierung der Felder für Vorbereitungszeit, Kochzeit und Portionen
+    // Validierung der Felder für Vorbereitungszeit, Kochzeit, Portionen und Schwierigkeitsgrad
+    $allowed_difficulties = ["leicht", "mittel", "schwer"]; // Erlaubte Werte für Schwierigkeitsgrad
+
     if (!is_numeric($prep_time) || $prep_time <= 0) {
         $error .= "Bitte eine gültige Vorbereitungszeit (größer als 0) angeben.<br>";
     }
@@ -36,17 +38,10 @@ if ($_POST) {
         $error .= "Bitte eine gültige Anzahl von Portionen (größer als 0) angeben.<br>";
     }
 
-    // Debugging-Ausgaben, um die Eingabedaten zu überprüfen
-    echo "<pre>";
-    echo "Title: " . $title . "<br>";
-    echo "Mahlzeitenkategorie: " . $category . "<br>";
-    echo "Ingredients: " . $ingredients . "<br>";
-    echo "Instructions: " . $instructions . "<br>";
-    echo "Prep Time: " . $prep_time . "<br>";
-    echo "Cook Time: " . $cook_time . "<br>";
-    echo "Difficulty: " . $difficulty . "<br>";
-    echo "Servings: " . $servings . "<br>";
-    echo "</pre>";
+    // Validierung des Schwierigkeitsgrads
+    if (!in_array($difficulty, $allowed_difficulties)) {
+        $error .= "Bitte einen gültigen Schwierigkeitsgrad wählen: leicht, mittel oder schwer.<br>";
+    }
 
     // Wenn kein Fehler aufgetreten ist, Rezept in die Datenbank einfügen
     if (empty($error)) {
@@ -73,7 +68,7 @@ if ($_POST) {
         </div>
 
         <div class="form-group">
-            <label for="category">Mahlzeitenkategorie (optional):</label> <!-- Bezeichnung geändert -->
+            <label for="category">Mahlzeitenkategorie (optional):</label>
             <select name="category">
                 <option value="">Mahlzeitenkategorie wählen</option>
                 <?php
@@ -109,9 +104,9 @@ if ($_POST) {
         <div class="form-group">
             <label for="difficulty">Schwierigkeitsgrad:</label>
             <select name="difficulty">
-                <option value="Einfach">Einfach</option>
-                <option value="Mittel">Mittel</option>
-                <option value="Schwierig">Schwierig</option>
+                <option value="leicht">Leicht</option>
+                <option value="mittel">Mittel</option>
+                <option value="schwer">Schwer</option>
             </select>
         </div>
 
