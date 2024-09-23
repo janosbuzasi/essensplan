@@ -1,5 +1,5 @@
 <footer>
-    <p>&copy; <?php echo date("Y"); ?> Essensplan. Alle Rechte vorbehalten.</p>
+    <p>&copy; <?php echo date("Y"); ?> Essensplan Janos Buzasi. Alle Rechte vorbehalten.</p>
 </footer>
 </body>
 </html>
