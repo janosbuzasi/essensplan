@@ -6,9 +6,6 @@ require 'header.php';  // Inkludiere den Header
     <h2><?php echo $title; ?></h2>
     <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne. Du kannst neue Essenspläne hinzufügen, bestehende bearbeiten oder archivieren.</p>
 
-    <!-- Button für Dark Mode -->
-    <button onclick="toggleDarkMode()" class="btn btn-add">Dark Mode umschalten</button>
-
     <!-- Suchfunktion -->
     <form method="get" action="index.php">
         <input type="text" name="search" placeholder="Nach Woche oder Jahr suchen...">
@@ -89,8 +86,6 @@ require 'header.php';  // Inkludiere den Header
             ?>
         </tbody>
     </table>
-
-    <a href="src/add_week.php" class="btn btn-add">Neuen Essensplan hinzufügen</a>
 </main>
 <?php
 include 'footer.php';
