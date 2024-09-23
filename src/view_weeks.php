@@ -6,11 +6,6 @@ require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
-// Debugging: Überprüfen, ob die Verbindung erfolgreich ist
-if (!$conn) {
-    die("Datenbankverbindung fehlgeschlagen!");
-}
-
 // Vorhandene Wochenpläne abrufen
 $stmt = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC");
 $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -61,6 +56,10 @@ function hasAssignments($conn, $week_plan_id) {
                             <?php endif; ?>
                         </td>
                     </tr>
+                    <?php
+                    // Debugging: Ausgabe der aktuellen Iteration
+                    echo "Aktuelle Iteration: Woche " . $plan['week_number'] . ", Jahr " . $plan['year'] . "<br>";
+                    ?>
                 <?php endforeach; ?>
             </tbody>
         </table>
