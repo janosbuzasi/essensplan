@@ -10,19 +10,7 @@
         echo $pageTitle;
         ?>
     </title>
-    <?php
-    // Standardstil festlegen, falls kein Cookie gesetzt ist
-    $current_style = isset($_COOKIE['style']) ? $_COOKIE['style'] : 'default';
-
-    // Dynamisch das Stylesheet basierend auf dem Cookie einbinden
-    if ($current_style === 'classic') {
-        echo '<link rel="stylesheet" href="/essensplan/styles/classic_style.css">';
-    } elseif ($current_style === 'yellow') {
-        echo '<link rel="stylesheet" href="/essensplan/styles/yellow_style.css">';
-    } else {
-        echo '<link rel="stylesheet" href="/essensplan/styles/style.css">';
-    }
-    ?>
+    <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Sicherstellen, dass der Pfad korrekt ist -->
 </head>
 <body>
 
