@@ -40,6 +40,10 @@ function hasAssignments($conn, $week_plan_id) {
             </thead>
             <tbody>
                 <?php foreach ($weekPlans as $plan): ?>
+                    <?php
+                    // Debugging: Ausgabe der aktuellen Iteration
+                    echo "<!-- Debugging: Aktuelle Iteration: Woche " . $plan['week_number'] . ", Jahr " . $plan['year'] . " -->";
+                    ?>
                     <tr>
                         <td>Woche <?php echo $plan['week_number']; ?></td>
                         <td><?php echo $plan['year']; ?></td>
@@ -56,10 +60,6 @@ function hasAssignments($conn, $week_plan_id) {
                             <?php endif; ?>
                         </td>
                     </tr>
-                    <?php
-                    // Debugging: Ausgabe der aktuellen Iteration
-                    echo "Aktuelle Iteration: Woche " . $plan['week_number'] . ", Jahr " . $plan['year'] . "<br>";
-                    ?>
                 <?php endforeach; ?>
             </tbody>
         </table>
