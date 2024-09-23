@@ -36,11 +36,27 @@ if ($_POST) {
         $error .= "Bitte eine gültige Anzahl von Portionen (größer als 0) angeben.<br>";
     }
 
+    // Debugging-Ausgaben, um die Eingabedaten zu überprüfen
+    echo "<pre>";
+    echo "Title: " . $title . "<br>";
+    echo "Mahlzeitenkategorie: " . $category . "<br>";
+    echo "Ingredients: " . $ingredients . "<br>";
+    echo "Instructions: " . $instructions . "<br>";
+    echo "Prep Time: " . $prep_time . "<br>";
+    echo "Cook Time: " . $cook_time . "<br>";
+    echo "Difficulty: " . $difficulty . "<br>";
+    echo "Servings: " . $servings . "<br>";
+    echo "</pre>";
+
     // Wenn kein Fehler aufgetreten ist, Rezept in die Datenbank einfügen
     if (empty($error)) {
-        $stmt = $conn->prepare("INSERT INTO recipes (title, category, ingredients, instructions, prep_time, cook_time, difficulty, servings) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $category, $ingredients, $instructions, $prep_time, $cook_time, $difficulty, $servings]);
-        echo "<p>Das Rezept wurde erfolgreich hinzugefügt.</p>";
+        try {
+            $stmt = $conn->prepare("INSERT INTO recipes (title, category, ingredients, instructions, prep_time, cook_time, difficulty, servings) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $category, $ingredients, $instructions, $prep_time, $cook_time, $difficulty, $servings]);
+            echo "<p>Das Rezept wurde erfolgreich hinzugefügt.</p>";
+        } catch (PDOException $e) {
+            echo "<p style='color:red;'>Fehler beim Einfügen in die Datenbank: " . $e->getMessage() . "</p>";
+        }
     } else {
         // Fehlermeldungen anzeigen
         echo "<p style='color:red;'>$error</p>";
@@ -57,9 +73,9 @@ if ($_POST) {
         </div>
 
         <div class="form-group">
-            <label for="category">Kategorie (optional):</label>
+            <label for="category">Mahlzeitenkategorie (optional):</label> <!-- Bezeichnung geändert -->
             <select name="category">
-                <option value="">Kategorie wählen</option>
+                <option value="">Mahlzeitenkategorie wählen</option>
                 <?php
                 foreach ($categories as $cat) {
                     echo "<option value='" . htmlspecialchars($cat['category'], ENT_QUOTES) . "'>" . htmlspecialchars($cat['category'], ENT_QUOTES) . "</option>";
