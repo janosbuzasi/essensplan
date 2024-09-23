@@ -6,8 +6,8 @@ require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
-// Kategorien abrufen
-$stmt = $conn->query("SELECT DISTINCT category FROM recipes WHERE category IS NOT NULL AND category != '' ORDER BY category ASC");
+// Kategorien aus der Tabelle meal_categories abrufen
+$stmt = $conn->query("SELECT * FROM meal_categories ORDER BY name ASC");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -21,16 +21,18 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <thead>
                 <tr>
                     <th>Mahlzeitenkategorie</th>
+                    <th>Beschreibung</th>
                     <th>Aktionen</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($categories as $cat): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($cat['category'], ENT_QUOTES); ?></td>
+                        <td><?php echo htmlspecialchars($cat['name'], ENT_QUOTES); ?></td>
+                        <td><?php echo htmlspecialchars($cat['description'], ENT_QUOTES); ?></td>
                         <td>
-                            <a href="edit_category.php?category=<?php echo urlencode($cat['category']); ?>" class="btn btn-edit">Bearbeiten</a>
-                            <a href="delete_category.php?category=<?php echo urlencode($cat['category']); ?>" class="btn btn-delete" onclick="return confirm('Möchtest du diese Kategorie wirklich löschen?');">Löschen</a>
+                            <a href="edit_category.php?category=<?php echo urlencode($cat['name']); ?>" class="btn btn-edit">Bearbeiten</a>
+                            <a href="delete_category.php?category=<?php echo urlencode($cat['name']); ?>" class="btn btn-delete" onclick="return confirm('Möchtest du diese Kategorie wirklich löschen?');">Löschen</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
