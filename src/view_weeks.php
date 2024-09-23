@@ -38,30 +38,31 @@ function hasAssignments($conn, $week_plan_id) {
                     <th>Aktionen</th>
                 </tr>
             </thead>
-            <tbody>
-                <?php foreach ($weekPlans as $plan): ?>
-                    <?php
-                    // Debugging: Ausgabe der aktuellen Iteration
-                    echo "<!-- Debugging: Aktuelle Iteration: Woche " . $plan['week_number'] . ", Jahr " . $plan['year'] . " -->";
-                    ?>
-                    <tr>
-                        <td>Woche <?php echo $plan['week_number']; ?></td>
-                        <td><?php echo $plan['year']; ?></td>
-                        <td><?php echo htmlspecialchars($plan['description'], ENT_QUOTES); ?></td>
-                        <td><?php echo $plan['status']; ?></td>
-                        <td>
-                            <a href="view_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-view">Ansehen</a>
-                            <a href="edit_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-edit">Bearbeiten</a>
-                            <a href="delete_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-delete" onclick="return confirm('Möchtest du diesen Wochenplan wirklich löschen?');">Löschen</a>
-                            <?php if (hasAssignments($conn, $plan['id'])): ?>
-                                <a href="edit_assignment.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-edit">Zuweisungen bearbeiten</a>
-                            <?php else: ?>
-                                <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-add">Rezepte zuweisen</a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+<tbody>
+    <?php foreach ($weekPlans as $plan): ?>
+        <tr>
+            <?php
+            // Debugging-Anweisungen für jede Zelle
+            echo "<!-- Debugging: Aktuelle Woche: " . $plan['week_number'] . ", Jahr: " . $plan['year'] . " -->";
+            ?>
+            <td>Woche <?php echo $plan['week_number']; ?></td>
+            <td><?php echo $plan['year']; ?></td>
+            <td><?php echo htmlspecialchars($plan['description'], ENT_QUOTES); ?></td>
+            <td><?php echo $plan['status']; ?></td>
+            <td>
+                <a href="view_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-view">Ansehen</a>
+                <a href="edit_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-edit">Bearbeiten</a>
+                <a href="delete_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-delete" onclick="return confirm('Möchtest du diesen Wochenplan wirklich löschen?');">Löschen</a>
+                <?php if (hasAssignments($conn, $plan['id'])): ?>
+                    <a href="edit_assignment.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-edit">Zuweisungen bearbeiten</a>
+                <?php else: ?>
+                    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-add">Rezepte zuweisen</a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
+
         </table>
     <?php else: ?>
         <p>Keine Wochenpläne gefunden.</p>
