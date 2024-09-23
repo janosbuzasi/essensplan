@@ -23,7 +23,7 @@
         <li><a href="/essensplan/index.php">Home</a></li>
         <li><a href="/essensplan/src/view_recipes.php">Rezepte</a></li>
         <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien</a></li>
-        <li><a href="/essensplan/src/view_weeks.php">Wochenpläne</a></li> <!-- Wochenpläne verwalten -->
+        <li><a href="/essensplan/src/view_weeks.php">Wochenpläne verwalten</a></li> <!-- Wochenpläne verwalten -->
         <li><a href="/essensplan/src/archived_weeks.php">Archivierte Essenspläne</a></li> <!-- Archivierte Essenspläne -->
         <li><a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a></li> <!-- Dark Mode Umschaltung -->
     </ul>
