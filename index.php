@@ -6,6 +6,15 @@ require 'header.php';  // Inkludiere den Header
     <h2><?php echo $title; ?></h2>
     <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne. Du kannst neue Essenspläne hinzufügen, bestehende bearbeiten oder archivieren.</p>
 
+    <!-- Button für Dark Mode -->
+    <button onclick="toggleDarkMode()" class="btn btn-add">Dark Mode umschalten</button>
+
+    <!-- Suchfunktion -->
+    <form method="get" action="index.php">
+        <input type="text" name="search" placeholder="Nach Woche oder Jahr suchen...">
+        <input type="submit" value="Suchen" class="btn btn-add">
+    </form>
+
     <!-- Aktive Essenspläne anzeigen -->
     <h3>Aktive Essenspläne</h3>
     <table border="1" cellpadding="5" cellspacing="0">
@@ -21,7 +30,12 @@ require 'header.php';  // Inkludiere den Header
             require_once 'config/db.php';
             $db = new Database();
             $conn = $db->getConnection();
-            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' ORDER BY year DESC, week_number DESC");
+            $searchQuery = "";
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $search = $_GET['search'];
+                $searchQuery = "AND (week_number LIKE '%$search%' OR year LIKE '%$search%')";
+            }
+            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' $searchQuery ORDER BY year DESC, week_number DESC");
             $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (!empty($plans)) {
                 foreach ($plans as $plan) {
@@ -55,7 +69,7 @@ require 'header.php';  // Inkludiere den Header
         </thead>
         <tbody>
             <?php
-            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'archiviert' ORDER BY year DESC, week_number DESC");
+            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'archiviert' $searchQuery ORDER BY year DESC, week_number DESC");
             $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (!empty($plans)) {
                 foreach ($plans as $plan) {
@@ -82,55 +96,10 @@ require 'header.php';  // Inkludiere den Header
 include 'footer.php';
 ?>
 
-<style>
-    /* Einfache CSS-Stile für die Buttons */
-    .btn {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 2px;
-        text-decoration: none;
-        border-radius: 5px;
-        color: #fff;
-    }
-
-    .btn-view {
-        background-color: #5cb85c;
-    }
-
-    .btn-edit {
-        background-color: #5bc0de;
-    }
-
-    .btn-archive {
-        background-color: #f0ad4e;
-    }
-
-    .btn-delete {
-        background-color: #d9534f;
-    }
-
-    .btn-add {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 10px 15px;
-        background-color: #337ab7;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    table th, table td {
-        padding: 10px;
-        text-align: left;
-    }
-
-    table th {
-        background-color: #f8f8f8;
-    }
-</style>
+<script>
+// Funktion zum Umschalten des Dark Mode
+function toggleDarkMode() {
+    var element = document.body;
+    element.classList.toggle("dark-mode");
+}
+</script>
