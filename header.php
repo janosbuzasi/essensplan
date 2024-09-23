@@ -18,7 +18,7 @@
         <h1><?php echo $title; ?></h1>
         <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
     </div>
-<nav id="menu">
+<nav id="menu" class="hidden"> <!-- Versteckt das Menü initial -->
     <ul>
         <li><a href="/essensplan/index.php">Home</a></li>
         <li><a href="/essensplan/src/view_recipes.php">Rezepte verwalten</a></li>
@@ -28,18 +28,13 @@
         <li><a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a></li> <!-- Dark Mode Umschaltung -->
     </ul>
 </nav>
-
 </header>
 
 <script>
-    // Funktion zum Umschalten des Dark Mode
-    function toggleDarkMode() {
-        var element = document.body;
-        element.classList.toggle("dark-mode");
-
-        // Zustand in einem Cookie speichern
-        var darkMode = element.classList.contains("dark-mode") ? "enabled" : "disabled";
-        document.cookie = "darkMode=" + darkMode + ";path=/"; // Cookie für das gesamte Verzeichnis setzen
+    // Funktion zum Umschalten des Burger-Menüs
+    function toggleMenu() {
+        var menu = document.getElementById("menu");
+        menu.classList.toggle("hidden"); // Versteckt/zeigt das Menü bei Klick
     }
 
     // Überprüfen, ob der Dark Mode aktiviert ist
@@ -60,15 +55,5 @@
             if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
         }
         return null;
-    }
-
-    // Menü-Umschaltung für mobile Ansicht
-    function toggleMenu() {
-        var menu = document.getElementById("menu");
-        if (menu.classList.contains('active')) {
-            menu.classList.remove('active');
-        } else {
-            menu.classList.add('active');
-        }
     }
 </script>
