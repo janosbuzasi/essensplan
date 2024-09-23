@@ -41,14 +41,20 @@ h2, h3 {
     font-size: 24px;
     cursor: pointer;
     padding: 10px;
-    display: block; /* Zeige das Burger-Icon auf kleinen Bildschirmen */
+    display: block;
 }
 
+/* Versteckt das Menü initial */
+#menu.hidden {
+    display: none;
+}
+
+/* Menü-Stile */
 #menu {
     display: none; /* Versteckt das Menü initial */
     position: absolute;
     top: 60px; /* Unter dem Header platzieren */
-    left: 20px; /* Links bündig zum Header */
+    left: 0; /* Links bündig zum Header */
     background-color: #337ab7; /* Gleiche Farbe wie im Header */
     width: 200px; /* Menübreite */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Leichter Schatten */
