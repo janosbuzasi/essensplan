@@ -4,6 +4,15 @@ require 'header.php';  // Inkludiere den Header
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
+
+    <!-- Aktuelles Datum und Kalenderwoche anzeigen -->
+    <?php
+    // Aktuelles Datum und Kalenderwoche berechnen
+    $currentDate = date('d.m.Y'); // Format: Tag.Monat.Jahr
+    $currentWeek = date('W');     // Kalenderwoche (1-53)
+    echo "<p>Heute ist der <strong>$currentDate</strong>, Kalenderwoche <strong>$currentWeek</strong>.</p>";
+    ?>
+
     <p>Hier siehst du den nächsten verfügbaren Essensplan basierend auf dem aktuellen Datum.</p>
 
     <?php
@@ -11,9 +20,8 @@ require 'header.php';  // Inkludiere den Header
     $db = new Database();
     $conn = $db->getConnection();
 
-    // Aktuelles Datum und Jahr
+    // Aktuelles Jahr und Kalenderwoche
     $currentYear = date('Y');
-    $currentWeek = date('W');
 
     // Nächsten verfügbaren Essensplan basierend auf dem aktuellen Datum abrufen
     $stmt = $conn->prepare("SELECT * FROM essensplan WHERE status = 'aktiv' AND (year > ? OR (year = ? AND week_number >= ?)) ORDER BY year, week_number LIMIT 1");
