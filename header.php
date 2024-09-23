@@ -12,7 +12,7 @@
     </title>
     <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Pfad zur style.css überprüfen -->
 </head>
-<body onload="checkDarkMode()"> <!-- Überprüft den Dark Mode beim Laden -->
+<body>
 <header>
     <div class="header-container">
         <h1><?php echo $title; ?></h1>
@@ -34,25 +34,5 @@
     function toggleMenu() {
         var menu = document.getElementById("menu");
         menu.classList.toggle("active"); // Menü bei Klick anzeigen/verstecken
-    }
-
-    // Überprüfen, ob der Dark Mode aktiviert ist
-    function checkDarkMode() {
-        var darkMode = getCookie("darkMode");
-        if (darkMode === "enabled") {
-            document.body.classList.add("dark-mode");
-        }
-    }
-
-    // Cookie-Wert abrufen
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
     }
 </script>
