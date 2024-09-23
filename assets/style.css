@@ -12,6 +12,7 @@ header {
     color: #fff;
     padding: 10px 0;
     text-align: center;
+    position: relative;
 }
 
 header h1 {
@@ -26,6 +27,59 @@ main {
 
 h2, h3 {
     color: #337ab7; /* Gleiche Farbe wie im Header */
+}
+
+/* Stil für das Burger-Menü */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    display: block; /* Zeige das Burger-Icon auf kleinen Bildschirmen */
+}
+
+#menu {
+    display: none; /* Versteckt das Menü initial */
+    position: absolute;
+    top: 60px; /* Unter dem Header platzieren */
+    left: 20px; /* Links bündig zum Header */
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    width: 200px; /* Menübreite */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Leichter Schatten */
+    border-radius: 5px; /* Abgerundete Ecken */
+    z-index: 1000; /* Über anderen Inhalten anzeigen */
+}
+
+#menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu ul li {
+    border-bottom: 1px solid #fff; /* Unterlinie für jedes Menüelement */
+}
+
+#menu ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+}
+
+#menu ul li a:hover {
+    background-color: #285e8e; /* Leicht dunkler beim Hover */
+}
+
+/* Menü anzeigen, wenn nicht versteckt */
+#menu.active {
+    display: block;
 }
 
 /* Stil für alle Tabellen */
@@ -273,7 +327,6 @@ footer {
     color: #fff;
     text-decoration: underline;
 }
-
 
 /* Stil für das Rezeptformular */
 .recipe-form {
