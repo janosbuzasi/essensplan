@@ -14,15 +14,18 @@
 </head>
 <body onload="checkDarkMode()"> <!-- Überprüft den Dark Mode beim Laden -->
 <header>
-    <h1><?php echo $title; ?></h1>
-    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+    <div class="header-container">
+        <h1><?php echo $title; ?></h1>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+    </div>
     <nav id="menu">
         <ul>
             <li><a href="/essensplan/index.php">Home</a></li>
-            <li><a href="/essensplan/src/view_recipes.php">Rezeptverwaltung</a></li>
+            <li><a href="/essensplan/src/view_recipes.php">Rezepte</a></li>
             <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien</a></li>
             <li><a href="/essensplan/src/view_weeks.php">Wochenpläne</a></li>
-            <li><a href="/essensplan/src/assign_recipe_to_week.php">Rezepte zuordnen</a></li>
+            <li><a href="/essensplan/src/add_week.php">Neuen Essensplan hinzufügen</a></li> <!-- Verlinkung zum Hinzufügen einer Woche -->
+            <li><a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a></li> <!-- Dark Mode Umschaltung -->
         </ul>
     </nav>
 </header>
