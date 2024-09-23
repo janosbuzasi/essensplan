@@ -10,43 +10,55 @@
         echo $pageTitle;
         ?>
     </title>
-    <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Sicherstellen, dass der Pfad korrekt ist -->
+    <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Pfad zur style.css überprüfen -->
 </head>
-<body>
-
-<!-- Header-Bereich mit Navigation -->
+<body onload="checkDarkMode()"> <!-- Überprüft den Dark Mode beim Laden -->
 <header>
-    <h1><?php echo isset($title) ? "$title | $domain" : $domain; ?></h1>
-    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div> <!-- Burger-Icon für mobile Navigation -->
+    <h1><?php echo $title; ?></h1>
+    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
     <nav id="menu">
         <ul>
             <li><a href="/essensplan/index.php">Home</a></li>
-            <li><a href="/essensplan/src/view_recipes.php">Rezeptverwaltung</a>
-                <ul>
-                    <li><a href="/essensplan/src/add_recipe.php">Neues Rezept hinzufügen</a></li>
-                    <li><a href="/essensplan/src/view_recipes.php">Rezepte anzeigen</a></li>
-                </ul>
-            </li>
-            <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorienverwaltung</a>
-                <ul>
-                    <li><a href="/essensplan/src/add_category.php">Neue Kategorie hinzufügen</a></li>
-                    <li><a href="/essensplan/src/view_categories.php">Kategorien anzeigen</a></li>
-                </ul>
-            </li>
-            <li><a href="/essensplan/src/view_weeks.php">Wochenplanverwaltung</a>
-                <ul>
-                    <li><a href="/essensplan/src/add_week.php">Neue Woche hinzufügen</a></li>
-                    <li><a href="/essensplan/src/view_weeks.php">Wochenpläne anzeigen</a></li>
-                    <li><a href="/essensplan/src/archived_weeks.php">Archivierte Wochen anzeigen</a></li>
-                </ul>
-            </li>
-            <li><a href="/essensplan/src/assign_recipe_to_week.php">Rezepte zu Wochenplänen</a></li>
+            <li><a href="/essensplan/src/view_recipes.php">Rezeptverwaltung</a></li>
+            <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien</a></li>
+            <li><a href="/essensplan/src/view_weeks.php">Wochenpläne</a></li>
+            <li><a href="/essensplan/src/assign_recipe_to_week.php">Rezepte zuordnen</a></li>
         </ul>
     </nav>
 </header>
 
 <script>
-    // Funktion zum Umschalten des Menüs auf mobilen Geräten
+    // Funktion zum Umschalten des Dark Mode
+    function toggleDarkMode() {
+        var element = document.body;
+        element.classList.toggle("dark-mode");
+
+        // Zustand in einem Cookie speichern
+        var darkMode = element.classList.contains("dark-mode") ? "enabled" : "disabled";
+        document.cookie = "darkMode=" + darkMode + ";path=/"; // Cookie für das gesamte Verzeichnis setzen
+    }
+
+    // Überprüfen, ob der Dark Mode aktiviert ist
+    function checkDarkMode() {
+        var darkMode = getCookie("darkMode");
+        if (darkMode === "enabled") {
+            document.body.classList.add("dark-mode");
+        }
+    }
+
+    // Cookie-Wert abrufen
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    // Menü-Umschaltung für mobile Ansicht
     function toggleMenu() {
         var menu = document.getElementById("menu");
         if (menu.classList.contains('active')) {
