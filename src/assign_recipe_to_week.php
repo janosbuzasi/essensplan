@@ -20,9 +20,9 @@ require '../header.php';
     if ($weekPlans && $recipes && $mealCategories) {
         ?>
         <!-- Dropdown-Menü zur Auswahl der Woche -->
-        <form method="get" action="assign_recipe_to_week.php">
+        <form method="get" action="assign_recipe_to_week.php" class="form-inline">
             <label for="week_plan_id">Woche:</label>
-            <select name="week_plan_id" onchange="this.form.submit()" required>
+            <select name="week_plan_id" onchange="this.form.submit()" required class="form-select">
                 <?php foreach ($weekPlans as $plan): ?>
                     <option value="<?php echo $plan['id']; ?>" <?php echo ($plan['id'] == $selectedWeekPlanId) ? 'selected' : ''; ?>>
                         Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
@@ -33,39 +33,45 @@ require '../header.php';
         <br>
 
         <!-- Formular zur Zuordnung eines Rezepts -->
-        <form action="assign_recipe_to_week.php" method="post">
+        <form action="assign_recipe_to_week.php" method="post" class="recipe-form">
             <input type="hidden" name="week_plan_id" value="<?php echo $selectedWeekPlanId; ?>">
             
-            <label for="day_of_week">Tag:</label>
-            <select name="day_of_week" required>
-                <option value="Montag">Montag</option>
-                <option value="Dienstag">Dienstag</option>
-                <option value="Mittwoch">Mittwoch</option>
-                <option value="Donnerstag">Donnerstag</option>
-                <option value="Freitag">Freitag</option>
-                <option value="Samstag">Samstag</option>
-                <option value="Sonntag">Sonntag</option>
-            </select><br>
+            <div class="form-group">
+                <label for="day_of_week">Tag:</label>
+                <select name="day_of_week" required class="form-select">
+                    <option value="Montag">Montag</option>
+                    <option value="Dienstag">Dienstag</option>
+                    <option value="Mittwoch">Mittwoch</option>
+                    <option value="Donnerstag">Donnerstag</option>
+                    <option value="Freitag">Freitag</option>
+                    <option value="Samstag">Samstag</option>
+                    <option value="Sonntag">Sonntag</option>
+                </select>
+            </div>
 
-            <label for="meal_category_id">Mahlzeitenkategorie:</label>
-            <select name="meal_category_id" required>
-                <?php foreach ($mealCategories as $category): ?>
-                    <option value="<?php echo $category['id']; ?>">
-                        <?php echo $category['name']; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
+            <div class="form-group">
+                <label for="meal_category_id">Mahlzeitenkategorie:</label>
+                <select name="meal_category_id" required class="form-select">
+                    <?php foreach ($mealCategories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>">
+                            <?php echo $category['name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <label for="recipe_id">Rezept:</label>
-            <select name="recipe_id" required>
-                <?php foreach ($recipes as $recipe): ?>
-                    <option value="<?php echo $recipe['id']; ?>">
-                        <?php echo $recipe['title']; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
+            <div class="form-group">
+                <label for="recipe_id">Rezept:</label>
+                <select name="recipe_id" required class="form-select">
+                    <?php foreach ($recipes as $recipe): ?>
+                        <option value="<?php echo $recipe['id']; ?>">
+                            <?php echo $recipe['title']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <input type="submit" value="Rezept zuordnen">
+            <input type="submit" value="Rezept zuordnen" class="btn btn-add">
         </form>
         <?php
     } else {
@@ -114,17 +120,17 @@ require '../header.php';
         $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($assignments) {
-            echo "<table border='1'>";
-            echo "<tr><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr>";
+            echo "<table class='styled-table'>"; // CSS-Klasse für Styling
+            echo "<thead><tr><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr></thead><tbody>";
             foreach ($assignments as $assignment) {
                 echo "<tr>
                         <td>" . $assignment['day_of_week'] . "</td>
                         <td>" . $assignment['meal_category'] . "</td>
                         <td>" . $assignment['recipe_title'] . "</td>
-                        <td><a href='edit_assignment.php?id=" . $assignment['id'] . "'>Bearbeiten</a></td>
+                        <td><a href='edit_assignment.php?id=" . $assignment['id'] . "' class='btn btn-edit'>Bearbeiten</a></td>
                       </tr>";
             }
-            echo "</table>";
+            echo "</tbody></table>";
         } else {
             echo "<p>Keine Zuordnungen für diese Woche gefunden.</p>";
         }
