@@ -1,6 +1,11 @@
 <?php
 $title = "Wochenpläne verwalten";
 require '../header.php'; // Header einfügen
+
+// Fehlerausgabe aktivieren (nur für Debugging-Zwecke, sollte in Produktion deaktiviert sein)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
@@ -15,7 +20,10 @@ require '../header.php'; // Header einfügen
     $stmt = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC");
     $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($weekPlans) {
+    // Debugging: Überprüfen, ob die Abfrage erfolgreich war und Daten vorhanden sind
+    if ($weekPlans === false) {
+        echo "<p>Fehler beim Abrufen der Wochenpläne: " . $conn->errorInfo()[2] . "</p>";
+    } elseif (count($weekPlans) > 0) {
         echo "<table class='styled-table'>"; // CSS-Klasse für Styling
         echo "<thead><tr><th>Woche</th><th>Jahr</th><th>Beschreibung</th><th>Status</th><th>Aktionen</th></tr></thead><tbody>";
         
