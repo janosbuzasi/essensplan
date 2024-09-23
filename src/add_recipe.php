@@ -15,7 +15,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_POST) {
     // Rezeptdaten aus dem Formular abrufen
     $title = $_POST['title'];
-    $category = $_POST['category'];
+    $category = !empty($_POST['custom_category']) ? $_POST['custom_category'] : $_POST['category'];
     $ingredients = $_POST['ingredients'];
     $instructions = $_POST['instructions'];
     $prep_time = $_POST['prep_time'];
@@ -50,39 +50,59 @@ if ($_POST) {
 
 <main>
     <h2><?php echo $title; ?></h2>
-    <form method="post">
-        <label for="title">Titel des Rezepts:</label>
-        <input type="text" name="title" required>
+    <form method="post" class="recipe-form"> <!-- CSS-Klasse für das Formular -->
+        <div class="form-group"> <!-- Container für jedes Feld und Label -->
+            <label for="title">Titel des Rezepts:</label>
+            <input type="text" name="title" required>
+        </div>
 
-        <label for="category">Kategorie (optional):</label>
-        <select name="category">
-            <option value="">Kategorie wählen</option>
-            <?php
-            foreach ($categories as $cat) {
-                echo "<option value='" . htmlspecialchars($cat['category'], ENT_QUOTES) . "'>" . htmlspecialchars($cat['category'], ENT_QUOTES) . "</option>";
-            }
-            ?>
-            <option value="custom">Andere (bitte unten eintragen)</option>
-        </select>
-        <input type="text" name="custom_category" placeholder="Andere Kategorie">
+        <div class="form-group">
+            <label for="category">Kategorie (optional):</label>
+            <select name="category">
+                <option value="">Kategorie wählen</option>
+                <?php
+                foreach ($categories as $cat) {
+                    echo "<option value='" . htmlspecialchars($cat['category'], ENT_QUOTES) . "'>" . htmlspecialchars($cat['category'], ENT_QUOTES) . "</option>";
+                }
+                ?>
+                <option value="custom">Andere (bitte unten eintragen)</option>
+            </select>
+            <input type="text" name="custom_category" placeholder="Andere Kategorie">
+        </div>
 
-        <label for="ingredients">Zutaten:</label>
-        <textarea name="ingredients" required></textarea>
+        <div class="form-group">
+            <label for="ingredients">Zutaten:</label>
+            <textarea name="ingredients" required></textarea>
+        </div>
 
-        <label for="instructions">Zubereitung:</label>
-        <textarea name="instructions" required></textarea>
+        <div class="form-group">
+            <label for="instructions">Zubereitung:</label>
+            <textarea name="instructions" required></textarea>
+        </div>
 
-        <label for="prep_time">Vorbereitungszeit (Minuten):</label>
-        <input type="number" name="prep_time" min="1" required>
+        <div class="form-group">
+            <label for="prep_time">Vorbereitungszeit (Minuten):</label>
+            <input type="number" name="prep_time" min="1" required>
+        </div>
 
-        <label for="cook_time">Kochzeit (Minuten):</label>
-        <input type="number" name="cook_time" min="1" required>
+        <div class="form-group">
+            <label for="cook_time">Kochzeit (Minuten):</label>
+            <input type="number" name="cook_time" min="1" required>
+        </div>
 
-        <label for="difficulty">Schwierigkeitsgrad:</label>
-        <input type="text" name="difficulty">
+        <div class="form-group">
+            <label for="difficulty">Schwierigkeitsgrad:</label>
+            <select name="difficulty">
+                <option value="Einfach">Einfach</option>
+                <option value="Mittel">Mittel</option>
+                <option value="Schwierig">Schwierig</option>
+            </select>
+        </div>
 
-        <label for="servings">Portionen:</label>
-        <input type="number" name="servings" min="1" required>
+        <div class="form-group">
+            <label for="servings">Portionen:</label>
+            <input type="number" name="servings" min="1" required>
+        </div>
 
         <input type="submit" value="Rezept hinzufügen" class="btn btn-add">
     </form>
