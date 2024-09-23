@@ -18,23 +18,23 @@
         <h1><?php echo $title; ?></h1>
         <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
     </div>
-<nav id="menu" class="hidden"> <!-- Versteckt das Menü initial -->
-    <ul>
-        <li><a href="/essensplan/index.php">Home</a></li>
-        <li><a href="/essensplan/src/view_recipes.php">Rezepte verwalten</a></li>
-        <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien verwalten</a></li>
-        <li><a href="/essensplan/src/view_weeks.php">Wochenpläne verwalten</a></li> <!-- Wochenpläne verwalten -->
-        <li><a href="/essensplan/src/archived_weeks.php">Archivierte Essenspläne</a></li> <!-- Archivierte Essenspläne -->
-        <li><a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a></li> <!-- Dark Mode Umschaltung -->
-    </ul>
-</nav>
+    <nav id="menu" class="hidden"> <!-- Versteckt das Menü initial -->
+        <ul>
+            <li><a href="/essensplan/index.php">Home</a></li>
+            <li><a href="/essensplan/src/view_recipes.php">Rezepte verwalten</a></li>
+            <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien verwalten</a></li>
+            <li><a href="/essensplan/src/view_weeks.php">Wochenpläne verwalten</a></li> <!-- Wochenpläne verwalten -->
+            <li><a href="/essensplan/src/archived_weeks.php">Archivierte Essenspläne</a></li> <!-- Archivierte Essenspläne -->
+            <li><a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a></li> <!-- Dark Mode Umschaltung -->
+        </ul>
+    </nav>
 </header>
 
 <script>
     // Funktion zum Umschalten des Burger-Menüs
     function toggleMenu() {
         var menu = document.getElementById("menu");
-        menu.classList.toggle("hidden"); // Versteckt/zeigt das Menü bei Klick
+        menu.classList.toggle("active"); // Menü bei Klick anzeigen/verstecken
     }
 
     // Überprüfen, ob der Dark Mode aktiviert ist
