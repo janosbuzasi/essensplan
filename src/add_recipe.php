@@ -8,6 +8,10 @@ $conn = $db->getConnection();
 
 $error = ""; // Variable für Fehlermeldungen
 
+// Vorhandene Kategorien abrufen, um sie im Dropdown anzuzeigen
+$stmt = $conn->query("SELECT DISTINCT category FROM recipes WHERE category IS NOT NULL AND category != '' ORDER BY category ASC");
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_POST) {
     // Rezeptdaten aus dem Formular abrufen
     $title = $_POST['title'];
@@ -50,8 +54,17 @@ if ($_POST) {
         <label for="title">Titel des Rezepts:</label>
         <input type="text" name="title" required>
 
-        <label for="category">Kategorie:</label>
-        <input type="text" name="category">
+        <label for="category">Kategorie (optional):</label>
+        <select name="category">
+            <option value="">Kategorie wählen</option>
+            <?php
+            foreach ($categories as $cat) {
+                echo "<option value='" . htmlspecialchars($cat['category'], ENT_QUOTES) . "'>" . htmlspecialchars($cat['category'], ENT_QUOTES) . "</option>";
+            }
+            ?>
+            <option value="custom">Andere (bitte unten eintragen)</option>
+        </select>
+        <input type="text" name="custom_category" placeholder="Andere Kategorie">
 
         <label for="ingredients">Zutaten:</label>
         <textarea name="ingredients" required></textarea>
