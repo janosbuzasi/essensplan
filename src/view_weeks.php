@@ -1,74 +1,59 @@
 <?php
 $title = "Wochenpläne verwalten";
-require '../header.php';
-require_once '../config/db.php';
-
-$db = new Database();
-$conn = $db->getConnection();
-
-// Vorhandene Wochenpläne abrufen
-$stmt = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC");
-$weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Debugging: Anzahl der abgerufenen Wochenpläne anzeigen
-echo "<pre>";
-echo "Anzahl der vorhandenen Wochenpläne: " . count($weekPlans) . "\n";
-print_r($weekPlans);
-echo "</pre>";
-
-function hasAssignments($conn, $week_plan_id) {
-    // Überprüfen, ob Zuweisungen für den Wochenplan existieren
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM meal_plan WHERE week_plan_id = ?");
-    $stmt->execute([$week_plan_id]);
-    return $stmt->fetchColumn() > 0;
-}
+require '../header.php'; // Header einfügen
 ?>
-
 <main>
     <h2><?php echo $title; ?></h2>
-    
-    <?php if ($weekPlans): ?>
-        <table class="styled-table"> <!-- Nutzung der bestehenden CSS-Klassen -->
-            <thead>
-                <tr>
-                    <th>Woche</th>
-                    <th>Jahr</th>
-                    <th>Beschreibung</th>
-                    <th>Status</th>
-                    <th>Aktionen</th>
-                </tr>
-            </thead>
-<tbody>
-    <?php foreach ($weekPlans as $plan): ?>
-        <tr>
-            <?php
-            // Debugging-Anweisungen für jede Zelle
-            echo "<!-- Debugging: Aktuelle Woche: " . $plan['week_number'] . ", Jahr: " . $plan['year'] . " -->";
-            ?>
-            <td>Woche <?php echo $plan['week_number']; ?></td>
-            <td><?php echo $plan['year']; ?></td>
-            <td><?php echo htmlspecialchars($plan['description'], ENT_QUOTES); ?></td>
-            <td><?php echo $plan['status']; ?></td>
-            <td>
-                <a href="view_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-view">Ansehen</a>
-                <a href="edit_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-edit">Bearbeiten</a>
-                <a href="delete_week.php?id=<?php echo $plan['id']; ?>" class="btn btn-delete" onclick="return confirm('Möchtest du diesen Wochenplan wirklich löschen?');">Löschen</a>
-                <?php if (hasAssignments($conn, $plan['id'])): ?>
-                    <a href="edit_assignment.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-edit">Zuweisungen bearbeiten</a>
-                <?php else: ?>
-                    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $plan['id']; ?>" class="btn btn-add">Rezepte zuweisen</a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+    <p>Hier kannst du die bestehenden Wochenpläne anzeigen, bearbeiten oder löschen.</p>
 
-        </table>
-    <?php else: ?>
-        <p>Keine Wochenpläne gefunden.</p>
-    <?php endif; ?>
+    <?php
+    require_once '../config/db.php';
+    $db = new Database();
+    $conn = $db->getConnection();
+
+    // Vorhandene Wochenpläne abrufen
+    $stmt = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC");
+    $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($weekPlans) {
+        echo "<table class='styled-table'>"; // CSS-Klasse für Styling
+        echo "<thead><tr><th>Woche</th><th>Jahr</th><th>Beschreibung</th><th>Status</th><th>Aktionen</th></tr></thead><tbody>";
+        
+        // Schleife über die abgerufenen Wochenpläne
+        foreach ($weekPlans as $plan) {
+            echo "<tr>";
+            echo "<td>Woche " . $plan['week_number'] . "</td>";
+            echo "<td>" . $plan['year'] . "</td>";
+            echo "<td>" . htmlspecialchars($plan['description'], ENT_QUOTES) . "</td>";
+            echo "<td>" . $plan['status'] . "</td>";
+            echo "<td>";
+            echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view'>Ansehen</a> ";
+            echo "<a href='edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit'>Bearbeiten</a> ";
+            echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' onclick=\"return confirm('Möchtest du diesen Wochenplan wirklich löschen?');\">Löschen</a> ";
+            
+            // Überprüfen, ob es Zuweisungen gibt, um die richtige Aktion anzuzeigen
+            $stmt2 = $conn->prepare("SELECT COUNT(*) FROM meal_plan WHERE week_plan_id = ?");
+            $stmt2->execute([$plan['id']]);
+            $hasAssignments = $stmt2->fetchColumn();
+            if ($hasAssignments) {
+                echo "<a href='edit_assignment.php?week_plan_id=" . $plan['id'] . "' class='btn btn-edit'>Zuweisungen bearbeiten</a>";
+            } else {
+                echo "<a href='assign_recipe_to_week.php?week_plan_id=" . $plan['id'] . "' class='btn btn-add'>Rezepte zuweisen</a>";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+
+        echo "</tbody></table>";
+    } else {
+        echo "<p>Keine Wochenpläne gefunden.</p>";
+    }
+    ?>
+
+    <!-- Link zum Hinzufügen eines neuen Wochenplans -->
+    <a href="add_week.php" class="btn btn-add">Neuen Wochenplan hinzufügen</a>
 </main>
 
 <?php
-include '../footer.php';
+include '../footer.php'; // Footer einfügen
 ?>
