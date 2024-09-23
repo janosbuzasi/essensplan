@@ -32,7 +32,7 @@ error_reporting(E_ALL);
             echo "<tr>";
             echo "<td>Woche " . $plan['week_number'] . "</td>";
             echo "<td>" . $plan['year'] . "</td>";
-            echo "<td>" . htmlspecialchars($plan['description'], ENT_QUOTES) . "</td>";
+            echo "<td>" . htmlspecialchars($plan['description'] ?? '', ENT_QUOTES) . "</td>"; // Leeren String verwenden, wenn description null ist
             echo "<td>" . $plan['status'] . "</td>";
             echo "<td>";
             echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view'>Ansehen</a> ";
@@ -40,12 +40,19 @@ error_reporting(E_ALL);
             echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' onclick=\"return confirm('Möchtest du diesen Wochenplan wirklich löschen?');\">Löschen</a> ";
             
             // Überprüfen, ob es Zuweisungen gibt, um die richtige Aktion anzuzeigen
-            $stmt2 = $conn->prepare("SELECT COUNT(*) FROM meal_plan WHERE week_plan_id = ?");
-            $stmt2->execute([$plan['id']]);
-            $hasAssignments = $stmt2->fetchColumn();
-            if ($hasAssignments) {
-                echo "<a href='edit_assignment.php?week_plan_id=" . $plan['id'] . "' class='btn btn-edit'>Zuweisungen bearbeiten</a>";
+            // Prüfen, ob Tabelle meal_plan existiert, bevor die Abfrage ausgeführt wird
+            $stmt_check = $conn->query("SHOW TABLES LIKE 'meal_plan'");
+            if ($stmt_check->rowCount() > 0) {
+                $stmt2 = $conn->prepare("SELECT COUNT(*) FROM meal_plan WHERE week_plan_id = ?");
+                $stmt2->execute([$plan['id']]);
+                $hasAssignments = $stmt2->fetchColumn();
+                if ($hasAssignments) {
+                    echo "<a href='edit_assignment.php?week_plan_id=" . $plan['id'] . "' class='btn btn-edit'>Zuweisungen bearbeiten</a>";
+                } else {
+                    echo "<a href='assign_recipe_to_week.php?week_plan_id=" . $plan['id'] . "' class='btn btn-add'>Rezepte zuweisen</a>";
+                }
             } else {
+                // Fallback, falls die Tabelle 'meal_plan' nicht existiert
                 echo "<a href='assign_recipe_to_week.php?week_plan_id=" . $plan['id'] . "' class='btn btn-add'>Rezepte zuweisen</a>";
             }
             echo "</td>"; // Schließen der Aktionenspalte
