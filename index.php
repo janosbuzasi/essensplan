@@ -95,11 +95,3 @@ require 'header.php';  // Inkludiere den Header
 <?php
 include 'footer.php';
 ?>
-
-<script>
-// Funktion zum Umschalten des Dark Mode
-function toggleDarkMode() {
-    var element = document.body;
-    element.classList.toggle("dark-mode");
-}
-</script>
