@@ -1,49 +1,46 @@
 <?php
 $title = "Rezept löschen";
-require '../header.php';
-?>
-<main>
-    <h2><?php echo $title; ?></h2>
-    <?php
-    if (isset($_GET['id'])) {
-        require_once '../config/db.php';
-        $db = new Database();
-        $conn = $db->getConnection();
+require '../header.php'; // Header einfügen
+require_once '../config/db.php';
 
-        // Überprüfung, ob das Rezept existiert
-        $stmt = $conn->prepare("SELECT * FROM recipes WHERE id = ?");
-        $stmt->execute([$_GET['id']]);
-        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+$db = new Database();
+$conn = $db->getConnection();
 
-        if ($recipe) {
-            // Bestätigungsabfrage anzeigen
-            echo "<p>Möchtest du das Rezept <strong>" . $recipe['title'] . "</strong> wirklich löschen?</p>";
-            echo '<form action="delete_recipe.php?id=' . $recipe['id'] . '" method="post">
-                    <button type="submit" name="confirm_delete" value="yes">Ja, löschen</button>
-                    <button type="submit" name="confirm_delete" value="no">Nein, abbrechen</button>
-                  </form>';
+if (isset($_GET['id'])) {
+    $recipe_id = $_GET['id'];
+    
+    // Rezeptdetails abrufen, um sie dem Benutzer anzuzeigen
+    $stmt = $conn->prepare("SELECT title FROM recipes WHERE id = ?");
+    $stmt->execute([$recipe_id]);
+    $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verarbeitung der Benutzerentscheidung
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if ($_POST['confirm_delete'] === 'yes') {
-                    $stmt = $conn->prepare("DELETE FROM recipes WHERE id = ?");
-                    if ($stmt->execute([$_GET['id']])) {
-                        echo "<p>Rezept erfolgreich gelöscht!</p>";
-                    } else {
-                        echo "<p>Fehler beim Löschen des Rezepts.</p>";
-                    }
-                } else {
-                    echo "<p>Löschvorgang abgebrochen.</p>";
-                }
-            }
+    if ($recipe) {
+        // Bestätigungsabfrage anzeigen
+        if (!isset($_POST['confirm'])) {
+            ?>
+            <main>
+                <h2><?php echo $title; ?></h2>
+                <p>Möchtest du das Rezept <strong><?php echo $recipe['title']; ?></strong> wirklich löschen?</p>
+                <form method="post">
+                    <input type="hidden" name="confirm" value="yes">
+                    <button type="submit" class="btn btn-delete">Löschen</button>
+                    <a href="view_recipes.php" class="btn btn-add">Abbrechen</a>
+                </form>
+            </main>
+            <?php
         } else {
-            echo "<p>Rezept nicht gefunden.</p>";
+            // Rezept löschen
+            $stmt = $conn->prepare("DELETE FROM recipes WHERE id = ?");
+            $stmt->execute([$recipe_id]);
+            echo "<main><p>Das Rezept <strong>{$recipe['title']}</strong> wurde erfolgreich gelöscht.</p>";
+            echo "<a href='view_recipes.php' class='btn btn-add'>Zurück zur Rezeptverwaltung</a></main>";
         }
     } else {
-        echo "<p>Kein Rezept ausgewählt.</p>";
+        echo "<main><p>Rezept nicht gefunden.</p><a href='view_recipes.php' class='btn btn-add'>Zurück zur Rezeptverwaltung</a></main>";
     }
-    ?>
-</main>
-<?php
-include '../footer.php';
+} else {
+    echo "<main><p>Keine ID angegeben.</p><a href='view_recipes.php' class='btn btn-add'>Zurück zur Rezeptverwaltung</a></main>";
+}
+
+include '../footer.php'; // Footer einfügen
 ?>
