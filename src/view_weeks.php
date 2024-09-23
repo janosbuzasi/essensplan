@@ -6,9 +6,20 @@ require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
+// Debugging: Überprüfen, ob die Verbindung erfolgreich ist
+if (!$conn) {
+    die("Datenbankverbindung fehlgeschlagen!");
+}
+
 // Vorhandene Wochenpläne abrufen
 $stmt = $conn->query("SELECT * FROM essensplan ORDER BY year DESC, week_number DESC");
 $weekPlans = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Debugging: Anzahl der abgerufenen Wochenpläne anzeigen
+echo "<pre>";
+echo "Anzahl der vorhandenen Wochenpläne: " . count($weekPlans) . "\n";
+print_r($weekPlans);
+echo "</pre>";
 
 function hasAssignments($conn, $week_plan_id) {
     // Überprüfen, ob Zuweisungen für den Wochenplan existieren
