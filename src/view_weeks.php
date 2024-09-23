@@ -40,11 +40,11 @@ require '../header.php'; // Header einfügen
             } else {
                 echo "<a href='assign_recipe_to_week.php?week_plan_id=" . $plan['id'] . "' class='btn btn-add'>Rezepte zuweisen</a>";
             }
-            echo "</td>";
-            echo "</tr>";
+            echo "</td>"; // Schließen der Aktionenspalte
+            echo "</tr>"; // Schließen der Tabellenzeile
         }
 
-        echo "</tbody></table>";
+        echo "</tbody></table>"; // Schließen des Tabellenkörpers und der Tabelle
     } else {
         echo "<p>Keine Wochenpläne gefunden.</p>";
     }
