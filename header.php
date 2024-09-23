@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <?php
+        $domain = $_SERVER['HTTP_HOST'];
+        $pageTitle = isset($title) ? "$title | $domain" : $domain;
+        echo $pageTitle;
+        ?>
+    </title>
+    <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Pfad zur style.css überprüfen -->
+</head>
+<body onload="checkDarkMode()"> <!-- Überprüft den Dark Mode beim Laden -->
 <header>
     <div class="header-container">
         <h1><?php echo $title; ?></h1>
