@@ -132,3 +132,60 @@ input[type="text"], input[type="number"], textarea, select {
 .dark-mode .btn-add {
     background-color: #2980b9;
 }
+
+/* Footer-Stile */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.social-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.social-links li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.social-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+/* Dark Mode Footer */
+.dark-mode footer {
+    background-color: #1a1a1a;
+    color: #ccc;
+}
+
+.dark-mode .social-links a {
+    color: #ccc;
+}
+
+.dark-mode .social-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
