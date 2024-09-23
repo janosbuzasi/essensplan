@@ -35,7 +35,9 @@ if (isset($_GET['id'])) {
             $difficulty = $_POST['difficulty'];
             $servings = $_POST['servings'];
 
-            // Validierung der Felder für Vorbereitungszeit, Kochzeit und Portionen
+            // Validierung der Felder für Vorbereitungszeit, Kochzeit, Portionen und Schwierigkeitsgrad
+            $allowed_difficulties = ["leicht", "mittel", "schwer"]; // Erlaubte Werte für Schwierigkeitsgrad
+
             if (!is_numeric($prep_time) || $prep_time <= 0) {
                 $error .= "Bitte eine gültige Vorbereitungszeit (größer als 0) angeben.<br>";
             }
@@ -46,6 +48,11 @@ if (isset($_GET['id'])) {
 
             if (!is_numeric($servings) || $servings <= 0) {
                 $error .= "Bitte eine gültige Anzahl von Portionen (größer als 0) angeben.<br>";
+            }
+
+            // Validierung des Schwierigkeitsgrads
+            if (!in_array($difficulty, $allowed_difficulties)) {
+                $error .= "Bitte einen gültigen Schwierigkeitsgrad wählen: leicht, mittel oder schwer.<br>";
             }
 
             // Wenn kein Fehler aufgetreten ist, Rezept in der Datenbank aktualisieren
@@ -121,9 +128,9 @@ if (isset($_GET['id'])) {
         <div class="form-group">
             <label for="difficulty">Schwierigkeitsgrad:</label>
             <select name="difficulty">
-                <option value="Einfach" <?php if ($recipe['difficulty'] == "Einfach") echo "selected"; ?>>Einfach</option>
-                <option value="Mittel" <?php if ($recipe['difficulty'] == "Mittel") echo "selected"; ?>>Mittel</option>
-                <option value="Schwierig" <?php if ($recipe['difficulty'] == "Schwierig") echo "selected"; ?>>Schwierig</option>
+                <option value="leicht" <?php if ($recipe['difficulty'] == "leicht") echo "selected"; ?>>Leicht</option>
+                <option value="mittel" <?php if ($recipe['difficulty'] == "mittel") echo "selected"; ?>>Mittel</option>
+                <option value="schwer" <?php if ($recipe['difficulty'] == "schwer") echo "selected"; ?>>Schwer</option>
             </select>
         </div>
 
