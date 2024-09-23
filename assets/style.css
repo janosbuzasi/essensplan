@@ -12,29 +12,18 @@ header {
     color: #fff;
     padding: 10px 0;
     text-align: center;
-    position: relative;
+    position: relative; /* Ermöglicht die korrekte Positionierung des Menüs */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Zwischenräume zwischen H1 und Menü-Button */
+    align-items: center;
+    padding: 0 20px;
 }
 
 header h1 {
     margin: 0;
-}
-
-main {
-    padding: 20px;
-    max-width: 1000px;
-    margin: auto;
-}
-
-h2, h3 {
-    color: #337ab7; /* Gleiche Farbe wie im Header */
-}
-
-/* Stil für das Burger-Menü */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
 }
 
 .menu-toggle {
@@ -52,9 +41,9 @@ h2, h3 {
 /* Menü-Stile */
 #menu {
     display: none; /* Versteckt das Menü initial */
-    position: absolute;
+    position: absolute; /* Absolut positioniert, um unter dem Menü-Button zu erscheinen */
     top: 60px; /* Unter dem Header platzieren */
-    left: 0; /* Links bündig zum Header */
+    right: 20px; /* Rechts bündig ausrichten */
     background-color: #337ab7; /* Gleiche Farbe wie im Header */
     width: 200px; /* Menübreite */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Leichter Schatten */
@@ -83,9 +72,22 @@ h2, h3 {
     background-color: #285e8e; /* Leicht dunkler beim Hover */
 }
 
-/* Menü anzeigen, wenn nicht versteckt */
+/* Menü anzeigen, wenn es die 'active'-Klasse hat */
 #menu.active {
     display: block;
+}
+
+/* Responsive-Anpassungen */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: row; /* Horizontale Ausrichtung */
+        justify-content: space-between; /* H1 und Menü-Button auseinanderziehen */
+    }
+
+    #menu {
+        width: 100%; /* Menü über die gesamte Breite */
+        right: 0; /* Rechts ausrichten */
+    }
 }
 
 /* Stil für alle Tabellen */
