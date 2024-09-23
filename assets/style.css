@@ -77,6 +77,16 @@ header h1 {
     display: block;
 }
 
+/* Hauptinhalt zentrieren und einrücken */
+main {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 20px auto; /* Zentriert den Inhalt auf der Seite */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optionaler Schatten für Hauptinhalt */
+    background-color: #ffffff; /* Hintergrundfarbe für Hauptinhalt */
+    border-radius: 8px; /* Abgerundete Ecken für Hauptinhalt */
+}
+
 /* Responsive-Anpassungen */
 @media (max-width: 768px) {
     .header-container {
@@ -87,6 +97,11 @@ header h1 {
     #menu {
         width: 100%; /* Menü über die gesamte Breite */
         right: 0; /* Rechts ausrichten */
+    }
+
+    main {
+        padding: 10px; /* Weniger Padding auf kleineren Bildschirmen */
+        margin: 10px; /* Weniger Außenabstand auf kleineren Bildschirmen */
     }
 }
 
