@@ -162,6 +162,7 @@ table th {
 
 .btn-add:hover { background-color: #286090; }
 
+/* Druck-Button-Stil normal mode*/
 .btn-print {
     background-color: #5bc0de; /* Helles Blau für den Hintergrund */
     color: #fff; /* Weiße Schriftfarbe */
