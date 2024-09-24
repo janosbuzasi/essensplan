@@ -49,14 +49,14 @@ h2 {
 
 .category {
     font-weight: bold;
-    background-color: #f9f9f9;
+    background-color: #f2f2f2;
     margin-bottom: 5px; /* Abstand zwischen Kategorie und Rezepttitel */
 }
 
 /* Hintergrundfarbe für gerade Spalten */
 .meal-plan-table td:nth-child(even),
 .meal-plan-table th:nth-child(even) {
-    background-color: #f9f9f9; /* Leichtes Grau */
+    background-color: #e0e0e0; /* Etwas dunkleres Grau für besseren Kontrast im Druck */
 }
 
 /* Für A3-Format optimieren */
