@@ -16,9 +16,9 @@ require '../header.php';
 
     // Button zum Drucken des Wochenplans
     if ($weekPlanId): ?>
-        <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
-            <i class="fas fa-print"></i> Drucken
-        </a>
+      <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank" style="background-color: #ff0000; color: #ffffff; padding: 10px 15px; border: 2px solid #000; display: inline-block; font-size: 16px;">
+        <i class="fas fa-print"></i> Drucken
+      </a>
     <?php endif; ?>
 
     <?php
