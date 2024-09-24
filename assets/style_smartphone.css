@@ -359,22 +359,49 @@ footer {
     .styled-table {
         display: block;
         overflow-x: auto; /* Ermöglicht horizontales Scrollen */
+        white-space: nowrap; /* Verhindert das Umbruch der Tabelle */
     }
 
     /* Button-Icons in die Mitte setzen */
     .btn i {
         font-size: 18px; /* Icon-Größe anpassen */
+        display: block; /* Block-Anzeige, um das Icon zu zentrieren */
     }
 
     /* Reduziere die Button-Größe auf Smartphones */
     .btn {
-        padding: 5px;
-        font-size: 14px;
+        padding: 10px; /* Größere Klickfläche für Touchscreens */
+        font-size: 16px; /* Lesbarere Schriftgröße */
+        display: inline-flex; /* Buttons in einer Zeile anzeigen */
+        justify-content: center; /* Icon in der Mitte zentrieren */
+        align-items: center; /* Icon vertikal zentrieren */
+        width: 45px; /* Einheitliche Breite der Buttons */
+        height: 45px; /* Einheitliche Höhe der Buttons */
+        margin: 5px 2px; /* Abstände zwischen den Buttons */
     }
 
     /* Hauptinhalt flexibler gestalten */
     main {
         padding: 10px;
         box-shadow: none; /* Schatten entfernen */
+    }
+
+    /* Optimierungen für die Tabellenzellen */
+    table th, table td {
+        padding: 8px; /* Weniger Padding, um Platz zu sparen */
+        font-size: 14px; /* Kleinere Schriftgröße */
+    }
+
+    /* Buttons nebeneinander in einer Zeile anzeigen */
+    .btn-group {
+        display: flex; /* Flexbox-Layout für die Buttons */
+        justify-content: space-around; /* Platz zwischen den Buttons */
+        align-items: center; /* Buttons vertikal zentrieren */
+        flex-wrap: wrap; /* Zeilenumbruch für mehrere Buttons */
+    }
+
+    /* Responsive Anpassungen für die Tabelle */
+    table {
+        width: auto; /* Breite entsprechend dem Inhalt anpassen */
     }
 }
