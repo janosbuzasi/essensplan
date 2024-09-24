@@ -1,4 +1,8 @@
 <?php
+$title = "Essenspläne Übersicht"; 
+require 'header.php';  // Inkludiere den Header
+?>
+<?php
 require_once '../config/db.php'; // Pfad zur Datenbankverbindung sicherstellen
 $db = new Database();
 $conn = $db->getConnection();
@@ -24,7 +28,6 @@ if ($plans) {
     echo "<p>Keine Essenspläne gefunden.</p>";
 }
 ?>
-
 <main>
     <h2><?php echo $title; ?></h2>
     <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne.</p>
@@ -37,7 +40,6 @@ if ($plans) {
                 <th>Aktionen</th>
             </tr>
         </thead>
-
         <tbody>
             <?php
             require_once '../config/db.php';
@@ -69,3 +71,4 @@ if ($plans) {
 <?php
 include 'footer.php';
 ?>
+
