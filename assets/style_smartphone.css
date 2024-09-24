@@ -1,0 +1,380 @@
+/* Basisstil für die gesamte Website */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    display: block;
+}
+
+#menu.hidden {
+    display: none;
+}
+
+#menu {
+    display: none; /* Versteckt das Menü initial */
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    width: 200px; /* Menübreite */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+    border-radius: 5px; /* Abgerundete Ecken */
+    z-index: 1000; /* Über anderen Inhalten anzeigen */
+}
+
+#menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu ul li {
+    border-bottom: 1px solid #fff; /* Unterlinie für jedes Menüelement */
+}
+
+#menu ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+}
+
+#menu ul li a:hover {
+    background-color: #285e8e; /* Leicht dunkler beim Hover */
+}
+
+#menu.active {
+    display: block;
+}
+
+main {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+h2, h3 {
+    color: #337ab7; /* Gleiche Farbe wie im Header */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 2px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn-view {
+    background-color: #5cb85c; /* Grün */
+}
+
+.btn-view:hover {
+    background-color: #4cae4c; /* Dunkleres Grün */
+}
+
+.btn-edit {
+    background-color: #5bc0de; /* Blau */
+}
+
+.btn-edit:hover {
+    background-color: #46b8da; /* Dunkleres Blau */
+}
+
+.btn-archive {
+    background-color: #f0ad4e; /* Orange */
+}
+
+.btn-archive:hover {
+    background-color: #ec971f; /* Dunkleres Orange */
+}
+
+.btn-delete {
+    background-color: #d9534f; /* Rot */
+}
+
+.btn-delete:hover {
+    background-color: #c9302c; /* Dunkleres Rot */
+}
+
+.btn-add {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #337ab7; /* Dunkelblau */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-add:hover {
+    background-color: #286090; /* Dunkleres Dunkelblau */
+}
+
+footer {
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.social-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.social-links li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.social-links a {
+    color: #fff; /* Weiß wie die Schrift im Header */
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.dark-mode header {
+    background-color: #1abc9c;
+}
+
+.dark-mode footer {
+    background-color: #1abc9c; /* Gleiche Farbe wie der Header im Dark Mode */
+    color: #ecf0f1; /* Helle Farbe für den Text */
+}
+
+.dark-mode h2, .dark-mode h3 {
+    color: #1abc9c; /* Gleiche Farbe wie im Header */
+}
+
+.dark-mode .styled-table {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.dark-mode .styled-table th {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.dark-mode .styled-table td {
+    border-bottom: 1px solid #2c3e50;
+    color: #ecf0f1;
+}
+
+.dark-mode .styled-table tbody tr:nth-of-type(even) {
+    background-color: #3b4b5c;
+}
+
+.dark-mode .styled-table tbody tr:nth-of-type(odd) {
+    background-color: #34495e;
+}
+
+.dark-mode .styled-table tbody tr:hover {
+    background-color: #1abc9c;
+    color: #2c3e50;
+}
+
+.dark-mode .btn {
+    color: #2c3e50;
+}
+
+.dark-mode .btn-view {
+    background-color: #27ae60;
+}
+
+.dark-mode .btn-view:hover {
+    background-color: #219150;
+}
+
+.dark-mode .btn-edit {
+    background-color: #3498db;
+}
+
+.dark-mode .btn-edit:hover {
+    background-color: #2980b9;
+}
+
+.dark-mode .btn-archive {
+    background-color: #e67e22;
+}
+
+.dark-mode .btn-archive:hover {
+    background-color: #d35400;
+}
+
+.dark-mode .btn-delete {
+    background-color: #e74c3c;
+}
+
+.dark-mode .btn-delete:hover {
+    background-color: #c0392b;
+}
+
+.dark-mode .btn-add {
+    background-color: #2980b9;
+}
+
+.dark-mode .btn-add:hover {
+    background-color: #2471a3;
+}
+
+.dark-mode .social-links a {
+    color: #ecf0f1;
+}
+
+.dark-mode .social-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.recipe-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical; /* Ermöglicht das Vergrößern des Textbereichs */
+}
+
+/* Smartphone-spezifische Anpassungen */
+@media (max-width: 768px) {
+    /* Tabelle scrollbar machen */
+    .styled-table {
+        display: block;
+        overflow-x: auto; /* Ermöglicht horizontales Scrollen */
+    }
+
+    /* Button-Icons in die Mitte setzen */
+    .btn i {
+        font-size: 18px; /* Icon-Größe anpassen */
+    }
+
+    /* Reduziere die Button-Größe auf Smartphones */
+    .btn {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    /* Hauptinhalt flexibler gestalten */
+    main {
+        padding: 10px;
+        box-shadow: none; /* Schatten entfernen */
+    }
+}
