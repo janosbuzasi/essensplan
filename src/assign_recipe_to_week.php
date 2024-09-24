@@ -17,7 +17,7 @@ require '../header.php';
     // Bestimme die standardmäßig ausgewählte Woche (die neueste)
     $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
 
-    // Verhindere das Springen zur neuesten Woche nach Formularabsendung
+    // Aktualisiere die ausgewählte Woche nach dem POST-Request
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $selectedWeekPlanId = $_POST['week_plan_id'];
     }
@@ -104,8 +104,9 @@ require '../header.php';
             // Zuordnung in die Datenbank einfügen
             $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
             if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
-                // Nach dem Hinzufügen bleibt die Woche erhalten
-                header("Location: assign_recipe_to_week.php?week_plan_id=$weekPlanId");
+                echo "<p>Rezept erfolgreich zugeordnet!</p>";
+                // Rufe die Funktion zur Aktualisierung der Seite auf
+                echo "<script>location.href = 'assign_recipe_to_week.php?week_plan_id=" . $weekPlanId . "';</script>";
                 exit;
             } else {
                 echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
