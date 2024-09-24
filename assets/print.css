@@ -1,3 +1,5 @@
+/* print.css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -42,6 +44,7 @@ h2 {
 .category {
     font-weight: bold;
     background-color: #f9f9f9;
+    margin-bottom: 5px; /* Abstand zwischen Kategorie und Rezepttitel */
 }
 
 /* Für A3-Format optimieren */
@@ -49,4 +52,3 @@ h2 {
     size: A3 landscape;
     margin: 20mm;
 }
-
