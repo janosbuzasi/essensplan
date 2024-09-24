@@ -27,10 +27,10 @@ require 'header.php';  // Inkludiere den Header
                     echo "<td>Woche " . $plan['week_number'] . "</td>";
                     echo "<td>" . $plan['year'] . "</td>";
                     echo "<td>";
-                    echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view'><i class='fas fa-eye'></i></a>";
-                    echo "<a href='edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit'><i class='fas fa-edit'></i></a>";
-                    echo "<a href='archive_week.php?id=" . $plan['id'] . "' class='btn btn-archive'><i class='fas fa-archive'></i></a>";
-                    echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\"><i class='fas fa-trash'></i></a>";
+                    echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view' title='Essensplan ansehen'><i class='fas fa-eye'></i></a>";
+                    echo "<a href='edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit' title='Essensplan bearbeiten'><i class='fas fa-edit'></i></a>";
+                    echo "<a href='archive_week.php?id=" . $plan['id'] . "' class='btn btn-archive' title='Essensplan archivieren'><i class='fas fa-archive'></i></a>";
+                    echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' title='Essensplan löschen' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\"><i class='fas fa-trash'></i></a>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -45,4 +45,3 @@ require 'header.php';  // Inkludiere den Header
 <?php
 include 'footer.php';
 ?>
-
