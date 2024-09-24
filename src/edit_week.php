@@ -21,23 +21,31 @@ require '../header.php';
         if ($weekPlan) {
             // Bearbeitungsformular anzeigen
             ?>
-            <form action="edit_week.php?id=<?php echo $weekPlan['id']; ?>" method="post">
-                <label for="week_number">Kalenderwoche:</label><br>
-                <input type="number" name="week_number" value="<?php echo $weekPlan['week_number']; ?>" required><br><br>
+            <form action="edit_week.php?id=<?php echo $weekPlan['id']; ?>" method="post" class="recipe-form">
+                <div class="form-group">
+                    <label for="week_number">Kalenderwoche:</label>
+                    <input type="number" name="week_number" value="<?php echo $weekPlan['week_number']; ?>" required class="form-control">
+                </div>
 
-                <label for="year">Jahr:</label><br>
-                <input type="number" name="year" value="<?php echo $weekPlan['year']; ?>" required><br><br>
+                <div class="form-group">
+                    <label for="year">Jahr:</label>
+                    <input type="number" name="year" value="<?php echo $weekPlan['year']; ?>" required class="form-control">
+                </div>
 
-                <label for="description">Beschreibung:</label><br>
-                <textarea name="description" rows="4"><?php echo $weekPlan['description']; ?></textarea><br><br>
+                <div class="form-group">
+                    <label for="description">Beschreibung:</label>
+                    <textarea name="description" rows="4" class="form-control"><?php echo $weekPlan['description']; ?></textarea>
+                </div>
 
-                <label for="status">Status:</label><br>
-                <select name="status" required>
-                    <option value="aktiv" <?php echo ($weekPlan['status'] == 'aktiv') ? 'selected' : ''; ?>>Aktiv</option>
-                    <option value="archiviert" <?php echo ($weekPlan['status'] == 'archiviert') ? 'selected' : ''; ?>>Archiviert</option>
-                </select><br><br>
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select name="status" required class="form-select">
+                        <option value="aktiv" <?php echo ($weekPlan['status'] == 'aktiv') ? 'selected' : ''; ?>>Aktiv</option>
+                        <option value="archiviert" <?php echo ($weekPlan['status'] == 'archiviert') ? 'selected' : ''; ?>>Archiviert</option>
+                    </select>
+                </div>
 
-                <input type="submit" value="Änderungen speichern">
+                <input type="submit" value="Änderungen speichern" class="btn btn-edit">
             </form>
             <?php
         } else {
@@ -63,7 +71,7 @@ require '../header.php';
         }
     }
     ?>
-    <a href="view_weeks.php">Zurück zur Wochenplanverwaltung</a>
+    <a href="view_weeks.php" class="btn btn-view">Zurück zur Wochenplanverwaltung</a>
 </main>
 <?php
 include '../footer.php';
