@@ -162,7 +162,6 @@ table th {
 
 .btn-add:hover { background-color: #286090; }
 
-/* Druck-Button-Stil */
 .btn-print {
     background-color: #5bc0de; /* Helles Blau für den Hintergrund */
     color: #fff; /* Weiße Schriftfarbe */
@@ -174,11 +173,17 @@ table th {
     margin: 5px;
     cursor: pointer;
     font-size: 16px; /* Schriftgröße anpassen */
+    z-index: 1000; /* Sicherstellen, dass der Button nicht überdeckt wird */
 }
 
 .btn-print:hover {
     background-color: #46b8da; /* Dunkleres Blau beim Hover */
     color: #fff; /* Weiße Schriftfarbe */
+}
+
+.btn-print:active, .btn-print:focus {
+    outline: none; /* Entfernt den Rahmen bei Fokussierung */
+    box-shadow: 0 0 5px #5bc0de; /* Leichter Schlagschatten zur Hervorhebung */
 }
 
 /* Footer-Stile */
