@@ -16,9 +16,9 @@ require '../header.php';
 
     // Button zum Drucken des Wochenplans
     if ($weekPlanId): ?>
-      <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank" style="background-color: #ff0000; color: #ffffff; padding: 10px 15px; border: 2px solid #ff0000; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; cursor: pointer; font-size: 16px;">
-        <i class="fas fa-print"></i> Drucken
-      </a>
+        <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
+            <i class="fas fa-print"></i> Drucken
+        </a>
     <?php endif; ?>
 
     <?php
@@ -75,9 +75,15 @@ require '../header.php';
     ?>
 
     <!-- Link zum Bearbeiten des Wochenplans -->
-    <a href="edit_week.php?id=<?php echo $weekPlanId; ?>" class="btn btn-edit">Wochenplan bearbeiten</a>
-    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $weekPlanId; ?>" class="btn btn-add">Rezepte zuweisen</a>
-    <a href="view_weeks.php" class="btn btn-view">Zurück zur Übersicht</a>
+    <a href="edit_week.php?id=<?php echo $weekPlanId; ?>" class="btn btn-edit" title="Wochenplan bearbeiten">
+        <i class="fas fa-edit"></i>
+    </a>
+    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $weekPlanId; ?>" class="btn btn-add" title="Rezepte zuweisen">
+        <i class="fas fa-plus-circle"></i>
+    </a>
+    <a href="view_weeks.php" class="btn btn-view" title="Zurück zur Übersicht">
+        <i class="fas fa-arrow-circle-left"></i>
+    </a>
 </main>
 
 <?php
