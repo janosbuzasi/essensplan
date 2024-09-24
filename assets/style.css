@@ -286,12 +286,15 @@ footer {
 .dark-mode .btn-add { background-color: #2980b9; }
 .dark-mode .btn-add:hover { background-color: #2471a3; }
 
+/* Dark Mode Anpassungen für den Druck-Button */
 .dark-mode .btn-print {
-    background-color: #6c757d;
-    color: #ecf0f1;
+    background-color: #3498db; /* Etwas dunkleres Blau für den Dark Mode */
+    color: #ecf0f1; /* Hellere Schriftfarbe */
 }
+
 .dark-mode .btn-print:hover {
-    background-color: #5a6268;
+    background-color: #2980b9; /* Noch dunkleres Blau beim Hover im Dark Mode */
+    color: #ecf0f1; /* Hellere Schriftfarbe */
 }
 
 .dark-mode .social-links a {
