@@ -14,53 +14,70 @@ require '../header.php';
     $recipes = $conn->query("SELECT * FROM recipes ORDER BY title")->fetchAll(PDO::FETCH_ASSOC);
     $mealCategories = $conn->query("SELECT * FROM meal_categories ORDER BY FIELD(name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Bestimme die standardmäßig ausgewählte Woche (die neueste)
+    // Bestimme die standardmäßig ausgewählte Woche (die neueste oder aus der URL)
     $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
 
-    // Aktualisiere die ausgewählte Woche nach dem POST-Request
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $selectedWeekPlanId = $_POST['week_plan_id'];
+    // Filter für bereits zugeordnete Kombinationen aus Tag und Mahlzeitenkategorie
+    $existingAssignments = [];
+    if ($selectedWeekPlanId) {
+        $stmt = $conn->prepare("SELECT day_of_week, meal_category_id FROM essensplan_recipes WHERE essensplan_id = ?");
+        $stmt->execute([$selectedWeekPlanId]);
+        $existingAssignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Debugging: Anzeigen, welche Woche ausgewählt ist
-    echo "<!-- Ausgewählte Woche: $selectedWeekPlanId -->";
+    // Filtere die verfügbaren Tage und Mahlzeitenkategorien
+    $availableDays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    $availableMealCategories = $mealCategories;
 
-    if ($weekPlans && $recipes && $mealCategories) {
-        ?>
-        <!-- Dropdown-Menü zur Auswahl der Woche -->
-        <form method="get" action="assign_recipe_to_week.php" class="form-inline">
-            <label for="week_plan_id">Woche:</label>
-            <select name="week_plan_id" onchange="this.form.submit()" required class="form-select">
-                <?php foreach ($weekPlans as $plan): ?>
-                    <option value="<?php echo $plan['id']; ?>" <?php echo ($plan['id'] == $selectedWeekPlanId) ? 'selected' : ''; ?>>
-                        Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </form>
-        <br>
+    foreach ($existingAssignments as $assignment) {
+        $dayIndex = array_search($assignment['day_of_week'], $availableDays);
+        if ($dayIndex !== false) {
+            // Entferne den Tag, wenn bereits alle Mahlzeitenkategorien zugewiesen sind
+            $mealCategoryCount = 0;
+            foreach ($availableMealCategories as $key => $category) {
+                if ($category['id'] == $assignment['meal_category_id']) {
+                    unset($availableMealCategories[$key]);
+                    $mealCategoryCount++;
+                }
+            }
+            if ($mealCategoryCount === count($mealCategories)) {
+                unset($availableDays[$dayIndex]);
+            }
+        }
+    }
+    ?>
 
-        <!-- Formular zur Zuordnung eines Rezepts -->
+    <!-- Dropdown-Menü zur Auswahl der Woche -->
+    <form method="get" action="assign_recipe_to_week.php" class="form-inline">
+        <label for="week_plan_id">Woche:</label>
+        <select name="week_plan_id" onchange="this.form.submit()" required class="form-select">
+            <?php foreach ($weekPlans as $plan): ?>
+                <option value="<?php echo $plan['id']; ?>" <?php echo ($plan['id'] == $selectedWeekPlanId) ? 'selected' : ''; ?>>
+                    Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+    <br>
+
+    <!-- Formular zur Zuordnung eines Rezepts -->
+    <?php if (!empty($availableDays) && !empty($availableMealCategories)) : ?>
         <form action="assign_recipe_to_week.php" method="post" class="recipe-form">
             <input type="hidden" name="week_plan_id" value="<?php echo $selectedWeekPlanId; ?>">
-            
+
             <div class="form-group">
                 <label for="day_of_week">Tag:</label>
                 <select name="day_of_week" required class="form-select">
-                    <option value="Montag">Montag</option>
-                    <option value="Dienstag">Dienstag</option>
-                    <option value="Mittwoch">Mittwoch</option>
-                    <option value="Donnerstag">Donnerstag</option>
-                    <option value="Freitag">Freitag</option>
-                    <option value="Samstag">Samstag</option>
-                    <option value="Sonntag">Sonntag</option>
+                    <?php foreach ($availableDays as $day): ?>
+                        <option value="<?php echo $day; ?>"><?php echo $day; ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="meal_category_id">Mahlzeitenkategorie:</label>
                 <select name="meal_category_id" required class="form-select">
-                    <?php foreach ($mealCategories as $category): ?>
+                    <?php foreach ($availableMealCategories as $category): ?>
                         <option value="<?php echo $category['id']; ?>">
                             <?php echo $category['name']; ?>
                         </option>
@@ -81,11 +98,11 @@ require '../header.php';
 
             <input type="submit" value="Rezept zuordnen" class="btn btn-add">
         </form>
-        <?php
-    } else {
-        echo "<p>Keine Wochenpläne, Rezepte oder Mahlzeitenkategorien verfügbar.</p>";
-    }
+    <?php else: ?>
+        <p>Alle Tage und Mahlzeitenkategorien sind für diese Woche bereits zugewiesen.</p>
+    <?php endif; ?>
 
+    <?php
     // Verarbeitung des Formulars
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $weekPlanId = $_POST['week_plan_id'];
@@ -105,9 +122,9 @@ require '../header.php';
             $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
             if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
                 echo "<p>Rezept erfolgreich zugeordnet!</p>";
-                // Rufe die Funktion zur Aktualisierung der Seite auf
-                echo "<script>location.href = 'assign_recipe_to_week.php?week_plan_id=" . $weekPlanId . "';</script>";
-                exit;
+                // Nach der Zuordnung auf derselben Woche bleiben
+                header("Location: assign_recipe_to_week.php?week_plan_id=$weekPlanId");
+                exit();
             } else {
                 echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
             }
@@ -138,7 +155,7 @@ require '../header.php';
                         <td>" . $assignment['day_of_week'] . "</td>
                         <td>" . $assignment['meal_category'] . "</td>
                         <td>" . $assignment['recipe_title'] . "</td>
-                        <td><a href='edit_assignment.php?id=" . $assignment['id'] . "' class='btn btn-edit'>Bearbeiten</a></td>
+                        <td><a href='edit_assignment.php?id=" . $assignment['id'] . "' class='btn btn-edit'><i class='fas fa-edit'></i></a></td>
                       </tr>";
             }
             echo "</tbody></table>";
