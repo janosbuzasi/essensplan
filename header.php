@@ -10,8 +10,12 @@
         echo $pageTitle;
         ?>
     </title>
-    <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Pfad zur style.css überprüfen -->
-    <link rel="stylesheet" href="/essensplan/assets/style_smartphone.css"> <!-- Smartphone-spezifisches Stylesheet -->
+
+    <!-- Standard-Styling -->
+    <link rel="stylesheet" href="/essensplan/assets/style.css"> 
+    <!-- Smartphone-spezifisches Styling nur für kleine Bildschirme -->
+    <link rel="stylesheet" href="/essensplan/assets/style_smartphone.css" media="only screen and (max-width: 768px)">
+
 </head>
 <body>
 <header>
