@@ -1,36 +1,78 @@
 <?php
 $title = "Neuen Wochenplan hinzufügen";
 require '../header.php';
+require_once '../config/db.php'; // Datenbankverbindung einbinden
+
+// Datenbankverbindung herstellen
+$db = new Database();
+$conn = $db->getConnection();
+
+// Standardjahr festlegen (aktuelles Jahr)
+$currentYear = date('Y');
+
+// Überprüfen, ob ein Jahr ausgewählt wurde, sonst Standardjahr verwenden
+$selectedYear = isset($_GET['year']) ? (int)$_GET['year'] : $currentYear;
+
+// Alle existierenden Wochenpläne des ausgewählten Jahres abrufen
+$stmt = $conn->prepare("SELECT week_number FROM essensplan WHERE year = ?");
+$stmt->execute([$selectedYear]);
+$existingWeeks = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Alle möglichen Kalenderwochen (1-52)
+$allWeeks = range(1, 52);
+
+// Verfügbare Wochen berechnen
+$availableWeeks = array_diff($allWeeks, $existingWeeks);
+
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
-    <form action="add_week.php" method="post">
-        <label for="week_number">Kalenderwoche:</label>
-        <input type="number" name="week_number" min="1" max="52" required><br>
-        
-        <label for="year">Jahr:</label>
-        <input type="number" name="year" value="<?php echo date('Y'); ?>" required><br>
-        
-        <!-- Stil für den Button hinzufügen -->
-        <input type="submit" value="Wochenplan hinzufügen" class="btn btn-add"> 
+    <form action="add_week.php" method="get">
+        <label for="year">Jahr auswählen:</label>
+        <select name="year" onchange="this.form.submit()">
+            <?php
+            // Zeige die letzten 5 Jahre und die nächsten 5 Jahre im Dropdown an
+            for ($year = $currentYear - 5; $year <= $currentYear + 5; $year++) {
+                echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+            }
+            ?>
+        </select>
     </form>
+    
+    <?php if (!empty($availableWeeks)) : ?>
+    <form action="add_week.php" method="post">
+        <input type="hidden" name="year" value="<?php echo $selectedYear; ?>">
+        
+        <label for="week_number">Verfügbare Kalenderwochen für das Jahr <?php echo $selectedYear; ?>:</label>
+        <select name="week_number" required>
+            <?php foreach ($availableWeeks as $week) : ?>
+                <option value="<?php echo $week; ?>">Woche <?php echo $week; ?></option>
+            <?php endforeach; ?>
+        </select><br>
+        
+        <input type="submit" value="Wochenplan hinzufügen" class="btn btn-add">
+    </form>
+    <?php else : ?>
+        <p>Alle Kalenderwochen für das Jahr <?php echo $selectedYear; ?> sind bereits definiert.</p>
+    <?php endif; ?>
+
     <?php
+    // Verarbeitung des Formulars
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        require_once '../config/db.php';
-        $db = new Database();
-        $conn = $db->getConnection();
+        $year = $_POST['year'];
+        $weekNumber = $_POST['week_number'];
 
         // Überprüfen, ob der Wochenplan bereits existiert
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE week_number = ? AND year = ?");
-        $stmt->execute([$_POST['week_number'], $_POST['year']]);
+        $stmt->execute([$weekNumber, $year]);
         $existingWeekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($existingWeekPlan) {
-            echo "<p>Ein Wochenplan für Woche " . $_POST['week_number'] . " im Jahr " . $_POST['year'] . " existiert bereits.</p>";
+            echo "<p>Ein Wochenplan für Woche $weekNumber im Jahr $year existiert bereits.</p>";
         } else {
             // Wochenplan hinzufügen
             $stmt = $conn->prepare("INSERT INTO essensplan (week_number, year) VALUES (?, ?)");
-            if ($stmt->execute([$_POST['week_number'], $_POST['year']])) {
+            if ($stmt->execute([$weekNumber, $year])) {
                 echo "<p>Wochenplan erfolgreich hinzugefügt!</p>";
             } else {
                 echo "<p>Fehler beim Hinzufügen des Wochenplans.</p>";
