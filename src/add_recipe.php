@@ -1,8 +1,8 @@
 <?php
 $title = "Neues Rezept hinzufügen";
 require '../header.php'; // Header einfügen
-
 require_once '../config/db.php';
+
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -12,8 +12,8 @@ $error = ""; // Variable für Fehlermeldungen
 $stmt = $conn->query("SELECT DISTINCT category FROM recipes WHERE category IS NOT NULL AND category != '' ORDER BY category ASC");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Rezept hinzufügen, wenn das Formular abgesendet wurde
 if ($_POST) {
-    // Rezeptdaten aus dem Formular abrufen
     $title = $_POST['title'];
     $category = !empty($_POST['custom_category']) ? $_POST['custom_category'] : $_POST['category'];
     $ingredients = $_POST['ingredients'];
@@ -23,9 +23,9 @@ if ($_POST) {
     $difficulty = $_POST['difficulty'];
     $servings = $_POST['servings'];
 
-    // Validierung der Felder für Vorbereitungszeit, Kochzeit, Portionen und Schwierigkeitsgrad
     $allowed_difficulties = ["leicht", "mittel", "schwer"]; // Erlaubte Werte für Schwierigkeitsgrad
 
+    // Validierung
     if (!is_numeric($prep_time) || $prep_time <= 0) {
         $error .= "Bitte eine gültige Vorbereitungszeit (größer als 0) angeben.<br>";
     }
@@ -38,12 +38,10 @@ if ($_POST) {
         $error .= "Bitte eine gültige Anzahl von Portionen (größer als 0) angeben.<br>";
     }
 
-    // Validierung des Schwierigkeitsgrads
     if (!in_array($difficulty, $allowed_difficulties)) {
         $error .= "Bitte einen gültigen Schwierigkeitsgrad wählen: leicht, mittel oder schwer.<br>";
     }
 
-    // Wenn kein Fehler aufgetreten ist, Rezept in die Datenbank einfügen
     if (empty($error)) {
         try {
             $stmt = $conn->prepare("INSERT INTO recipes (title, category, ingredients, instructions, prep_time, cook_time, difficulty, servings) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -53,7 +51,6 @@ if ($_POST) {
             echo "<p style='color:red;'>Fehler beim Einfügen in die Datenbank: " . $e->getMessage() . "</p>";
         }
     } else {
-        // Fehlermeldungen anzeigen
         echo "<p style='color:red;'>$error</p>";
     }
 }
@@ -115,8 +112,14 @@ if ($_POST) {
             <input type="number" name="servings" min="1" required>
         </div>
 
-        <input type="submit" value="Rezept hinzufügen" class="btn btn-add">
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add"><i class="fas fa-plus-circle"></i> Rezept hinzufügen</button>
+            <button type="reset" class="btn btn-reset"><i class="fas fa-undo"></i> Zurücksetzen</button>
+        </div>
     </form>
+
+    <!-- Link zur Rezeptübersicht -->
+    <a href="view_recipes.php" class="btn btn-view"><i class="fas fa-arrow-circle-left"></i> Zur Rezeptübersicht</a>
 </main>
 
 <?php
