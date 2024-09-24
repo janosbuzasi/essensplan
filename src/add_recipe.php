@@ -46,7 +46,7 @@ if ($_POST) {
         try {
             $stmt = $conn->prepare("INSERT INTO recipes (title, category, ingredients, instructions, prep_time, cook_time, difficulty, servings) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$title, $category, $ingredients, $instructions, $prep_time, $cook_time, $difficulty, $servings]);
-            echo "<p>Das Rezept wurde erfolgreich hinzugefügt.</p>";
+            echo "<p style='color: green;'>Das Rezept wurde erfolgreich hinzugefügt.</p>";
         } catch (PDOException $e) {
             echo "<p style='color:red;'>Fehler beim Einfügen in die Datenbank: " . $e->getMessage() . "</p>";
         }
@@ -112,14 +112,21 @@ if ($_POST) {
             <input type="number" name="servings" min="1" required>
         </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-add"><i class="fas fa-plus-circle"></i> Rezept hinzufügen</button>
-            <button type="reset" class="btn btn-reset"><i class="fas fa-undo"></i> Zurücksetzen</button>
+        <!-- Buttons: Rezept hinzufügen und Formular zurücksetzen -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-add" title="Rezept hinzufügen">
+                <i class="fas fa-plus-circle"></i> Hinzufügen
+            </button>
+            <button type="reset" class="btn btn-reset" title="Formular zurücksetzen">
+                <i class="fas fa-undo"></i> Zurücksetzen
+            </button>
         </div>
     </form>
 
-    <!-- Link zur Rezeptübersicht -->
-    <a href="view_recipes.php" class="btn btn-view"><i class="fas fa-arrow-circle-left"></i> Zur Rezeptübersicht</a>
+    <!-- Link zur Rezeptverwaltung -->
+    <a href="view_recipes.php" class="btn btn-view" title="Zurück zur Rezeptverwaltung">
+        <i class="fas fa-arrow-left"></i> Zurück
+    </a>
 </main>
 
 <?php
