@@ -5,11 +5,13 @@ require '../header.php';
 <main>
     <h2><?php echo $title; ?></h2>
 
-    <!-- Link zum Drucken des Wochenplans mit optimierter Druckansicht -->
-    <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
-        <i class="fas fa-print"></i> Drucken
-    </a>
-    
+    <!-- Button zum Drucken des Wochenplans -->
+    <?php if ($weekPlanId): ?>
+        <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
+            <i class="fas fa-print"></i> Drucken
+        </a>
+    <?php endif; ?>
+
     <?php
     require_once '../config/db.php';
     $db = new Database();
@@ -70,9 +72,9 @@ require '../header.php';
     }
     ?>
     <!-- Link zum Bearbeiten des Wochenplans -->
-    <a href="edit_week.php?id=<?php echo $weekPlanId; ?>" class="btn btn-edit"><i class="fas fa-edit"></i> Wochenplan bearbeiten</a>
-    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $weekPlanId; ?>" class="btn btn-add"><i class="fas fa-plus"></i> Rezepte zuweisen</a>
-    <a href="view_weeks.php" class="btn btn-view"><i class="fas fa-arrow-left"></i> Zurück zur Übersicht</a>
+    <a href="edit_week.php?id=<?php echo $weekPlanId; ?>" class="btn btn-edit">Wochenplan bearbeiten</a>
+    <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $weekPlanId; ?>" class="btn btn-add">Rezepte zuweisen</a>
+    <a href="view_weeks.php" class="btn btn-view">Zurück zur Übersicht</a>
 </main>
 <?php
 include '../footer.php';
