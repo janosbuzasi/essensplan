@@ -144,6 +144,7 @@ table th {
 }
 
 /* Button-Stile */
+
 .btn {
     display: inline-block;
     padding: 5px 10px;
@@ -152,6 +153,12 @@ table th {
     border-radius: 5px;
     color: #fff;
     font-weight: bold;
+}
+
+/* Button-Icons in die Mitte setzen und verkleinern */
+.btn i {
+    font-size: 16px; /* Einheitliche Schriftgröße für alle Icons in Buttons */
+    vertical-align: middle; /* Stellt sicher, dass die Icons vertikal mittig ausgerichtet sind */
 }
 
 .btn-view { background-color: #5cb85c; }
@@ -391,12 +398,6 @@ footer {
     .styled-table {
         display: block;
         overflow-x: auto;
-    }
-
-    /* Button-Icons in die Mitte setzen und verkleinern */
-    .btn i {
-       font-size: 16px; /* Einheitliche Schriftgröße für alle Icons in Buttons */
-       vertical-align: middle; /* Stellt sicher, dass die Icons vertikal mittig ausgerichtet sind */
     }
 
 
