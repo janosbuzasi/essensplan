@@ -60,7 +60,7 @@ if (isset($_GET['id'])) {
                 try {
                     $stmt = $conn->prepare("UPDATE recipes SET title = ?, category = ?, ingredients = ?, instructions = ?, prep_time = ?, cook_time = ?, difficulty = ?, servings = ? WHERE id = ?");
                     $stmt->execute([$title, $category, $ingredients, $instructions, $prep_time, $cook_time, $difficulty, $servings, $recipe_id]);
-                    echo "<p>Das Rezept wurde erfolgreich aktualisiert.</p>";
+                    echo "<p style='color: green;'>Das Rezept wurde erfolgreich aktualisiert.</p>";
                     // Rezeptdaten erneut abrufen, um das aktualisierte Rezept anzuzeigen
                     $stmt = $conn->prepare("SELECT * FROM recipes WHERE id = ?");
                     $stmt->execute([$recipe_id]);
@@ -91,7 +91,7 @@ if (isset($_GET['id'])) {
         </div>
 
         <div class="form-group">
-            <label for="category">Mahlzeitenkategorie (optional):</label> <!-- Bezeichnung geändert -->
+            <label for="category">Mahlzeitenkategorie (optional):</label>
             <select name="category">
                 <option value="">Mahlzeitenkategorie wählen</option>
                 <?php
@@ -139,9 +139,22 @@ if (isset($_GET['id'])) {
             <input type="number" name="servings" value="<?php echo htmlspecialchars($recipe['servings'], ENT_QUOTES); ?>" min="1" required>
         </div>
 
-        <input type="submit" value="Rezept aktualisieren" class="btn btn-add">
+        <!-- Buttons: Rezept aktualisieren und Formular zurücksetzen -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-edit" title="Rezept aktualisieren">
+                <i class="fas fa-save"></i> Speichern
+            </button>
+            <button type="reset" class="btn btn-delete" title="Formular zurücksetzen">
+                <i class="fas fa-undo"></i> Zurücksetzen
+            </button>
+        </div>
     </form>
     <?php endif; ?>
+
+    <!-- Link zur Rezeptverwaltung -->
+    <a href="view_recipes.php" class="btn btn-view" title="Zurück zur Rezeptverwaltung">
+        <i class="fas fa-arrow-left"></i> Zurück
+    </a>
 </main>
 
 <?php
