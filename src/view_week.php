@@ -2,15 +2,9 @@
 $title = "Wochenplan anzeigen";
 require '../header.php';
 ?>
+
 <main>
     <h2><?php echo $title; ?></h2>
-
-    <!-- Button zum Drucken des Wochenplans -->
-    <?php if ($weekPlanId): ?>
-        <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
-            <i class="fas fa-print"></i> Drucken
-        </a>
-    <?php endif; ?>
 
     <?php
     require_once '../config/db.php';
@@ -20,6 +14,14 @@ require '../header.php';
     // Wochenplan-ID abrufen
     $weekPlanId = isset($_GET['id']) ? intval($_GET['id']) : null;
 
+    // Button zum Drucken des Wochenplans
+    if ($weekPlanId): ?>
+        <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
+            <i class="fas fa-print"></i> Drucken
+        </a>
+    <?php endif; ?>
+
+    <?php
     if ($weekPlanId) {
         // Wochenplan-Daten abrufen
         $stmt = $conn->prepare("SELECT * FROM essensplan WHERE id = ?");
@@ -71,11 +73,13 @@ require '../header.php';
         echo "<p>Kein Wochenplan ausgewählt.</p>";
     }
     ?>
+
     <!-- Link zum Bearbeiten des Wochenplans -->
     <a href="edit_week.php?id=<?php echo $weekPlanId; ?>" class="btn btn-edit">Wochenplan bearbeiten</a>
     <a href="assign_recipe_to_week.php?week_plan_id=<?php echo $weekPlanId; ?>" class="btn btn-add">Rezepte zuweisen</a>
     <a href="view_weeks.php" class="btn btn-view">Zurück zur Übersicht</a>
 </main>
+
 <?php
 include '../footer.php';
 ?>
