@@ -80,7 +80,7 @@ $availableWeeks = array_diff($allWeeks, $existingWeeks);
         }
     }
     ?>
-        <a href="view_weeks.php" class="btn btn-add" style="margin-bottom: 10px;">&larr; Zurück zur Übersicht</a>
+    <a href="view_weeks.php" class="btn btn-view">Zurück zur Übersicht</a>
 
 </main>
 <?php
