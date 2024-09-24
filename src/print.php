@@ -1,7 +1,9 @@
 <?php
-$title = "Essensplan Druckansicht";
-require '../config/db.php'; // Nur die Datenbankverbindung laden
+$title = "Essensplan drucken";
+require '../header.php'; // Header einfügen
 
+// Datenbankverbindung einbinden
+require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -15,78 +17,87 @@ if ($weekPlanId) {
     $weekPlan = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($weekPlan) {
-        // Berechnung des ersten Tages der Woche basierend auf der Kalenderwoche und dem Jahr
-        $dateTime = new DateTime();
-        $dateTime->setISODate($weekPlan['year'], $weekPlan['week_number']);
-        $firstDayOfWeek = $dateTime->format('d.m.Y');
-    }
-} else {
-    die("Kein Wochenplan ausgewählt.");
-}
-?>
+        // Startdatum der Woche berechnen
+        $weekNumber = $weekPlan['week_number'];
+        $year = $weekPlan['year'];
+        $mondayDate = new DateTime();
+        $mondayDate->setISODate($year, $weekNumber); // Setzt das Datum auf den Montag der Woche
 
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo "Essensplan KW " . $weekPlan['week_number']; ?></title>
-    <link rel="stylesheet" href="/essensplan/assets/print.css"> <!-- Pfad zur print.css -->
-</head>
-<body>
-<main>
-    <h2>Essensplan KW <?php echo $weekPlan['week_number']; ?> (<?php echo $firstDayOfWeek; ?>)</h2>
+        // Enddatum (Sonntag) berechnen
+        $sundayDate = clone $mondayDate;
+        $sundayDate->modify('+6 days'); // Sonntag ist 6 Tage nach Montag
 
-    <?php
-    // Mahlzeitenplan abrufen
-    $stmt = $conn->prepare("
-        SELECT er.day_of_week, mc.name AS meal_category, r.title AS recipe_title
-        FROM essensplan_recipes er
-        JOIN recipes r ON er.recipe_id = r.id
-        JOIN meal_categories mc ON er.meal_category_id = mc.id
-        WHERE er.essensplan_id = ?
-        ORDER BY FIELD(er.day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
-                 FIELD(mc.name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')
-    ");
-    $stmt->execute([$weekPlanId]);
-    $mealPlan = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Titel mit Zeitraum anzeigen
+        echo "<h2>Essensplan KW {$weekNumber} ({$mondayDate->format('d.m.Y')} - {$sundayDate->format('d.m.Y')})</h2>";
 
-    if ($mealPlan) {
-        $daysOfWeek = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-        $mealCategories = ['Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen'];
-        
-        echo "<table class='meal-plan-table'>"; // CSS-Klasse für Styling
-        echo "<thead><tr><th></th>"; // Leere Zelle für die Kategorien-Spalte
-        foreach ($daysOfWeek as $day) {
-            echo "<th>$day</th>";
-        }
-        echo "</tr></thead><tbody>";
+        // Mahlzeitenplan abrufen
+        $stmt = $conn->prepare("
+            SELECT er.day_of_week, mc.name AS meal_category, r.title AS recipe_title
+            FROM essensplan_recipes er
+            JOIN recipes r ON er.recipe_id = r.id
+            JOIN meal_categories mc ON er.meal_category_id = mc.id
+            WHERE er.essensplan_id = ?
+            ORDER BY FIELD(er.day_of_week, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'),
+                     FIELD(mc.name, 'Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen')
+        ");
+        $stmt->execute([$weekPlanId]);
+        $mealPlan = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($mealCategories as $category) {
-            echo "<tr><td class='category'>$category</td>"; // Kategorien-Spalte
-            foreach ($daysOfWeek as $day) {
-                $recipe = '';
-                foreach ($mealPlan as $meal) {
-                    if ($meal['day_of_week'] == $day && $meal['meal_category'] == $category) {
-                        $recipe = $meal['recipe_title'];
-                        break;
-                    }
-                }
-                echo "<td>" . ($recipe ? $recipe : '-') . "</td>"; // Rezept anzeigen oder '-' wenn leer
+        if ($mealPlan) {
+            // Array für die Zuordnung von Wochentagen und Daten
+            $daysOfWeek = [
+                'Montag' => $mondayDate,
+                'Dienstag' => (clone $mondayDate)->modify('+1 day'),
+                'Mittwoch' => (clone $mondayDate)->modify('+2 days'),
+                'Donnerstag' => (clone $mondayDate)->modify('+3 days'),
+                'Freitag' => (clone $mondayDate)->modify('+4 days'),
+                'Samstag' => (clone $mondayDate)->modify('+5 days'),
+                'Sonntag' => $sundayDate
+            ];
+
+            echo "<table class='styled-table'>"; // CSS-Klasse für Styling
+            echo "<thead><tr>";
+
+            // Tabelle mit Tagen und Datumskopfzeile
+            foreach ($daysOfWeek as $day => $date) {
+                echo "<th>{$day}<br>{$date->format('d.m.Y')}</th>";
+            }
+
+            echo "</tr></thead><tbody>";
+
+            // Leere Array für die Tagesdaten
+            $dayData = array_fill_keys(array_keys($daysOfWeek), '');
+
+            // Daten für jeden Tag aufbereiten
+            foreach ($mealPlan as $meal) {
+                $day = $meal['day_of_week'];
+                $mealCategory = $meal['meal_category'];
+                $recipeTitle = $meal['recipe_title'];
+                $dayData[$day] .= "<strong>{$mealCategory}:</strong> {$recipeTitle}<br>";
+            }
+
+            // Ausgabe der Mahlzeiten pro Tag in die Tabelle
+            echo "<tr>";
+            foreach ($dayData as $meals) {
+                echo "<td>{$meals}</td>";
             }
             echo "</tr>";
+
+            echo "</tbody></table>";
+        } else {
+            echo "<p>Keine Mahlzeitenzuordnungen für diesen Wochenplan gefunden.</p>";
         }
 
-        echo "</tbody></table>";
     } else {
-        echo "<p>Keine Mahlzeitenzuordnungen für diesen Wochenplan gefunden.</p>";
+        echo "<p>Wochenplan nicht gefunden.</p>";
     }
-    ?>
-</main>
-<script>
-    window.onload = function() {
-        window.print(); // Automatischer Druckstart
-    }
-</script>
-</body>
-</html>
+} else {
+    echo "<p>Kein Wochenplan ausgewählt.</p>";
+}
+
+?>
+<a href="view_weeks.php" class="btn btn-view">Zurück zur Übersicht</a>
+
+<?php
+include '../footer.php'; // Footer einfügen
+?>
