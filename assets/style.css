@@ -395,8 +395,10 @@ footer {
 
     /* Button-Icons in die Mitte setzen und verkleinern */
     .btn i {
-        font-size: 12px;
+       font-size: 16px; /* Einheitliche Schriftgröße für alle Icons in Buttons */
+       vertical-align: middle; /* Stellt sicher, dass die Icons vertikal mittig ausgerichtet sind */
     }
+
 
     /* Reduziere die Button-Größe auf Smartphones */
     .btn {
