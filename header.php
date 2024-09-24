@@ -11,6 +11,7 @@
         ?>
     </title>
     <link rel="stylesheet" href="/essensplan/assets/style.css"> <!-- Pfad zur style.css überprüfen -->
+    <link rel="stylesheet" href="/essensplan/assets/style_smartphone.css"> <!-- Smartphone-spezifisches Stylesheet -->
 </head>
 <body>
 <header>
