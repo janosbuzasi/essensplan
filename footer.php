@@ -2,7 +2,6 @@
     <div class="footer-content">
         <p>&copy; <?php echo date("Y"); ?> Essensplan by Janos Buzasi - Alle Rechte vorbehalten.</p>
         <ul class="social-links">
-            <li><a href="https://github.com/janosbuzasi/essensplan">_github</a></li>
             <li>
                 <a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a> <!-- Dark Mode Umschaltung -->
             </li>
