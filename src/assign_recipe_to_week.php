@@ -17,6 +17,9 @@ require '../header.php';
     // Bestimme die standardmäßig ausgewählte Woche (die neueste)
     $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
 
+    // Debugging: Anzeigen, welche Woche ausgewählt ist
+    echo "<!-- Ausgewählte Woche: $selectedWeekPlanId -->";
+
     if ($weekPlans && $recipes && $mealCategories) {
         ?>
         <!-- Dropdown-Menü zur Auswahl der Woche -->
@@ -96,7 +99,9 @@ require '../header.php';
             // Zuordnung in die Datenbank einfügen
             $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
             if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
-                echo "<p>Rezept erfolgreich zugeordnet!</p>";
+                // Nach dem Hinzufügen bleibt die Woche erhalten
+                header("Location: assign_recipe_to_week.php?week_plan_id=$weekPlanId");
+                exit;
             } else {
                 echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
             }
@@ -120,7 +125,7 @@ require '../header.php';
         $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($assignments) {
-            echo "<table class='styled-table'>"; // CSS-Klasse für Styling
+            echo "<table class='styled-table'>";
             echo "<thead><tr><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr></thead><tbody>";
             foreach ($assignments as $assignment) {
                 echo "<tr>
