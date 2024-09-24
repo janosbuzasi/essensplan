@@ -96,9 +96,7 @@ require '../header.php';
             // Zuordnung in die Datenbank einfügen
             $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
             if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
-                // Nach dem Hinzufügen bleibt die Woche erhalten
-                header("Location: assign_recipe_to_week.php?week_plan_id=$weekPlanId");
-                exit;
+                echo "<p>Rezept erfolgreich zugeordnet!</p>";
             } else {
                 echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
             }
@@ -122,7 +120,7 @@ require '../header.php';
         $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($assignments) {
-            echo "<table class='styled-table'>";
+            echo "<table class='styled-table'>"; // CSS-Klasse für Styling
             echo "<thead><tr><th>Tag</th><th>Kategorie</th><th>Rezept</th><th>Aktion</th></tr></thead><tbody>";
             foreach ($assignments as $assignment) {
                 echo "<tr>
