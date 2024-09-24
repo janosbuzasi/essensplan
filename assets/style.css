@@ -162,19 +162,23 @@ table th {
 
 .btn-add:hover { background-color: #286090; }
 
+/* Druck-Button-Stil */
 .btn-print {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 10px 0;
-    background-color: #6c757d; /* Grau */
-    color: #fff;
-    border-radius: 5px;
+    background-color: #5bc0de; /* Helles Blau für den Hintergrund */
+    color: #fff; /* Weiße Schriftfarbe */
+    border: none; /* Keine Randlinie */
+    padding: 10px 15px;
     text-decoration: none;
-    font-weight: bold;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Schriftgröße anpassen */
 }
 
 .btn-print:hover {
-    background-color: #5a6268;
+    background-color: #46b8da; /* Dunkleres Blau beim Hover */
+    color: #fff; /* Weiße Schriftfarbe */
 }
 
 /* Footer-Stile */
