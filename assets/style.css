@@ -164,8 +164,7 @@ table th {
 
 /* Druck-Button-Stil normal mode*/
 .btn-print {
-    background-color: #ff0000;
-    /* background-color: #5bc0de; Helles Blau für den Hintergrund */
+    background-color: #5bc0de; /* Helles Blau für den Hintergrund */
     color: #fff; /* Weiße Schriftfarbe */
     border: none; /* Keine Randlinie */
     padding: 10px 15px;
