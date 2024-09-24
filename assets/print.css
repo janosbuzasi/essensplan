@@ -41,6 +41,12 @@ h2 {
     background-color: #f2f2f2;
 }
 
+.meal-plan-table td.category {
+    font-weight: bold;
+    background-color: #f2f2f2;
+    text-align: left; /* Linksbündig für Kategorien */
+}
+
 .category {
     font-weight: bold;
     background-color: #f9f9f9;
