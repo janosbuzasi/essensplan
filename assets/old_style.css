@@ -1,0 +1,389 @@
+/* Basisstil für die gesamte Website */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    position: relative; /* Ermöglicht die korrekte Positionierung des Menüs */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Zwischenräume zwischen H1 und Menü-Button */
+    align-items: center;
+    padding: 0 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    display: block;
+}
+
+/* Versteckt das Menü initial */
+#menu.hidden {
+    display: none;
+}
+
+/* Menü-Stile */
+#menu {
+    display: none; /* Versteckt das Menü initial */
+    position: absolute; /* Absolut positioniert, um unter dem Menü-Button zu erscheinen */
+    top: 60px; /* Unter dem Header platzieren */
+    right: 20px; /* Rechts bündig ausrichten */
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    width: 200px; /* Menübreite */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Leichter Schatten */
+    border-radius: 5px; /* Abgerundete Ecken */
+    z-index: 1000; /* Über anderen Inhalten anzeigen */
+}
+
+#menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu ul li {
+    border-bottom: 1px solid #fff; /* Unterlinie für jedes Menüelement */
+}
+
+#menu ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+}
+
+#menu ul li a:hover {
+    background-color: #285e8e; /* Leicht dunkler beim Hover */
+}
+
+/* Menü anzeigen, wenn es die 'active'-Klasse hat */
+#menu.active {
+    display: block;
+}
+
+/* Hauptinhalt zentrieren und einrücken */
+main {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 20px auto; /* Zentriert den Inhalt auf der Seite */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optionaler Schatten für Hauptinhalt */
+    background-color: #ffffff; /* Hintergrundfarbe für Hauptinhalt */
+    border-radius: 8px; /* Abgerundete Ecken für Hauptinhalt */
+}
+
+/* Responsive-Anpassungen */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: row; /* Horizontale Ausrichtung */
+        justify-content: space-between; /* H1 und Menü-Button auseinanderziehen */
+    }
+
+    #menu {
+        width: 100%; /* Menü über die gesamte Breite */
+        right: 0; /* Rechts ausrichten */
+    }
+
+    main {
+        padding: 10px; /* Weniger Padding auf kleineren Bildschirmen */
+        margin: 10px; /* Weniger Außenabstand auf kleineren Bildschirmen */
+    }
+}
+
+/* Stil für alle Tabellen */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+/* Spezifischer Stil für .styled-table */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Einfache CSS-Stile für die Buttons */
+.btn {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 2px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn-view {
+    background-color: #5cb85c; /* Grün */
+}
+
+.btn-view:hover {
+    background-color: #4cae4c; /* Dunkleres Grün */
+}
+
+.btn-edit {
+    background-color: #5bc0de; /* Blau */
+}
+
+.btn-edit:hover {
+    background-color: #46b8da; /* Dunkleres Blau */
+}
+
+.btn-archive {
+    background-color: #f0ad4e; /* Orange */
+}
+
+.btn-archive:hover {
+    background-color: #ec971f; /* Dunkleres Orange */
+}
+
+.btn-delete {
+    background-color: #d9534f; /* Rot */
+}
+
+.btn-delete:hover {
+    background-color: #c9302c; /* Dunkleres Rot */
+}
+
+.btn-add {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #337ab7; /* Dunkelblau */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-add:hover {
+    background-color: #286090; /* Dunkleres Dunkelblau */
+}
+
+/* Footer-Stile - Gleiche Farben wie im Header */
+footer {
+    background-color: #337ab7; /* Gleiche Farbe wie im Header */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.social-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.social-links li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.social-links a {
+    color: #fff; /* Weiß wie die Schrift im Header */
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+/* Dark Mode Anpassungen */
+.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.dark-mode header {
+    background-color: #1abc9c;
+}
+
+.dark-mode footer {
+    background-color: #1abc9c; /* Gleiche Farbe wie der Header im Dark Mode */
+    color: #ecf0f1; /* Helle Farbe für den Text */
+}
+
+.dark-mode h2, .dark-mode h3 {
+    color: #1abc9c; /* Gleiche Farbe wie im Header */
+}
+
+/* Tabellenstile für Dark Mode */
+.dark-mode .styled-table {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.dark-mode .styled-table th {
+    background-color: #2c3e50; /* Dunklere Hintergrundfarbe für Tabellenköpfe */
+    color: #ecf0f1; /* Helle Textfarbe für Lesbarkeit */
+}
+
+.dark-mode .styled-table td {
+    border-bottom: 1px solid #2c3e50; /* Kontrastreichere Linienfarbe */
+    color: #ecf0f1; /* Helle Textfarbe */
+}
+
+.dark-mode .styled-table tbody tr:nth-of-type(even) {
+    background-color: #3b4b5c; /* Dunkleres Grau für abwechselnde Zeilen */
+}
+
+.dark-mode .styled-table tbody tr:nth-of-type(odd) {
+    background-color: #34495e; /* Leichtes Grau für abwechselnde Zeilen */
+}
+
+/* Hover-Effekt für Tabellenzeilen im Dark Mode */
+.dark-mode .styled-table tbody tr:hover {
+    background-color: #1abc9c; /* Hervorhebungsfarbe */
+    color: #2c3e50; /* Dunkle Textfarbe für Lesbarkeit */
+}
+
+/* Buttons im Dark Mode */
+.dark-mode .btn {
+    color: #2c3e50; /* Dunkle Textfarbe */
+}
+
+.dark-mode .btn-view {
+    background-color: #27ae60; /* Grün */
+}
+
+.dark-mode .btn-view:hover {
+    background-color: #219150; /* Dunkleres Grün */
+}
+
+.dark-mode .btn-edit {
+    background-color: #3498db; /* Blau */
+}
+
+.dark-mode .btn-edit:hover {
+    background-color: #2980b9; /* Dunkleres Blau */
+}
+
+.dark-mode .btn-archive {
+    background-color: #e67e22; /* Orange */
+}
+
+.dark-mode .btn-archive:hover {
+    background-color: #d35400; /* Dunkleres Orange */
+}
+
+.dark-mode .btn-delete {
+    background-color: #e74c3c; /* Rot */
+}
+
+.dark-mode .btn-delete:hover {
+    background-color: #c0392b; /* Dunkleres Rot */
+}
+
+.dark-mode .btn-add {
+    background-color: #2980b9; /* Blau */
+}
+
+.dark-mode .btn-add:hover {
+    background-color: #2471a3; /* Dunkleres Blau */
+}
+
+/* Links im Dark Mode */
+.dark-mode .social-links a {
+    color: #ecf0f1; /* Gleiche Textfarbe wie im Header */
+}
+
+.dark-mode .social-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Stil für das Rezeptformular */
+.recipe-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical; /* Ermöglicht das Vergrößern des Textbereichs */
+}
