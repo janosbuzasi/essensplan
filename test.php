@@ -16,7 +16,7 @@ require 'header.php';  // Inkludiere den Header
         </thead>
         <tbody>
             <?php
-            require_once '../config/db.php';
+            require_once '../essensplan/config/db.php';
             $db = new Database();
             $conn = $db->getConnection();
             $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' ORDER BY year, week_number");
