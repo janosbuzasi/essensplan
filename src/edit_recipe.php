@@ -144,7 +144,7 @@ if (isset($_GET['id'])) {
             <button type="submit" class="btn btn-edit" title="Rezept aktualisieren">
                 <i class="fas fa-save"></i> Speichern
             </button>
-            <button type="reset" class="btn btn-delete" title="Formular zurücksetzen">
+            <button type="reset" class="btn btn-reset" title="Formular zurücksetzen">
                 <i class="fas fa-undo"></i> Zurücksetzen
             </button>
         </div>
