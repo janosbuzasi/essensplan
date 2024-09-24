@@ -210,6 +210,25 @@ table th {
     box-shadow: 0 0 5px #5bc0de; /* Leichter Schlagschatten zur Hervorhebung */
 }
 
+/* Einheitlicher Stil für Zurücksetzen-Button */
+.btn-reset {
+    background-color: #d9534f; /* Roter Hintergrund */
+    color: #fff; /* Weiße Schrift */
+    border: none;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-reset:hover {
+    background-color: #c9302c; /* Dunkleres Rot beim Hover */
+}
+
+
 /* Footer-Stile */
 footer {
     background-color: #337ab7;
