@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Standard-Styling -->
     <link rel="stylesheet" href="/essensplan/assets/style.css"> 
-    <!-- Smartphone-spezifisches Styling nur für kleine Bildschirme -->
-    <link rel="stylesheet" href="/essensplan/assets/style_smartphone.css" media="only screen and (max-width: 768px)">
 
 </head>
 <body>
