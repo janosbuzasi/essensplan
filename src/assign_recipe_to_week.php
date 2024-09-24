@@ -52,6 +52,38 @@ require '../header.php';
             }
         }
     }
+
+    // Verarbeitung des Formulars
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $weekPlanId = $_POST['week_plan_id'];
+        $dayOfWeek = $_POST['day_of_week'];
+        $mealCategoryId = $_POST['meal_category_id'];
+        $recipeId = $_POST['recipe_id'];
+
+        // Überprüfung, ob die Zuordnung bereits existiert
+        $stmt = $conn->prepare("SELECT * FROM essensplan_recipes WHERE essensplan_id = ? AND day_of_week = ? AND meal_category_id = ?");
+        $stmt->execute([$weekPlanId, $dayOfWeek, $mealCategoryId]);
+        $existingAssignment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingAssignment) {
+            echo "<p>Für diese Kombination aus Woche, Tag und Mahlzeitenkategorie existiert bereits ein Rezept.</p>";
+        } else {
+            // Zuordnung in die Datenbank einfügen
+            $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
+            if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
+                echo "<p>Rezept erfolgreich zugeordnet!</p>";
+                echo "<script>
+                        // Seite nach 1 Sekunde aktualisieren, um die Tabelle mit den Zuordnungen zu aktualisieren
+                        setTimeout(function() {
+                            window.location.href = 'assign_recipe_to_week.php?week_plan_id=' + $weekPlanId;
+                        }, 1000);
+                      </script>";
+                exit();
+            } else {
+                echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
+            }
+        }
+    }
     ?>
 
     <!-- Dropdown-Menü zur Auswahl der Woche -->
@@ -114,34 +146,6 @@ require '../header.php';
     <?php endif; ?>
 
     <?php
-    // Verarbeitung des Formulars
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $weekPlanId = $_POST['week_plan_id'];
-        $dayOfWeek = $_POST['day_of_week'];
-        $mealCategoryId = $_POST['meal_category_id'];
-        $recipeId = $_POST['recipe_id'];
-
-        // Überprüfung, ob die Zuordnung bereits existiert
-        $stmt = $conn->prepare("SELECT * FROM essensplan_recipes WHERE essensplan_id = ? AND day_of_week = ? AND meal_category_id = ?");
-        $stmt->execute([$weekPlanId, $dayOfWeek, $mealCategoryId]);
-        $existingAssignment = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($existingAssignment) {
-            echo "<p>Für diese Kombination aus Woche, Tag und Mahlzeitenkategorie existiert bereits ein Rezept.</p>";
-        } else {
-            // Zuordnung in die Datenbank einfügen
-            $stmt = $conn->prepare("INSERT INTO essensplan_recipes (essensplan_id, recipe_id, day_of_week, meal_category_id) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$weekPlanId, $recipeId, $dayOfWeek, $mealCategoryId])) {
-                echo "<p>Rezept erfolgreich zugeordnet!</p>";
-                // Nach der Zuordnung auf derselben Woche bleiben
-                header("Location: assign_recipe_to_week.php?week_plan_id=$weekPlanId");
-                exit();
-            } else {
-                echo "<p>Fehler beim Zuordnen des Rezepts.</p>";
-            }
-        }
-    }
-
     // Bestehende Zuordnungen anzeigen
     echo "<h3>Bestehende Zuordnungen</h3>";
     if ($selectedWeekPlanId) {
