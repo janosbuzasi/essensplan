@@ -53,6 +53,12 @@ h2 {
     margin-bottom: 5px; /* Abstand zwischen Kategorie und Rezepttitel */
 }
 
+/* Hintergrundfarbe für gerade Spalten */
+.meal-plan-table td:nth-child(even),
+.meal-plan-table th:nth-child(even) {
+    background-color: #f9f9f9; /* Leichtes Grau */
+}
+
 /* Für A3-Format optimieren */
 @page {
     size: A3 landscape;
