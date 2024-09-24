@@ -1,52 +1,12 @@
 <?php
-$title = "Essenspläne Übersicht";
+$title = "Essenspläne Übersicht"; 
 require 'header.php';  // Inkludiere den Header
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
-
-    <!-- Aktuelles Datum und Kalenderwoche anzeigen -->
-    <?php
-    // Aktuelles Datum und Kalenderwoche berechnen
-    $currentDate = date('d.m.Y'); // Format: Tag.Monat.Jahr
-    $currentWeek = date('W');     // Kalenderwoche (1-53)
-    echo "<p>Heute ist der <strong>$currentDate</strong>, Kalenderwoche <strong>$currentWeek</strong>.</p>";
-    ?>
-
-    <p>Hier siehst du den nächsten verfügbaren Essensplan basierend auf dem aktuellen Datum.</p>
-
-    <?php
-    require_once 'config/db.php';
-    $db = new Database();
-    $conn = $db->getConnection();
-
-    // Aktuelles Jahr und Kalenderwoche
-    $currentYear = date('Y');
-
-    // Nächsten verfügbaren Essensplan basierend auf dem aktuellen Datum abrufen
-    $stmt = $conn->prepare("SELECT * FROM essensplan WHERE status = 'aktiv' AND (year > ? OR (year = ? AND week_number >= ?)) ORDER BY year, week_number LIMIT 1");
-    $stmt->execute([$currentYear, $currentYear, $currentWeek]);
-    $nextPlan = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($nextPlan) {
-        echo "<h3>Nächster verfügbarer Essensplan</h3>";
-        echo "<p><strong>Woche " . $nextPlan['week_number'] . " im Jahr " . $nextPlan['year'] . "</strong></p>";
-        echo "<p><a href='src/view_week.php?id=" . $nextPlan['id'] . "' class='btn btn-view'>Essensplan ansehen</a></p>";
-    } else {
-        echo "<p>Kein zukünftiger Essensplan verfügbar.</p>";
-    }
-    ?>
-
-    <!-- Suchfunktion -->
-    <h3>Essenspläne durchsuchen</h3>
-    <form method="get" action="index.php">
-        <input type="text" name="search" placeholder="Nach Woche oder Jahr suchen...">
-        <input type="submit" value="Suchen" class="btn btn-add">
-    </form>
-
-    <!-- Aktive Essenspläne anzeigen -->
+    <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne.</p>
     <h3>Aktive Essenspläne</h3>
-    <table border="1" cellpadding="5" cellspacing="0">
+    <table class="styled-table">
         <thead>
             <tr>
                 <th>Woche</th>
@@ -56,24 +16,22 @@ require 'header.php';  // Inkludiere den Header
         </thead>
         <tbody>
             <?php
-            $searchQuery = "";
-            if (isset($_GET['search']) && !empty($_GET['search'])) {
-                $search = $_GET['search'];
-                $searchQuery = "AND (week_number LIKE '%$search%' OR year LIKE '%$search%')";
-            }
-            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' $searchQuery ORDER BY year DESC, week_number DESC");
+            require_once '../essensplan/config/db.php';
+            $db = new Database();
+            $conn = $db->getConnection();
+            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' ORDER BY year, week_number");
             $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (!empty($plans)) {
                 foreach ($plans as $plan) {
                     echo "<tr>";
                     echo "<td>Woche " . $plan['week_number'] . "</td>";
                     echo "<td>" . $plan['year'] . "</td>";
-                    echo "<td>
-                        <a href='src/view_week.php?id=" . $plan['id'] . "' class='btn btn-view'>Ansehen</a> 
-                        <a href='src/edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit'>Bearbeiten</a> 
-                        <a href='src/archive_week.php?id=" . $plan['id'] . "' class='btn btn-archive'>Archivieren</a> 
-                        <a href='src/delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\">Löschen</a>
-                    </td>";
+                    echo "<td>";
+                    echo "<a href='view_week.php?id=" . $plan['id'] . "' class='btn btn-view' title='Essensplan ansehen'><i class='fas fa-eye'></i></a>";
+                    echo "<a href='edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit' title='Essensplan bearbeiten'><i class='fas fa-edit'></i></a>";
+                    echo "<a href='archive_week.php?id=" . $plan['id'] . "' class='btn btn-archive' title='Essensplan archivieren'><i class='fas fa-archive'></i></a>";
+                    echo "<a href='delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' title='Essensplan löschen' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\"><i class='fas fa-trash'></i></a>";
+                    echo "</td>";
                     echo "</tr>";
                 }
             } else {
@@ -82,6 +40,7 @@ require 'header.php';  // Inkludiere den Header
             ?>
         </tbody>
     </table>
+    <a href="add_week.php" class="btn btn-add">Neuen Essensplan hinzufügen</a>
 </main>
 <?php
 include 'footer.php';
