@@ -162,24 +162,24 @@ table th {
 
 .btn-add:hover { background-color: #286090; }
 
-/* Druck-Button-Stil normal mode*/
+/* Druck-Button-Stil */
 .btn-print {
     background-color: #5bc0de; /* Helles Blau für den Hintergrund */
-    color: #fff; /* Weiße Schriftfarbe */
-    border: none; /* Keine Randlinie */
+    color: #ffffff; /* Weiße Schriftfarbe */
     padding: 10px 15px;
+    border: 2px solid #5bc0de; /* Gleiche Farbe wie Hintergrund */
     text-decoration: none;
     border-radius: 5px;
     display: inline-block;
     margin: 5px;
     cursor: pointer;
-    font-size: 16px; /* Schriftgröße anpassen */
-    z-index: 1000; /* Sicherstellen, dass der Button nicht überdeckt wird */
+    font-size: 16px;
 }
 
 .btn-print:hover {
     background-color: #46b8da; /* Dunkleres Blau beim Hover */
-    color: #fff; /* Weiße Schriftfarbe */
+    border-color: #46b8da; /* Gleiche Farbe wie Hintergrund */
+    color: #ffffff; /* Weiße Schriftfarbe */
 }
 
 .btn-print:active, .btn-print:focus {
@@ -295,13 +295,16 @@ footer {
 /* Dark Mode Anpassungen für den Druck-Button */
 .dark-mode .btn-print {
     background-color: #3498db; /* Etwas dunkleres Blau für den Dark Mode */
-    color: #ecf0f1; /* Hellere Schriftfarbe */
+    color: #ffffff; /* Hellere Schriftfarbe */
+    border: 2px solid #3498db; /* Gleiche Farbe wie Hintergrund */
 }
 
 .dark-mode .btn-print:hover {
     background-color: #2980b9; /* Noch dunkleres Blau beim Hover im Dark Mode */
-    color: #ecf0f1; /* Hellere Schriftfarbe */
+    border-color: #2980b9; /* Gleiche Farbe wie Hintergrund */
+    color: #ffffff; /* Hellere Schriftfarbe */
 }
+
 
 .dark-mode .social-links a {
     color: #ecf0f1;
