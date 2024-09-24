@@ -17,6 +17,11 @@ require '../header.php';
     // Bestimme die standardmäßig ausgewählte Woche (die neueste)
     $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
 
+    // Verhindere das Springen zur neuesten Woche nach Formularabsendung
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $selectedWeekPlanId = $_POST['week_plan_id'];
+    }
+
     // Debugging: Anzeigen, welche Woche ausgewählt ist
     echo "<!-- Ausgewählte Woche: $selectedWeekPlanId -->";
 
