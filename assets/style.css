@@ -5,6 +5,15 @@
     box-sizing: border-box;
 }
 
+/* Spezifischer Hack für Edge, um Sichtbarkeitsprobleme zu vermeiden */
+@supports (-ms-ime-align: auto) {
+    .btn-print {
+        background-color: #ff0000 !important; /* Beispiel: Rot für Edge */
+        color: #ffffff !important;
+        display: inline-block !important;
+    }
+}
+
 /* Basisstil für die gesamte Website */
 body {
     font-family: Arial, sans-serif;
