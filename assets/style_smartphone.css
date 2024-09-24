@@ -386,22 +386,4 @@ footer {
         box-shadow: none; /* Schatten entfernen */
     }
 
-    /* Optimierungen für die Tabellenzellen */
-    table th, table td {
-        padding: 8px; /* Weniger Padding, um Platz zu sparen */
-        font-size: 14px; /* Kleinere Schriftgröße */
-    }
-
-    /* Buttons nebeneinander in einer Zeile anzeigen */
-    .btn-group {
-        display: flex; /* Flexbox-Layout für die Buttons */
-        justify-content: space-around; /* Platz zwischen den Buttons */
-        align-items: center; /* Buttons vertikal zentrieren */
-        flex-wrap: wrap; /* Zeilenumbruch für mehrere Buttons */
-    }
-
-    /* Responsive Anpassungen für die Tabelle */
-    table {
-        width: auto; /* Breite entsprechend dem Inhalt anpassen */
-    }
 }
