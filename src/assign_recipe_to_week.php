@@ -17,31 +17,38 @@ require '../header.php';
     // Bestimme die standardmäßig ausgewählte Woche (die neueste oder aus der URL)
     $selectedWeekPlanId = isset($_GET['week_plan_id']) ? $_GET['week_plan_id'] : (isset($weekPlans[0]['id']) ? $weekPlans[0]['id'] : null);
 
-    // Filter für bereits zugeordnete Kombinationen aus Tag und Mahlzeitenkategorie
-    $existingAssignments = [];
-    if ($selectedWeekPlanId) {
-        $stmt = $conn->prepare("SELECT day_of_week, meal_category_id FROM essensplan_recipes WHERE essensplan_id = ?");
-        $stmt->execute([$selectedWeekPlanId]);
-        $existingAssignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // Alle verfügbaren Tage und Mahlzeitenkategorien
+    $allDays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
-    // Filtere die verfügbaren Tage und Mahlzeitenkategorien
-    $availableDays = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-    $availableMealCategories = $mealCategories;
+    // Bereits zugewiesene Kombinationen abrufen
+    $stmt = $conn->prepare("SELECT day_of_week, meal_category_id FROM essensplan_recipes WHERE essensplan_id = ?");
+    $stmt->execute([$selectedWeekPlanId]);
+    $existingAssignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($existingAssignments as $assignment) {
-        $dayIndex = array_search($assignment['day_of_week'], $availableDays);
-        if ($dayIndex !== false) {
-            // Entferne den Tag, wenn bereits alle Mahlzeitenkategorien zugewiesen sind
-            $mealCategoryCount = 0;
-            foreach ($availableMealCategories as $key => $category) {
-                if ($category['id'] == $assignment['meal_category_id']) {
-                    unset($availableMealCategories[$key]);
-                    $mealCategoryCount++;
-                }
+    // Verfügbare Kombinationen von Tagen und Mahlzeitenkategorien berechnen
+    $availableDays = $allDays;
+    $availableMealCategories = [];
+
+    foreach ($allDays as $day) {
+        $usedMealCategories = [];
+        foreach ($existingAssignments as $assignment) {
+            if ($assignment['day_of_week'] === $day) {
+                $usedMealCategories[] = $assignment['meal_category_id'];
             }
-            if ($mealCategoryCount === count($mealCategories)) {
-                unset($availableDays[$dayIndex]);
+        }
+
+        // Finde die Mahlzeitenkategorien, die noch nicht verwendet wurden
+        $remainingMealCategories = array_filter($mealCategories, function($category) use ($usedMealCategories) {
+            return !in_array($category['id'], $usedMealCategories);
+        });
+
+        // Wenn es noch verfügbare Kategorien gibt, dann fügen wir den Tag und die Kategorien zur Verfügungsliste hinzu
+        if (!empty($remainingMealCategories)) {
+            $availableMealCategories[$day] = $remainingMealCategories;
+        } else {
+            // Entferne den Tag, wenn alle Kategorien bereits zugeordnet sind
+            if (($key = array_search($day, $availableDays)) !== false) {
+                unset($availableDays[$key]);
             }
         }
     }
@@ -77,10 +84,14 @@ require '../header.php';
             <div class="form-group">
                 <label for="meal_category_id">Mahlzeitenkategorie:</label>
                 <select name="meal_category_id" required class="form-select">
-                    <?php foreach ($availableMealCategories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>">
-                            <?php echo $category['name']; ?>
-                        </option>
+                    <?php foreach ($availableMealCategories as $day => $categories): ?>
+                        <?php if ($day === reset($availableDays)): // Nur für den ersten verfügbaren Tag anzeigen ?>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?php echo $category['id']; ?>">
+                                    <?php echo $category['name']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             </div>
