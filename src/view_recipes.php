@@ -43,6 +43,11 @@ require '../header.php'; // Header einfügen
     </form>
 
     <?php
+    // Gefilterte Kategorie anzeigen
+    if ($selectedCategory) {
+        echo "<p>Gefilterte Kategorie: <strong>" . htmlspecialchars($selectedCategory, ENT_QUOTES) . "</strong></p>";
+    }
+
     if ($recipes) {
         echo "<table class='styled-table'>"; // CSS-Klasse für Styling
         echo "<thead><tr><th>Titel</th><th>Kategorie</th><th>Zutaten</th><th>Zubereitung</th><th>Aktionen</th></tr></thead><tbody>";
