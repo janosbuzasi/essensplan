@@ -14,6 +14,13 @@ require 'header.php';  // Inkludiere den Header
                 <th>Aktionen</th>
             </tr>
         </thead>
+        <!-- Beispiel für einen Tabellenzeile mit Icons für Aktionen -->
+<td>
+    <a href='view_week.php?id=<?php echo $plan['id']; ?>' class='btn btn-view'><i class='fas fa-eye'></i></a> <!-- Auge-Icon für Ansehen -->
+    <a href='edit_week.php?id=<?php echo $plan['id']; ?>' class='btn btn-edit'><i class='fas fa-edit'></i></a> <!-- Stift-Icon für Bearbeiten -->
+    <a href='archive_week.php?id=<?php echo $plan['id']; ?>' class='btn btn-archive'><i class='fas fa-archive'></i></a> <!-- Archiv-Icon für Archivieren -->
+    <a href='delete_week.php?id=<?php echo $plan['id']; ?>' class='btn btn-delete' onclick="return confirm('Möchtest du diesen Essensplan wirklich löschen?');"><i class='fas fa-trash'></i></a> <!-- Papierkorb-Icon für Löschen -->
+</td>
         <tbody>
             <?php
             require_once '../config/db.php';
