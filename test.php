@@ -4,7 +4,7 @@ require 'header.php';  // Inkludiere den Header
 ?>
 <main>
     <?php
-require_once '../config/db.php'; // Pfad zur Datenbankverbindung sicherstellen
+require_once '/config/db.php'; // Pfad zur Datenbankverbindung sicherstellen
 $db = new Database();
 $conn = $db->getConnection();
 
