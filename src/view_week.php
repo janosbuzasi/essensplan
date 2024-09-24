@@ -4,7 +4,12 @@ require '../header.php';
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
-    <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> Drucken</button>
+
+    <!-- Link zum Drucken des Wochenplans mit optimierter Druckansicht -->
+    <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
+        <i class="fas fa-print"></i> Drucken
+    </a>
+    
     <?php
     require_once '../config/db.php';
     $db = new Database();
