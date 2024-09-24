@@ -29,7 +29,7 @@ if ($weekPlanId) {
         
         // Mahlzeitenplan-Daten abrufen, einschließlich Zubereitungszeiten und Zubereitung
         $stmt = $conn->prepare("
-            SELECT er.id, er.day_of_week, mc.name AS meal_category, r.title AS recipe_title, r.prep_time, r.cook_time, r.instructions
+            SELECT er.id, er.day_of_week, mc.name AS meal_category, r.title AS recipe_title, r.prep_time, r.cook_time, r.ingredients, r.instructions
             FROM essensplan_recipes er
             JOIN recipes r ON er.recipe_id = r.id
             JOIN meal_categories mc ON er.meal_category_id = mc.id
@@ -104,8 +104,10 @@ if ($weekPlanId) {
                         // Wenn eine Mahlzeit für den Tag und die Kategorie vorhanden ist, anzeigen
                         if (isset($mealPlanByDayAndCategory[$day][$category])) {
                             $meal = $mealPlanByDayAndCategory[$day][$category];
+                            $totalTime = $meal['prep_time'] + $meal['cook_time']; // Gesamtzeit berechnen
                             echo "<strong>{$meal['recipe_title']}</strong><br>";
-                            echo "<em>Zeit:</em> {$meal['prep_time']} Min. Vorb., {$meal['cook_time']} Min. Kochzeit<br>";
+                            echo "<em>Gesamtzeit:</em> {$totalTime} Min.<br>";
+                            echo "<em>Zutaten:</em> " . nl2br(htmlspecialchars($meal['ingredients'])) . "<br>";
                             echo "<em>Zubereitung:</em> " . nl2br(htmlspecialchars($meal['instructions']));
                         } else {
                             echo "-"; // Platzhalter, wenn keine Mahlzeit vorhanden ist
