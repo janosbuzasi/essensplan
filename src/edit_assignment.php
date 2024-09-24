@@ -33,46 +33,54 @@ require '../header.php';
             
             // Bearbeitungsformular anzeigen
             ?>
-            <form action="edit_assignment.php?id=<?php echo $assignment['id']; ?>" method="post">
-                <label for="week_plan_id">Woche:</label>
-                <select name="week_plan_id" required>
-                    <?php foreach ($weekPlans as $plan): ?>
-                        <option value="<?php echo $plan['id']; ?>" <?php echo $plan['id'] == $assignment['essensplan_id'] ? 'selected' : ''; ?>>
-                            Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select><br>
+            <form action="edit_assignment.php?id=<?php echo $assignment['id']; ?>" method="post" class="recipe-form">
+                <div class="form-group">
+                    <label for="week_plan_id">Woche:</label>
+                    <select name="week_plan_id" required class="form-select">
+                        <?php foreach ($weekPlans as $plan): ?>
+                            <option value="<?php echo $plan['id']; ?>" <?php echo $plan['id'] == $assignment['essensplan_id'] ? 'selected' : ''; ?>>
+                                Woche <?php echo $plan['week_number'] . " im Jahr " . $plan['year']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <label for="day_of_week">Tag:</label>
-                <select name="day_of_week" required>
-                    <option value="Montag" <?php echo $assignment['day_of_week'] == 'Montag' ? 'selected' : ''; ?>>Montag</option>
-                    <option value="Dienstag" <?php echo $assignment['day_of_week'] == 'Dienstag' ? 'selected' : ''; ?>>Dienstag</option>
-                    <option value="Mittwoch" <?php echo $assignment['day_of_week'] == 'Mittwoch' ? 'selected' : ''; ?>>Mittwoch</option>
-                    <option value="Donnerstag" <?php echo $assignment['day_of_week'] == 'Donnerstag' ? 'selected' : ''; ?>>Donnerstag</option>
-                    <option value="Freitag" <?php echo $assignment['day_of_week'] == 'Freitag' ? 'selected' : ''; ?>>Freitag</option>
-                    <option value="Samstag" <?php echo $assignment['day_of_week'] == 'Samstag' ? 'selected' : ''; ?>>Samstag</option>
-                    <option value="Sonntag" <?php echo $assignment['day_of_week'] == 'Sonntag' ? 'selected' : ''; ?>>Sonntag</option>
-                </select><br>
+                <div class="form-group">
+                    <label for="day_of_week">Tag:</label>
+                    <select name="day_of_week" required class="form-select">
+                        <option value="Montag" <?php echo $assignment['day_of_week'] == 'Montag' ? 'selected' : ''; ?>>Montag</option>
+                        <option value="Dienstag" <?php echo $assignment['day_of_week'] == 'Dienstag' ? 'selected' : ''; ?>>Dienstag</option>
+                        <option value="Mittwoch" <?php echo $assignment['day_of_week'] == 'Mittwoch' ? 'selected' : ''; ?>>Mittwoch</option>
+                        <option value="Donnerstag" <?php echo $assignment['day_of_week'] == 'Donnerstag' ? 'selected' : ''; ?>>Donnerstag</option>
+                        <option value="Freitag" <?php echo $assignment['day_of_week'] == 'Freitag' ? 'selected' : ''; ?>>Freitag</option>
+                        <option value="Samstag" <?php echo $assignment['day_of_week'] == 'Samstag' ? 'selected' : ''; ?>>Samstag</option>
+                        <option value="Sonntag" <?php echo $assignment['day_of_week'] == 'Sonntag' ? 'selected' : ''; ?>>Sonntag</option>
+                    </select>
+                </div>
 
-                <label for="meal_category_id">Mahlzeitenkategorie:</label>
-                <select name="meal_category_id" required>
-                    <?php foreach ($mealCategories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>" <?php echo $category['id'] == $assignment['meal_category_id'] ? 'selected' : ''; ?>>
-                            <?php echo $category['name']; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select><br>
+                <div class="form-group">
+                    <label for="meal_category_id">Mahlzeitenkategorie:</label>
+                    <select name="meal_category_id" required class="form-select">
+                        <?php foreach ($mealCategories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>" <?php echo $category['id'] == $assignment['meal_category_id'] ? 'selected' : ''; ?>>
+                                <?php echo $category['name']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <label for="recipe_id">Rezept:</label>
-                <select name="recipe_id" required>
-                    <?php foreach ($recipes as $recipe): ?>
-                        <option value="<?php echo $recipe['id']; ?>" <?php echo $recipe['id'] == $assignment['recipe_id'] ? 'selected' : ''; ?>>
-                            <?php echo $recipe['title']; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select><br>
+                <div class="form-group">
+                    <label for="recipe_id">Rezept:</label>
+                    <select name="recipe_id" required class="form-select">
+                        <?php foreach ($recipes as $recipe): ?>
+                            <option value="<?php echo $recipe['id']; ?>" <?php echo $recipe['id'] == $assignment['recipe_id'] ? 'selected' : ''; ?>>
+                                <?php echo $recipe['title']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <input type="submit" value="Änderungen speichern">
+                <input type="submit" value="Änderungen speichern" class="btn btn-add">
             </form>
             <?php
         } else {
@@ -98,7 +106,7 @@ require '../header.php';
         }
     }
     ?>
-    <a href="assign_recipe_to_week.php">Zurück zur Zuordnungsseite</a>
+    <a href="assign_recipe_to_week.php" class="btn btn-view">Zurück zur Zuordnungsseite</a>
 </main>
 <?php
 include '../footer.php';
