@@ -7,9 +7,12 @@ require '../header.php';
     <form action="add_week.php" method="post">
         <label for="week_number">Kalenderwoche:</label>
         <input type="number" name="week_number" min="1" max="52" required><br>
+        
         <label for="year">Jahr:</label>
         <input type="number" name="year" value="<?php echo date('Y'); ?>" required><br>
-        <input type="submit" value="Wochenplan hinzufügen">
+        
+        <!-- Stil für den Button hinzufügen -->
+        <input type="submit" value="Wochenplan hinzufügen" class="btn btn-add"> 
     </form>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
