@@ -40,11 +40,15 @@ if ($weekPlanId) {
         $stmt->execute([$weekPlanId]);
         $mealPlan = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Mahlzeiten in einem assoziativen Array speichern, um sie besser zuordnen zu können
-        $mealPlanByDay = [];
+        // Mahlzeiten in einem zweidimensionalen Array speichern, um sie besser zuordnen zu können
+        $mealPlanByDayAndCategory = [];
         foreach ($mealPlan as $meal) {
-            $mealPlanByDay[$meal['day_of_week']][] = $meal;
+            $mealPlanByDayAndCategory[$meal['day_of_week']][$meal['meal_category']] = $meal['recipe_title'];
         }
+        
+        // Mahlzeitenkategorien in der gewünschten Reihenfolge
+        $mealCategories = ['Frühstück', 'Znüni', 'Mittagessen', 'Zvieri', 'Abendessen'];
+        
     } else {
         echo "Wochenplan nicht gefunden.";
         exit;
@@ -61,6 +65,11 @@ if ($weekPlanId) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title; ?></title>
     <link rel="stylesheet" href="/essensplan/assets/print.css"> <!-- Pfad zur print.css -->
+    <script>
+        window.onload = function() {
+            window.print(); // Automatischer Druckstart
+        }
+    </script>
 </head>
 <body>
 <main>
@@ -70,6 +79,7 @@ if ($weekPlanId) {
         <table class="meal-plan-table">
             <thead>
                 <tr>
+                    <th></th> <!-- Leere Zelle für die linke Spalte mit den Kategorien -->
                     <?php
                     // Berechnung der Tagesdaten und Anzeige im Kopf der Tabelle
                     $dto->setISODate($year, $weekNumber); // Zurücksetzen auf Wochenbeginn
@@ -83,33 +93,30 @@ if ($weekPlanId) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <?php
-                    // Mahlzeiten für jeden Tag in die Zellen einfügen
+                <?php
+                // Schleife über die Mahlzeitenkategorien
+                foreach ($mealCategories as $category) {
+                    echo "<tr>";
+                    echo "<td class='category'>$category</td>"; // Mahlzeitenkategorie in der linken Spalte
+                    // Schleife über die Wochentage
                     foreach ($daysOfWeek as $day) {
                         echo "<td>";
-                        if (isset($mealPlanByDay[$day])) {
-                            foreach ($mealPlanByDay[$day] as $meal) {
-                                echo "<div class='category'>" . $meal['meal_category'] . "</div>";
-                                echo "<div>" . $meal['recipe_title'] . "</div>";
-                            }
+                        // Wenn eine Mahlzeit für den Tag und die Kategorie vorhanden ist, anzeigen
+                        if (isset($mealPlanByDayAndCategory[$day][$category])) {
+                            echo $mealPlanByDayAndCategory[$day][$category];
                         } else {
-                            echo "<div>Keine Mahlzeiten</div>"; // Wenn keine Mahlzeiten vorhanden sind
+                            echo "-"; // Platzhalter, wenn keine Mahlzeit vorhanden ist
                         }
                         echo "</td>";
                     }
-                    ?>
-                </tr>
+                    echo "</tr>";
+                }
+                ?>
             </tbody>
         </table>
     <?php else: ?>
         <p>Keine Mahlzeitenzuordnungen für diesen Wochenplan gefunden.</p>
     <?php endif; ?>
 </main>
-<script>
-    window.onload = function() {
-        window.print(); // Automatischer Druckstart
-    }
-</script>
 </body>
 </html>
