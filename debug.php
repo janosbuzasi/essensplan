@@ -7,8 +7,15 @@ error_reporting(E_ALL);
 
 echo "<h2>Debugging für Essenspläne</h2>";
 
-// Datenbankverbindung
-require_once '../config/db.php';
+// Pfad zur Datenbankkonfigurationsdatei prüfen
+$dbFilePath = '../config/db.php';
+
+if (!file_exists($dbFilePath)) {
+    die("<p>Fehler: Die Datenbankkonfigurationsdatei wurde nicht gefunden. Überprüfe den Pfad: $dbFilePath</p>");
+}
+
+require_once $dbFilePath;
+
 $db = new Database();
 $conn = $db->getConnection();
 
