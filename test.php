@@ -2,7 +2,8 @@
 $title = "Essenspläne Übersicht"; 
 require 'header.php';  // Inkludiere den Header
 ?>
-<?php
+<main>
+    <?php
 require_once '../config/db.php'; // Pfad zur Datenbankverbindung sicherstellen
 $db = new Database();
 $conn = $db->getConnection();
@@ -28,7 +29,7 @@ if ($plans) {
     echo "<p>Keine Essenspläne gefunden.</p>";
 }
 ?>
-<main>
+
     <h2><?php echo $title; ?></h2>
     <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne.</p>
     <h3>Aktive Essenspläne</h3>
