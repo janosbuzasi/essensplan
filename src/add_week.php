@@ -1,5 +1,6 @@
 <?php
 $title = "Neuen Wochenplan hinzufügen";
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php';
 require_once '../config/db.php';
 
