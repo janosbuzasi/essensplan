@@ -467,6 +467,48 @@ footer {
     color: #23527c; /* Dunklere Farbe beim Hover */
 }
 
+/* Vertikales Icon-Menü-Stile */
+.icon-menu-vertical {
+    display: flex;
+    flex-direction: column; /* Vertikale Ausrichtung */
+    align-items: center; /* Zentriert die Elemente horizontal */
+    margin-top: 20px; /* Abstand nach oben */
+}
+
+.icon-menu-vertical .icon-menu-item {
+    display: flex;
+    flex-direction: row; /* Icon und Text nebeneinander */
+    align-items: center;
+    margin: 10px 0; /* Vertikaler Abstand zwischen den Elementen */
+    text-decoration: none; /* Entfernt die Unterstreichung */
+    color: #333; /* Textfarbe */
+    font-size: 18px; /* Schriftgröße für Text */
+    transition: background-color 0.2s, color 0.2s; /* Weiche Farbänderung beim Hover */
+    padding: 10px; /* Innenabstand für bessere Klickfläche */
+    border-radius: 8px; /* Abgerundete Ecken */
+    width: 250px; /* Festgelegte Breite für einheitliches Aussehen */
+    text-align: left; /* Text linksbündig */
+}
+
+.icon-menu-vertical .icon-menu-item i {
+    font-size: 24px; /* Größe des Icons */
+    margin-right: 10px; /* Abstand zwischen Icon und Text */
+    color: #337ab7; /* Standardfarbe des Icons */
+}
+
+.icon-menu-vertical .icon-menu-item:hover {
+    background-color: #f2f2f2; /* Hintergrundfarbe beim Hover */
+    color: #23527c; /* Textfarbe beim Hover */
+}
+
+.icon-menu-vertical .icon-menu-item:hover i {
+    color: #23527c; /* Iconfarbe beim Hover */
+}
+
+.icon-menu-vertical .icon-menu-item span {
+    text-align: left; /* Text linksbündig */
+}
+
 
 /* Smartphone-spezifische Anpassungen */
 @media (max-width: 768px) {
