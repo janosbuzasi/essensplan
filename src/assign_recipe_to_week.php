@@ -1,5 +1,6 @@
 <?php
 $title = "Rezept zu Woche zuordnen";
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php';
 ?>
 <main>
