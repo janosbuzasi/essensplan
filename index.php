@@ -11,7 +11,7 @@ $userLoggedIn = isset($_SESSION['username']);
     <?php if ($userLoggedIn): ?>
         <p>Hallo <?php echo $_SESSION['username']; ?>, willkommen zurück!</p>
         <p>Hier kannst du deine Essenspläne und Rezepte verwalten:</p>
-        <div class="icon-menu">
+        <div class="icon-menu-vertical">
             <a href="/essensplan/index.php" class="icon-menu-item" title="Home">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
