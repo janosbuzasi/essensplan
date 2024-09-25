@@ -1,3 +1,13 @@
+<?php
+session_start(); // Start der Session zur Verwaltung der Benutzeranmeldung
+require_once '../config/db.php'; // Datenbankverbindung
+$db = new Database();
+$conn = $db->getConnection();
+
+// Benutzerinformationen abrufen, wenn eingeloggt
+$userLoggedIn = isset($_SESSION['username']);
+?>
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -24,11 +34,16 @@
     </div>
     <nav id="menu" class="hidden"> <!-- Versteckt das Menü initial -->
         <ul>
-            <li><a href="/essensplan/index.php">Home</a></li>
-            <li><a href="/essensplan/src/view_recipes.php">Rezepte verwalten</a></li>
-            <li><a href="/essensplan/src/view_categories.php">Mahlzeitenkategorien verwalten</a></li>
-            <li><a href="/essensplan/src/view_weeks.php">Wochenpläne verwalten</a></li> <!-- Wochenpläne verwalten -->
-            <li><a href="/essensplan/src/archived_weeks.php">Archivierte Essenspläne</a></li> <!-- Archivierte Essenspläne -->
+            <li><a href="/essensplan/index.php"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/essensplan/src/view_recipes.php"><i class="fas fa-utensils"></i> Rezepte verwalten</a></li>
+            <li><a href="/essensplan/src/view_categories.php"><i class="fas fa-list"></i> Mahlzeitenkategorien verwalten</a></li>
+            <li><a href="/essensplan/src/view_weeks.php"><i class="fas fa-calendar-alt"></i> Wochenpläne verwalten</a></li>
+            <li><a href="/essensplan/src/archived_weeks.php"><i class="fas fa-archive"></i> Archivierte Essenspläne</a></li>
+            <?php if ($userLoggedIn): ?>
+                <li><a href="/essensplan/src/logout.php"><i class="fas fa-sign-out-alt"></i> Abmelden (<?php echo $_SESSION['username']; ?>)</a></li>
+            <?php else: ?>
+                <li><a href="/essensplan/src/login.php"><i class="fas fa-sign-in-alt"></i> Anmelden</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 </header>
