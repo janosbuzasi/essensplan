@@ -429,6 +429,44 @@ footer {
     margin: 5px 5px 0 0;
 }
 
+/* Icon-Menü-Stile */
+.icon-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Zentriert das Menü */
+    margin-top: 20px; /* Abstand nach oben */
+}
+
+.icon-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px;
+    text-decoration: none; /* Entfernt die Unterstreichung */
+    color: #333; /* Textfarbe */
+    font-size: 16px; /* Schriftgröße für Text */
+    transition: transform 0.2s; /* Weiche Skalierung beim Hover */
+}
+
+.icon-menu-item i {
+    font-size: 30px; /* Größe des Icons */
+    margin-bottom: 5px; /* Abstand zwischen Icon und Text */
+    color: #337ab7; /* Standardfarbe des Icons */
+}
+
+.icon-menu-item:hover {
+    transform: scale(1.1); /* Skalierung beim Hover */
+}
+
+.icon-menu-item span {
+    margin-top: 5px; /* Abstand zwischen Icon und Text */
+    text-align: center; /* Text zentrieren */
+}
+
+.icon-menu-item:hover i {
+    color: #23527c; /* Dunklere Farbe beim Hover */
+}
+
 
 /* Smartphone-spezifische Anpassungen */
 @media (max-width: 768px) {
