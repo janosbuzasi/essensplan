@@ -1,46 +1,25 @@
 <?php
-$title = "Essenspläne Übersicht"; 
-require 'header.php';  // Inkludiere den Header
+session_start(); // Start der Session zur Verwaltung der Benutzeranmeldung
+$title = "Willkommen auf dem Essensplan-Manager";
+require 'header.php'; // Inkludiere den Header
+
+// Überprüfen, ob der Benutzer eingeloggt ist
+$userLoggedIn = isset($_SESSION['username']);
 ?>
 <main>
     <h2><?php echo $title; ?></h2>
-    <p>Hier siehst du eine Übersicht aller aktiven und archivierten Essenspläne.</p>
-    <h3>Aktive Essenspläne</h3>
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>Woche</th>
-                <th>Jahr</th>
-                <th>Aktionen</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            require_once '../essensplan/config/db.php';
-            $db = new Database();
-            $conn = $db->getConnection();
-            $stmt = $conn->query("SELECT * FROM essensplan WHERE status = 'aktiv' ORDER BY year, week_number");
-            $plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (!empty($plans)) {
-                foreach ($plans as $plan) {
-                    echo "<tr>";
-                    echo "<td>Woche " . $plan['week_number'] . "</td>";
-                    echo "<td>" . $plan['year'] . "</td>";
-                    echo "<td>";
-                    echo "<a href='src/view_week.php?id=" . $plan['id'] . "' class='btn btn-view' title='Essensplan ansehen'><i class='fas fa-eye'></i></a>";
-                    echo "<a href='src/edit_week.php?id=" . $plan['id'] . "' class='btn btn-edit' title='Essensplan bearbeiten'><i class='fas fa-edit'></i></a>";
-                    echo "<a href='src/archive_week.php?id=" . $plan['id'] . "' class='btn btn-archive' title='Essensplan archivieren'><i class='fas fa-archive'></i></a>";
-                    echo "<a href='src/delete_week.php?id=" . $plan['id'] . "' class='btn btn-delete' title='Essensplan löschen' onclick=\"return confirm('Möchtest du diesen Essensplan wirklich löschen?');\"><i class='fas fa-trash'></i></a>";
-                    echo "</td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='3'>Keine aktiven Essenspläne vorhanden.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-    <a href="src/add_week.php" class="btn btn-add">Neuen Essensplan hinzufügen</a>
+    <?php if ($userLoggedIn): ?>
+        <p>Hallo <?php echo $_SESSION['username']; ?>, willkommen zurück!</p>
+        <p>Hier kannst du deine Essenspläne und Rezepte verwalten:</p>
+        <ul>
+            <li><a href="/essensplan/src/view_recipes.php" class="btn btn-view"><i class="fas fa-utensils"></i> Rezepte verwalten</a></li>
+            <li><a href="/essensplan/src/view_weeks.php" class="btn btn-view"><i class="fas fa-calendar-alt"></i> Wochenpläne verwalten</a></li>
+            <li><a href="/essensplan/src/archived_weeks.php" class="btn btn-view"><i class="fas fa-archive"></i> Archivierte Essenspläne</a></li>
+        </ul>
+    <?php else: ?>
+        <p>Willkommen auf dem Essensplan-Manager!</p>
+        <p>Bitte <a href="/essensplan/src/login.php" class="btn btn-add"><i class="fas fa-sign-in-alt"></i> Melde dich an</a>, um fortzufahren.</p>
+    <?php endif; ?>
 </main>
 <?php
 include 'footer.php';
