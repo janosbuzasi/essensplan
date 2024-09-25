@@ -394,6 +394,42 @@ footer {
     resize: vertical;
 }
 
+/* Stil für das Anmeldeformular */
+.login-form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.login-form .form-group {
+    margin-bottom: 15px;
+}
+
+.login-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-form button {
+    width: calc(50% - 10px); /* Buttons teilen sich den Platz */
+    margin: 5px 5px 0 0;
+}
+
+
 /* Smartphone-spezifische Anpassungen */
 @media (max-width: 768px) {
     /* Menü und Header anpassen */
