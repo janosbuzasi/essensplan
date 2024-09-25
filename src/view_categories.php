@@ -1,5 +1,6 @@
 <?php
 $title = "Mahlzeitenkategorien verwalten";
+require_once '../auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php'; // Header einfügen
 require_once '../config/db.php';
 
@@ -9,7 +10,6 @@ $conn = $db->getConnection();
 // Kategorien aus der Tabelle meal_categories abrufen
 $stmt = $conn->query("SELECT * FROM meal_categories ORDER BY name ASC");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <main>
