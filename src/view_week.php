@@ -1,5 +1,6 @@
 <?php
 $title = "Wochenplan anzeigen";
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php';
 ?>
 
