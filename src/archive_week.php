@@ -1,5 +1,6 @@
 <?php
 $title = "Essensplan archivieren"; 
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php';  // Inkludiere den Header
 ?>
 <main>
