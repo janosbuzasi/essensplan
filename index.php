@@ -1,7 +1,7 @@
 <?php
 session_start(); // Start der Session zur Verwaltung der Benutzeranmeldung
 $title = "Willkommen auf dem Essensplan-Manager";
-require 'header.php'; // Inkludiere den Header
+require_once 'header.php'; // Inkludiere den Header
 
 // Überprüfen, ob der Benutzer eingeloggt ist
 $userLoggedIn = isset($_SESSION['username']);
