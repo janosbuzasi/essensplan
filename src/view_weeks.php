@@ -1,5 +1,6 @@
 <?php
 $title = "Wochenpläne verwalten";
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php'; // Header einfügen
 
 // Fehlerausgabe aktivieren (nur für Debugging-Zwecke, sollte in Produktion deaktiviert sein)
