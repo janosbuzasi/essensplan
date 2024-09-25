@@ -1,6 +1,6 @@
 <?php
 session_start(); // Start der Session zur Verwaltung der Benutzeranmeldung
-require_once '../config/db.php'; // Datenbankverbindung
+require_once 'config/db.php'; // Datenbankverbindung
 $db = new Database();
 $conn = $db->getConnection();
 
