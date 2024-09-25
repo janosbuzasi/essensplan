@@ -58,7 +58,7 @@ if ($databaseExists) {
 
             try {
                 // Löschen der bestehenden Tabellen
-                $conn->exec("DROP TABLE IF EXISTS essensplan_recipes, recipes, meal_categories, essensplan");
+                $conn->exec("DROP TABLE IF EXISTS essensplan_recipes, recipes, meal_categories, essensplan, users");
                 echo "Alle bestehenden Tabellen wurden gelöscht.<br>";
             } catch (PDOException $e) {
                 echo "Fehler beim Löschen der Tabellen: " . $e->getMessage();
@@ -71,7 +71,30 @@ if ($databaseExists) {
 }
 
 try {
-    // Tabelle für Essenspläne erstellen oder ändern, falls sie nicht existiert
+    // Tabelle für Benutzer erstellen
+    $sqlUsers = "
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
+            role ENUM('admin', 'user') DEFAULT 'user',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+    ";
+    $conn->exec($sqlUsers);
+    echo "Tabelle 'users' wurde erfolgreich erstellt oder aktualisiert.<br>";
+
+    // Admin-Benutzer hinzufügen
+    $adminPassword = password_hash('adminpasswort', PASSWORD_DEFAULT); // Passwort verschlüsseln
+    $conn->exec("
+        INSERT INTO users (username, password, email, role) VALUES
+        ('admin', '$adminPassword', 'admin@example.com', 'admin')
+        ON DUPLICATE KEY UPDATE username = 'admin';
+    ");
+    echo "Admin-Benutzer wurde hinzugefügt oder aktualisiert.<br>";
+
+    // Tabelle für Essenspläne erstellen
     $sqlEssensplan = "
         CREATE TABLE IF NOT EXISTS essensplan (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,7 +108,7 @@ try {
     $conn->exec($sqlEssensplan);
     echo "Tabelle 'essensplan' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Tabelle für Rezepte erstellen oder ändern, falls sie nicht existiert
+    // Tabelle für Rezepte erstellen
     $sqlRecipes = "
         CREATE TABLE IF NOT EXISTS recipes (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -103,7 +126,7 @@ try {
     $conn->exec($sqlRecipes);
     echo "Tabelle 'recipes' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Tabelle für Mahlzeitenkategorien erstellen, falls sie nicht existiert
+    // Tabelle für Mahlzeitenkategorien erstellen
     $sqlMealCategories = "
         CREATE TABLE IF NOT EXISTS meal_categories (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -115,7 +138,7 @@ try {
     $conn->exec($sqlMealCategories);
     echo "Tabelle 'meal_categories' wurde erfolgreich erstellt oder aktualisiert.<br>";
 
-    // Tabelle für Essensplan-Rezepte erstellen oder ändern, falls sie nicht existiert
+    // Tabelle für Essensplan-Rezepte erstellen
     $sqlEssensplanRecipes = "
         CREATE TABLE IF NOT EXISTS essensplan_recipes (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -140,8 +163,9 @@ try {
         ('Mittagessen', 'Hauptmahlzeit am Mittag'),
         ('Zvieri', 'Zwischenmahlzeit um 16 Uhr'),
         ('Abendessen', 'Abendliche Mahlzeit')
+        ON DUPLICATE KEY UPDATE name = VALUES(name);
     ");
-    echo "Standardkategorien wurden hinzugefügt.<br>";
+    echo "Standardkategorien wurden hinzugefügt oder aktualisiert.<br>";
 
     // Standardrezepte hinzufügen
     $conn->exec("
@@ -151,8 +175,9 @@ try {
         ('Spaghetti Bolognese', 'Spaghetti, Hackfleisch, Tomaten, Zwiebeln, Knoblauch, Olivenöl', 'Hackfleisch anbraten, Zwiebeln und Knoblauch hinzufügen, mit Tomaten köcheln lassen.', 'Mittagessen', 10, 30, 'leicht', 4),
         ('Käsebrot', 'Brot, Butter, Käse, Gurkenscheiben', 'Brot mit Butter bestreichen, Käse und Gurkenscheiben belegen.', 'Zvieri', 5, 0, 'leicht', 1),
         ('Hähnchenbrust mit Gemüse', 'Hähnchenbrust, Brokkoli, Karotten, Olivenöl, Salz, Pfeffer', 'Hähnchenbrust braten und mit gedünstetem Gemüse servieren.', 'Abendessen', 15, 20, 'mittel', 2)
+        ON DUPLICATE KEY UPDATE title = VALUES(title);
     ");
-    echo "Standardrezepte wurden hinzugefügt.<br>";
+    echo "Standardrezepte wurden hinzugefügt oder aktualisiert.<br>";
 
     // Beispiel-Wochenplan hinzufügen
     $conn->exec("INSERT INTO essensplan (week_number, year, description) VALUES (1, 2024, 'Beispielhafter Essensplan für Woche 1')");
