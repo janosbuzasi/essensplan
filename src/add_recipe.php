@@ -1,5 +1,6 @@
 <?php
 $title = "Neues Rezept hinzufügen";
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../header.php'; // Header einfügen
 require_once '../config/db.php';
 
