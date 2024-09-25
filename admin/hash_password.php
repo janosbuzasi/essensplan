@@ -4,12 +4,12 @@ $password = 'antonia'; // Setze hier dein gewünschtes Passwort
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 // Ausgabe für den ersten Benutzer
-echo 'Username: antonia, Passwort: ' . $password . ', Gehashtes Passwort: ' . $hashedPassword . '<br>';
+echo 'Username: antonia, Gehashtes Passwort: ' . $hashedPassword . '<br>';
 
 // Neuer Benutzer
 $password = 'admin'; // Setze hier dein gewünschtes Passwort
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 // Ausgabe für den zweiten Benutzer
-echo 'Username: admin, Passwort: ' . $password . ', Gehashtes Passwort: ' . $hashedPassword;
+echo 'Username: admin, Gehashtes Passwort: ' . $hashedPassword;
 ?>
