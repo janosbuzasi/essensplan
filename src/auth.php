@@ -1,5 +1,5 @@
-// auth.php
 <?php
+// auth.php
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: /essensplan/src/login.php");
