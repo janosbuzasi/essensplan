@@ -1,5 +1,6 @@
 <?php
 $title = "Essensplan"; // Standard-Titel
+require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
 require '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
