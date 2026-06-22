@@ -67,14 +67,17 @@ if ($weekPlanId) {
     <title><?php echo $title; ?></title>
     <link rel="stylesheet" href="/essensplan/assets/print.css"> <!-- Pfad zur print.css -->
     <script>
-        window.onload = function() {
-            window.print(); // Automatischer Druckstart
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            window.setTimeout(function () {
+                window.print(); // Automatischer Druckstart nach Redirect/Login
+            }, 250);
+        });
     </script>
 </head>
 <body>
 <main>
     <h2><?php echo $title; ?></h2>
+    <p class="print-help">Falls der Druckdialog nicht automatisch erscheint, nutze den Druck-Button unten.</p>
 
     <?php if ($mealPlan): ?>
         <table class="meal-plan-table">
@@ -123,6 +126,12 @@ if ($weekPlanId) {
     <?php else: ?>
         <p>Keine Mahlzeitenzuordnungen für diesen Wochenplan gefunden.</p>
     <?php endif; ?>
+
+    <p class="print-actions">
+        <button type="button" class="btn btn-print" onclick="window.print(); return false;">
+            Druck starten
+        </button>
+    </p>
 </main>
 </body>
 </html>
