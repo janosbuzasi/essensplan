@@ -78,6 +78,11 @@ if ($weekPlanId) {
 <main>
     <h2><?php echo $title; ?></h2>
     <p class="print-help">Falls der Druckdialog nicht automatisch erscheint, nutze den Druck-Button unten.</p>
+    <p class="print-actions print-actions-top">
+        <button type="button" class="btn btn-print" onclick="window.print(); return false;">
+            Druck starten
+        </button>
+    </p>
 
     <?php if ($mealPlan): ?>
         <section class="mobile-week-plan" aria-label="Mobile Wochenansicht">
@@ -153,12 +158,6 @@ if ($weekPlanId) {
     <?php else: ?>
         <p>Keine Mahlzeitenzuordnungen für diesen Wochenplan gefunden.</p>
     <?php endif; ?>
-
-    <p class="print-actions">
-        <button type="button" class="btn btn-print" onclick="window.print(); return false;">
-            Druck starten
-        </button>
-    </p>
 </main>
 </body>
 </html>

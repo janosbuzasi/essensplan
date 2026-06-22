@@ -87,6 +87,10 @@ h2 {
     text-align: right;
 }
 
+.print-actions-top {
+    margin: 0 0 14px;
+}
+
 .mobile-week-plan {
     display: none;
 }
@@ -106,25 +110,27 @@ h2 {
 
     .mobile-week-plan {
         display: block;
+        margin-top: 8px;
     }
 
     .mobile-day-card {
-        margin: 0 0 16px;
-        padding: 14px;
-        border: 1px solid #cfd6df;
-        border-radius: 10px;
-        background: #fff;
+        margin: 0 0 12px;
+        padding: 12px;
+        border: 1px solid #d6dde5;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
     }
 
     .mobile-day-card h3 {
-        margin: 0 0 10px;
-        font-size: 13pt;
+        margin: 0 0 8px;
+        font-size: 12pt;
     }
 
     .mobile-meal-card {
-        padding: 12px;
-        margin: 0 0 10px;
-        border-radius: 8px;
+        padding: 10px;
+        margin: 0 0 8px;
+        border-radius: 10px;
         background: #f6f7f9;
         border: 1px solid #d8dee8;
     }
@@ -135,16 +141,16 @@ h2 {
         color: #5f6b7a;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
 
     .mobile-meal-time {
-        margin: 4px 0 8px;
+        margin: 3px 0 6px;
         font-size: 9pt;
     }
 
     .mobile-meal-block {
-        margin-top: 8px;
+        margin-top: 6px;
         font-size: 9pt;
     }
 
@@ -157,6 +163,10 @@ h2 {
 
     .print-actions {
         text-align: center;
+    }
+
+    .print-actions-top {
+        margin-bottom: 12px;
     }
 }
 
