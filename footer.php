@@ -1,48 +1,29 @@
-<footer>
+<footer class="site-footer">
     <div class="footer-content">
-        <p>&copy; <?php echo date("Y"); ?> Essensplan by Janos Buzasi - Alle Rechte vorbehalten.</p>
-        <ul class="social-links">
-            <li>
-                <a href="javascript:void(0);" onclick="toggleDarkMode()">Dark Mode umschalten</a> <!-- Dark Mode Umschaltung -->
-            </li>
-        </ul>
+        <p>&copy; <?php echo date('Y'); ?> webtrash.ch</p>
+        <button class="theme-toggle" type="button" onclick="toggleDarkMode()">Darstellung wechseln</button>
     </div>
 </footer>
 
 <script>
-    // Funktion zum Umschalten des Dark Mode
-    function toggleDarkMode() {
-        var element = document.body;
-        element.classList.toggle("dark-mode");
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const mode = document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+    document.cookie = 'darkMode=' + mode + ';path=/;SameSite=Lax';
+}
 
-        // Zustand in einem Cookie speichern
-        var darkMode = element.classList.contains("dark-mode") ? "enabled" : "disabled";
-        document.cookie = "darkMode=" + darkMode + ";path=/"; // Cookie für das gesamte Verzeichnis setzen
-    }
+function getCookie(name) {
+    const prefix = name + '=';
+    return document.cookie.split(';').map(function (value) {
+        return value.trim();
+    }).find(function (value) {
+        return value.indexOf(prefix) === 0;
+    })?.substring(prefix.length) || null;
+}
 
-    // Überprüfen, ob der Dark Mode aktiviert ist
-    function checkDarkMode() {
-        var darkMode = getCookie("darkMode");
-        if (darkMode === "enabled") {
-            document.body.classList.add("dark-mode");
-        }
-    }
-
-    // Cookie-Wert abrufen
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
-    // Dark Mode beim Laden der Seite überprüfen und anwenden
-    checkDarkMode();
+if (getCookie('darkMode') === 'enabled') {
+    document.body.classList.add('dark-mode');
+}
 </script>
-
 </body>
 </html>
