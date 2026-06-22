@@ -7,6 +7,15 @@ require_once 'config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 $userLoggedIn = isset($_SESSION['username']);
+$isAdmin = false;
+
+if ($userLoggedIn && isset($_SESSION['user_id'])) {
+    $roleStmt = $conn->prepare('SELECT role FROM users WHERE id = ? LIMIT 1');
+    $roleStmt->execute([(int) $_SESSION['user_id']]);
+    $role = $roleStmt->fetchColumn();
+    $_SESSION['role'] = $role ?: null;
+    $isAdmin = $role === 'admin';
+}
 $domain = $_SERVER['HTTP_HOST'] ?? 'webtrash.ch';
 $pageTitle = isset($title) ? "$title | $domain" : $domain;
 ?>
@@ -41,7 +50,12 @@ $pageTitle = isset($title) ? "$title | $domain" : $domain;
             <li><a href="/essensplan/src/view_weeks.php"><i class="fas fa-calendar-alt"></i> Wochenpläne</a></li>
             <li><a href="/essensplan/src/archived_weeks.php"><i class="fas fa-archive"></i> Archiv</a></li>
             <?php if ($userLoggedIn): ?>
-                <li class="menu-separator"><a href="/essensplan/src/logout.php"><i class="fas fa-sign-out-alt"></i> Abmelden (<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>)</a></li>
+                <?php if ($isAdmin): ?>
+                    <li class="menu-separator"><a href="/essensplan/src/user_management.php"><i class="fas fa-users-cog"></i> Benutzerverwaltung</a></li>
+                    <li><a href="/essensplan/src/logout.php"><i class="fas fa-sign-out-alt"></i> Abmelden (<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>)</a></li>
+                <?php else: ?>
+                    <li class="menu-separator"><a href="/essensplan/src/logout.php"><i class="fas fa-sign-out-alt"></i> Abmelden (<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>)</a></li>
+                <?php endif; ?>
             <?php else: ?>
                 <li class="menu-separator"><a href="/essensplan/src/login.php"><i class="fas fa-sign-in-alt"></i> Anmelden</a></li>
             <?php endif; ?>

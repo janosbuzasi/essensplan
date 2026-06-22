@@ -162,6 +162,15 @@ textarea:focus { border-color: var(--accent); outline: 0; box-shadow: 0 0 0 3px 
 .footer-content p { margin: 0; }
 .theme-toggle { margin: 0; padding: 7px 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .85rem; }
 
+.alert { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; }
+.alert-error { border-color: #efb4b4; background: #fff0f0; color: #8f1d1d; }
+.alert-success { border-color: #a9d5bb; background: #edf8f1; color: #145c35; }
+.dark-mode .alert-error { background: #3b2025; color: #fecaca; }
+.dark-mode .alert-success { background: #173528; color: #bbf7d0; }
+.form-help { display: block; margin-top: 6px; color: var(--muted); }
+.user-management-form { margin-left: 0; }
+.user-table-wrap { overflow-x: auto; }
+
 @media (max-width: 760px) {
     .header-container { grid-template-columns: 1fr auto; }
     .app-name { display: none; }

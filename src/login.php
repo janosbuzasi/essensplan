@@ -1,68 +1,58 @@
 <?php
-$title = "Anmeldung";
-require '../header.php'; // Header einfügen
-require_once '../config/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-session_start();
+require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
+$error = '';
 
-$error = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim((string) ($_POST['username'] ?? ''));
+    $password = (string) ($_POST['password'] ?? '');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if (!empty($username) && !empty($password)) {
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+    if ($username !== '' && $password !== '') {
+        $stmt = $conn->prepare('SELECT id, username, password, role FROM users WHERE username = ? LIMIT 1');
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['username'] = $user['username'];
-            header('Location: ../index.php');
+            $_SESSION['role'] = $user['role'];
+            header('Location: /essensplan/index.php');
             exit;
-        } else {
-            $error = "Benutzername oder Passwort ist falsch.";
         }
-    } else {
-        $error = "Bitte Benutzername und Passwort eingeben.";
     }
-}
-?>
 
+    $error = 'Benutzername oder Passwort ist falsch.';
+}
+
+$title = 'Anmeldung';
+require '../header.php';
+?>
 <main>
-    <h2><i class="fas fa-sign-in-alt"></i> <?php echo $title; ?></h2>
-    <?php if (!empty($error)): ?>
-        <p style="color:red;"><?php echo $error; ?></p>
+    <h2><i class="fas fa-sign-in-alt"></i> <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></h2>
+    <?php if ($error !== ''): ?>
+        <p class="alert alert-error"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif; ?>
-    <form method="post" class="login-form"> <!-- CSS-Klasse für das Formular -->
+    <form method="post" class="login-form">
         <div class="form-group">
             <label for="username"><i class="fas fa-user"></i> Benutzername:</label>
-            <input type="text" name="username" id="username" required>
+            <input type="text" name="username" id="username" autocomplete="username" required autofocus>
         </div>
-        
         <div class="form-group">
             <label for="password"><i class="fas fa-lock"></i> Passwort:</label>
-            <input type="password" name="password" id="password" required>
+            <input type="password" name="password" id="password" autocomplete="current-password" required>
         </div>
-        
         <div class="form-group">
-            <button type="submit" class="btn btn-edit" title="Anmelden">
-                <i class="fas fa-sign-in-alt"></i> Anmelden
-            </button>
-            <button type="reset" class="btn btn-delete" title="Zurücksetzen">
-                <i class="fas fa-undo"></i> Zurücksetzen
-            </button>
+            <button type="submit" class="btn btn-edit"><i class="fas fa-sign-in-alt"></i> Anmelden</button>
+            <button type="reset" class="btn btn-delete"><i class="fas fa-undo"></i> Zurücksetzen</button>
         </div>
     </form>
-    
-    <a href="../index.php" class="btn btn-view" title="Zurück zur Startseite">
-        <i class="fas fa-arrow-left"></i> Zurück
-    </a>
+    <a href="../index.php" class="btn btn-view"><i class="fas fa-arrow-left"></i> Zurück</a>
 </main>
 
-<?php
-include '../footer.php'; // Footer einfügen
-?>
+<?php include '../footer.php'; ?>
