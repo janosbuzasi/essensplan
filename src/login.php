@@ -7,6 +7,11 @@ require_once '../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 $error = '';
+$returnUrl = (string) ($_GET['return_url'] ?? $_POST['return_url'] ?? '/essensplan/index.php');
+
+if (preg_match('#^/essensplan/[A-Za-z0-9._~!$&\'()*+,;=:@/%?-]*$#', $returnUrl) !== 1) {
+    $returnUrl = '/essensplan/index.php';
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim((string) ($_POST['username'] ?? ''));
@@ -22,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            header('Location: /essensplan/index.php');
+            header('Location: ' . $returnUrl);
             exit;
         }
     }
@@ -39,6 +44,7 @@ require '../header.php';
         <p class="alert alert-error"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif; ?>
     <form method="post" class="login-form">
+        <input type="hidden" name="return_url" value="<?php echo htmlspecialchars($returnUrl, ENT_QUOTES, 'UTF-8'); ?>">
         <div class="form-group">
             <label for="username"><i class="fas fa-user"></i> Benutzername:</label>
             <input type="text" name="username" id="username" autocomplete="username" required autofocus>

@@ -84,12 +84,18 @@ foreach ($meals as $meal) {
     $mealsByDay[$meal['day_of_week']][] = $meal;
 }
 
+$printUrl = 'https://webtrash.ch/essensplan/src/print.php?id=' . $weekPlanId;
+
 $body = '<!doctype html><html lang="de"><head><meta charset="utf-8"></head>';
 $body .= '<body style="margin:0;background:#f6f7f9;color:#17202a;font-family:Arial,sans-serif;line-height:1.5">';
 $body .= '<div style="max-width:760px;margin:0 auto;padding:24px">';
 $body .= '<div style="background:#212529;color:#fff;padding:18px 22px;border-radius:10px 10px 0 0"><strong>WT webtrash.ch</strong></div>';
 $body .= '<div style="background:#fff;border:1px solid #d8dee8;border-top:0;padding:24px;border-radius:0 0 10px 10px">';
 $body .= '<h1 style="margin:0 0 8px;font-size:26px">' . email_escape($title) . '</h1>';
+$body .= '<p style="margin:0 0 18px;color:#5f6b7a">Du kannst die Druckansicht direkt im Browser öffnen oder den Wochenplan weiter unten als HTML ansehen.</p>';
+$body .= '<p style="margin:0 0 24px">';
+$body .= '<a href="' . email_escape($printUrl) . '" style="display:inline-block;background:#0d6efd;color:#fff;text-decoration:none;font-weight:bold;padding:12px 18px;border-radius:8px">Druckansicht öffnen</a>';
+$body .= '</p>';
 
 if ((string) $weekPlan['description'] !== '') {
     $body .= '<p style="margin:0 0 24px;color:#5f6b7a">' . nl2br(email_escape($weekPlan['description'])) . '</p>';
