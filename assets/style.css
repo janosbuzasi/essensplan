@@ -111,7 +111,10 @@ input[type="submit"]:hover { filter: brightness(.92); }
 .btn-reset { background: var(--danger); }
 .btn-add { background: var(--accent); }
 .btn-print { background: var(--info); }
+.btn-email { background: #6f42c1; }
 .btn-back { background: var(--muted); }
+
+.email-send-form { display: inline-block; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
 
 .recipe-form,
 .category-form,

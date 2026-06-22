@@ -1,11 +1,24 @@
 <?php
 $title = "Wochenplan anzeigen";
 require_once 'auth.php'; // Überprüfung der Benutzeranmeldung (auth.php einbinden)
+if (!isset($_SESSION['week_email_csrf'])) {
+    $_SESSION['week_email_csrf'] = bin2hex(random_bytes(32));
+}
+
+$emailFlash = $_SESSION['week_email_flash'] ?? null;
+unset($_SESSION['week_email_flash']);
+
 require '../header.php';
 ?>
 
 <main>
     <h2><?php echo $title; ?></h2>
+
+    <?php if (is_array($emailFlash)): ?>
+        <p class="alert alert-<?php echo $emailFlash['type'] === 'success' ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($emailFlash['message'], ENT_QUOTES, 'UTF-8'); ?>
+        </p>
+    <?php endif; ?>
 
     <?php
     require_once '../config/db.php';
@@ -20,6 +33,11 @@ require '../header.php';
         <a href="print.php?id=<?php echo $weekPlanId; ?>" class="btn btn-print" target="_blank">
             <i class="fas fa-print"></i> Drucken
         </a>
+        <form method="post" action="send_week_email.php" class="email-send-form">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['week_email_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+            <input type="hidden" name="week_plan_id" value="<?php echo $weekPlanId; ?>">
+            <button type="submit" class="btn btn-email"><i class="fas fa-envelope"></i> Per E-Mail senden</button>
+        </form>
     <?php endif; ?>
 
     <?php
