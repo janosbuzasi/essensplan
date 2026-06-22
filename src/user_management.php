@@ -27,38 +27,69 @@ if (!isset($_SESSION['user_management_csrf'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = (string) ($_POST['csrf_token'] ?? '');
-    $targetUserId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+    $action = (string) ($_POST['action'] ?? '');
     $currentPassword = (string) ($_POST['current_password'] ?? '');
-    $newPassword = (string) ($_POST['new_password'] ?? '');
-    $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
-
-    $flash = ['type' => 'error', 'message' => 'Das Passwort konnte nicht geändert werden.'];
+    $flash = ['type' => 'error', 'message' => 'Die Aktion konnte nicht ausgeführt werden.'];
 
     if (!hash_equals($_SESSION['user_management_csrf'], $csrf)) {
         $flash['message'] = 'Ungültige oder abgelaufene Anfrage. Bitte erneut versuchen.';
     } elseif (!password_verify($currentPassword, $currentAdmin['password'])) {
         $flash['message'] = 'Dein aktuelles Admin-Passwort ist falsch.';
-    } elseif (!$targetUserId) {
-        $flash['message'] = 'Bitte einen gültigen Benutzer auswählen.';
-    } elseif (strlen($newPassword) < 12) {
-        $flash['message'] = 'Das neue Passwort muss mindestens 12 Zeichen lang sein.';
-    } elseif ($newPassword !== $confirmPassword) {
-        $flash['message'] = 'Die beiden neuen Passwörter stimmen nicht überein.';
-    } else {
-        $targetStmt = $conn->prepare('SELECT username FROM users WHERE id = ? LIMIT 1');
-        $targetStmt->execute([$targetUserId]);
-        $targetUsername = $targetStmt->fetchColumn();
+    } elseif ($action === 'reset_password') {
+        $targetUserId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+        $newPassword = (string) ($_POST['new_password'] ?? '');
+        $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
 
-        if ($targetUsername === false) {
-            $flash['message'] = 'Der ausgewählte Benutzer wurde nicht gefunden.';
+        if (!$targetUserId) {
+            $flash['message'] = 'Bitte einen gültigen Benutzer auswählen.';
+        } elseif (strlen($newPassword) < 12) {
+            $flash['message'] = 'Das neue Passwort muss mindestens 12 Zeichen lang sein.';
+        } elseif ($newPassword !== $confirmPassword) {
+            $flash['message'] = 'Die beiden neuen Passwörter stimmen nicht überein.';
         } else {
-            $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-            $updateStmt = $conn->prepare('UPDATE users SET password = ? WHERE id = ?');
-            $updateStmt->execute([$passwordHash, $targetUserId]);
-            $flash = [
-                'type' => 'success',
-                'message' => 'Das Passwort für ' . $targetUsername . ' wurde geändert.',
-            ];
+            $targetStmt = $conn->prepare('SELECT username FROM users WHERE id = ? LIMIT 1');
+            $targetStmt->execute([$targetUserId]);
+            $targetUsername = $targetStmt->fetchColumn();
+
+            if ($targetUsername === false) {
+                $flash['message'] = 'Der ausgewählte Benutzer wurde nicht gefunden.';
+            } else {
+                $updateStmt = $conn->prepare('UPDATE users SET password = ? WHERE id = ?');
+                $updateStmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $targetUserId]);
+                $flash = [
+                    'type' => 'success',
+                    'message' => 'Das Passwort für ' . $targetUsername . ' wurde geändert.',
+                ];
+            }
+        }
+    } elseif ($action === 'create_user') {
+        $username = trim((string) ($_POST['username'] ?? ''));
+        $email = trim((string) ($_POST['email'] ?? ''));
+        $newPassword = (string) ($_POST['user_password'] ?? '');
+        $confirmPassword = (string) ($_POST['user_confirm_password'] ?? '');
+
+        if (!preg_match('/^[A-Za-z0-9._-]{3,50}$/', $username)) {
+            $flash['message'] = 'Der Benutzername muss 3 bis 50 Zeichen lang sein und darf Buchstaben, Zahlen, Punkt, Unterstrich und Bindestrich enthalten.';
+        } elseif (strlen($email) > 100 || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            $flash['message'] = 'Bitte eine gültige E-Mail-Adresse eingeben.';
+        } elseif (strlen($newPassword) < 12) {
+            $flash['message'] = 'Das Passwort muss mindestens 12 Zeichen lang sein.';
+        } elseif ($newPassword !== $confirmPassword) {
+            $flash['message'] = 'Die beiden Passwörter stimmen nicht überein.';
+        } else {
+            $duplicateStmt = $conn->prepare('SELECT id FROM users WHERE username = ? OR email = ? LIMIT 1');
+            $duplicateStmt->execute([$username, $email]);
+
+            if ($duplicateStmt->fetchColumn() !== false) {
+                $flash['message'] = 'Benutzername oder E-Mail-Adresse wird bereits verwendet.';
+            } else {
+                $insertStmt = $conn->prepare("INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, 'user')");
+                $insertStmt->execute([$username, password_hash($newPassword, PASSWORD_DEFAULT), $email]);
+                $flash = [
+                    'type' => 'success',
+                    'message' => 'Der Benutzer ' . $username . ' wurde ohne Adminrechte angelegt.',
+                ];
+            }
         }
     }
 
@@ -77,7 +108,7 @@ require '../header.php';
 ?>
 <main>
     <h2><i class="fas fa-users-cog"></i> Benutzerverwaltung</h2>
-    <p>Hier kannst du als Administrator das Passwort eines vorhandenen Benutzers neu setzen.</p>
+    <p>Administratoren können Benutzer ohne Adminrechte anlegen und Passwörter aller vorhandenen Konten zurücksetzen.</p>
 
     <?php if (is_array($flash)): ?>
         <p class="alert alert-<?php echo $flash['type'] === 'success' ? 'success' : 'error'; ?>">
@@ -85,38 +116,80 @@ require '../header.php';
         </p>
     <?php endif; ?>
 
-    <form method="post" class="recipe-form user-management-form">
-        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['user_management_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+    <div class="user-management-grid">
+        <section>
+            <h3>Neuen Benutzer anlegen</h3>
+            <form method="post" class="recipe-form user-management-form">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['user_management_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" name="action" value="create_user">
 
-        <div class="form-group">
-            <label for="user_id">Benutzer</label>
-            <select id="user_id" name="user_id" required>
-                <?php foreach ($users as $user): ?>
-                    <option value="<?php echo (int) $user['id']; ?>">
-                        <?php echo htmlspecialchars($user['username'] . ' (' . $user['role'] . ')', ENT_QUOTES, 'UTF-8'); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                <div class="form-group">
+                    <label for="username">Benutzername</label>
+                    <input type="text" id="username" name="username" minlength="3" maxlength="50" pattern="[A-Za-z0-9._-]+" autocomplete="off" required>
+                </div>
 
-        <div class="form-group">
-            <label for="current_password">Dein aktuelles Admin-Passwort</label>
-            <input type="password" id="current_password" name="current_password" autocomplete="current-password" required>
-        </div>
+                <div class="form-group">
+                    <label for="email">E-Mail-Adresse</label>
+                    <input type="email" id="email" name="email" maxlength="100" autocomplete="off" required>
+                </div>
 
-        <div class="form-group">
-            <label for="new_password">Neues Passwort</label>
-            <input type="password" id="new_password" name="new_password" minlength="12" autocomplete="new-password" required>
-            <small class="form-help">Mindestens 12 Zeichen. Verwende kein Standardpasswort.</small>
-        </div>
+                <div class="form-group">
+                    <label for="user_password">Passwort</label>
+                    <input type="password" id="user_password" name="user_password" minlength="12" autocomplete="new-password" required>
+                </div>
 
-        <div class="form-group">
-            <label for="confirm_password">Neues Passwort bestätigen</label>
-            <input type="password" id="confirm_password" name="confirm_password" minlength="12" autocomplete="new-password" required>
-        </div>
+                <div class="form-group">
+                    <label for="user_confirm_password">Passwort bestätigen</label>
+                    <input type="password" id="user_confirm_password" name="user_confirm_password" minlength="12" autocomplete="new-password" required>
+                </div>
 
-        <button type="submit" class="btn btn-edit"><i class="fas fa-key"></i> Passwort ändern</button>
-    </form>
+                <div class="form-group">
+                    <label for="create_current_password">Dein aktuelles Admin-Passwort</label>
+                    <input type="password" id="create_current_password" name="current_password" autocomplete="current-password" required>
+                </div>
+
+                <p class="form-help">Das neue Konto erhält automatisch die Rolle <strong>user</strong>.</p>
+                <button type="submit" class="btn btn-add"><i class="fas fa-user-plus"></i> Benutzer anlegen</button>
+            </form>
+        </section>
+
+        <section>
+            <h3>Passwort zurücksetzen</h3>
+            <form method="post" class="recipe-form user-management-form">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['user_management_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" name="action" value="reset_password">
+
+                <div class="form-group">
+                    <label for="user_id">Benutzer oder Administrator</label>
+                    <select id="user_id" name="user_id" required>
+                        <?php foreach ($users as $user): ?>
+                            <option value="<?php echo (int) $user['id']; ?>">
+                                <?php echo htmlspecialchars($user['username'] . ' (' . $user['role'] . ')', ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reset_current_password">Dein aktuelles Admin-Passwort</label>
+                    <input type="password" id="reset_current_password" name="current_password" autocomplete="current-password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">Neues Passwort</label>
+                    <input type="password" id="new_password" name="new_password" minlength="12" autocomplete="new-password" required>
+                    <small class="form-help">Mindestens 12 Zeichen. Das bisherige Passwort des Zielkontos wird nicht benötigt.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Neues Passwort bestätigen</label>
+                    <input type="password" id="confirm_password" name="confirm_password" minlength="12" autocomplete="new-password" required>
+                </div>
+
+                <button type="submit" class="btn btn-edit"><i class="fas fa-key"></i> Passwort ändern</button>
+            </form>
+        </section>
+    </div>
 
     <div class="user-table-wrap">
         <table class="styled-table">
