@@ -1,67 +1,27 @@
+# Essensplan
 
-# Essensplan für Mahlzeiten
+Web-based weekly meal plan manager for webtrash.ch.
 
-Dieses Projekt ermöglicht die Verwaltung eines wöchentlichen Essensplans, einschließlich der Möglichkeit, Rezepte hinzuzufügen, zu bearbeiten und zu löschen.<br>
-Benutzer können zwischen verschiedenen CSS-Stilen wechseln und jederzeit zur ursprünglichen Version zurückkehren.
+## Current Status
 
-## Projektstruktur
+The project now includes:
 
-```
-essensplan/
-│
-├── assets/
-│   ├── style.css             # Standard-CSS-Stil
-│   ├── classic_style.css     # Classic-CSS-Stil
-│   └── yellow_style.css      # Gelber CSS-Stil
-│
-├── config/
-│   └── db.php                # Datenbankverbindungsdatei
-│
-├── src/
-│   ├── index.php             # Hauptseite zur Essensplan-Verwaltung
-│   ├── view_recipes.php      # Seite zum Anzeigen aller Rezepte
-│   ├── add_recipe.php        # Seite zum Hinzufügen neuer Rezepte
-│   ├── edit_recipe.php       # Seite zum Bearbeiten bestehender Rezepte
-│   └── delete_recipe.php     # Seite zum Löschen von Rezepten
-│
-├── admin/
-│   └── setup.php             # Initiale Datenbankeinrichtung
-│
-├── change_style.php          # Seite zum Ändern des CSS-Stils
-├── contact.php               # Kontaktseite
-├── about_us.php              # Über uns Seite
-├── header.php                # Gemeinsamer Header für alle Seiten
-├── footer.php                # Gemeinsamer Footer für alle Seiten
-└── README.md                 # Diese Datei
-```
+- admin-only user management
+- user creation with forced `user` role
+- password reset for existing users and admins
+- email delivery of weekly plans
+- a mail link to the print view
+- a print layout tuned for desktop and a lighter mobile fallback
+- shared webtrash.ch branding and navigation
 
-## Installation
+## Main Pages
 
-1. **Projekt klonen:**
-   ```bash
-   git clone <repository-url>
-   ```
-2. **Datenbank einrichten:**
-   Führe `admin/setup.php` aus, um die Datenbanktabellen zu erstellen.
-3. **Datenbankverbindung konfigurieren:**
-   Passe die Datei `config/db.php` an deine Datenbankeinstellungen an.
-4. **CSS-Stile anpassen:**
-   Füge deine eigenen CSS-Stile in das Verzeichnis `assets/` hinzu oder passe die vorhandenen an.
+- `index.php` - overview and weekly planning
+- `view_weeks.php` - list of weeks
+- `view_week.php` - single week view, print and email actions
+- `print.php` - print-optimized week layout
+- `user_management.php` - admin user management
 
-## Nutzung
+## Notes
 
-- **Essensplan erstellen:** Über die `index.php` kannst du neue Wochenpläne erstellen, anzeigen, bearbeiten und löschen.
-- **Rezepte verwalten:** Auf der Seite `view_recipes.php` kannst du alle vorhandenen Rezepte anzeigen, neue hinzufügen oder bestehende bearbeiten und löschen.
-- **CSS-Stil ändern:** Besuche `change_style.php`, um den Stil der Webseite zu ändern.
-
-## Rückkehr zum Standardstil
-
-Falls du zu `style.css` zurückkehren möchtest, kannst du auf der Seite `change_style.php` die Option "Zurücksetzen" wählen.
-
-## Bekannte Probleme
-
-- **CSS-Anzeigeprobleme:** Falls der Essensplan nicht korrekt angezeigt wird, überprüfe die Einstellungen in `style.css` und stelle sicher, dass keine anderen Stile die Anzeige beeinflussen.
-
-## Lizenz
-
-Dieses Projekt ist unter der MIT-Lizenz lizenziert.
+The printable view is designed for A4 landscape, while the mobile screen view is intentionally simpler so it stays readable on phones.
