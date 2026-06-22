@@ -172,6 +172,7 @@ textarea:focus { border-color: var(--accent); outline: 0; box-shadow: 0 0 0 3px 
 .user-management-form { margin-left: 0; }
 .user-management-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
 .user-management-grid .recipe-form { margin-top: 0; }
+.user-management-grid > section:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .user-table-wrap { overflow-x: auto; }
 
 @media (max-width: 760px) {
@@ -183,6 +184,7 @@ textarea:focus { border-color: var(--accent); outline: 0; box-shadow: 0 0 0 3px 
     .icon-menu,
     .icon-menu-vertical { grid-template-columns: 1fr; }
     .user-management-grid { grid-template-columns: 1fr; }
+    .user-management-grid > section:last-child:nth-child(odd) { grid-column: auto; }
     .form-inline,
     .recipe-filter-form { display: grid; }
     .form-inline select,
