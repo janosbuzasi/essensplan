@@ -1,66 +1,82 @@
 /* print.css */
 
+@page {
+    size: A4 landscape;
+    margin: 12mm;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    font-size: 12pt;
+    font-size: 10pt;
     color: #000;
 }
 
-header, footer, .btn, .menu-toggle, #menu {
-    display: none; /* Ausblenden von Header, Footer und Buttons */
+@media print {
+    body {
+        zoom: 50%;
+    }
+}
+
+header,
+footer,
+.btn,
+.menu-toggle,
+#menu {
+    display: none;
 }
 
 main {
-    margin: 20px;
+    margin: 0;
     padding: 0;
     max-width: 100%;
 }
 
 h2 {
     text-align: center;
-    font-size: 16pt;
-    margin-bottom: 20px;
+    font-size: 14pt;
+    margin: 0 0 12px;
 }
 
 .meal-plan-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* Verhindert das Überlaufen der Tabelle */
+    table-layout: fixed;
 }
 
-.meal-plan-table th, .meal-plan-table td {
+.meal-plan-table th,
+.meal-plan-table td {
     border: 1px solid #000;
-    padding: 8px;
+    padding: 5px;
     text-align: center;
-    word-wrap: break-word; /* Längere Worte umbrechen */
+    word-wrap: break-word;
+    vertical-align: top;
 }
 
 .meal-plan-table th {
     background-color: #f2f2f2;
+    font-size: 9pt;
+}
+
+.meal-plan-table td {
+    font-size: 8pt;
 }
 
 .meal-plan-table td.category {
     font-weight: bold;
     background-color: #f2f2f2;
-    text-align: left; /* Linksbündig für Kategorien */
+    text-align: left;
+    width: 9%;
 }
 
 .category {
     font-weight: bold;
     background-color: #f2f2f2;
-    margin-bottom: 5px; /* Abstand zwischen Kategorie und Rezepttitel */
+    margin-bottom: 4px;
 }
 
-/* Hintergrundfarbe für gerade Spalten */
 .meal-plan-table td:nth-child(even),
 .meal-plan-table th:nth-child(even) {
-    background-color: #e0e0e0; /* Etwas dunkleres Grau für besseren Kontrast im Druck */
-}
-
-/* Für A3-Format optimieren */
-@page {
-    size: A3 landscape;
-    margin: 20mm;
+    background-color: #e0e0e0;
 }
