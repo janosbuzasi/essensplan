@@ -80,6 +80,33 @@ if ($weekPlanId) {
     <p class="print-help">Falls der Druckdialog nicht automatisch erscheint, nutze den Druck-Button unten.</p>
 
     <?php if ($mealPlan): ?>
+        <section class="mobile-week-plan" aria-label="Mobile Wochenansicht">
+            <?php foreach ($daysOfWeek as $day): ?>
+                <?php if (empty($mealPlanByDayAndCategory[$day])) { continue; } ?>
+                <article class="mobile-day-card">
+                    <h3><?php echo htmlspecialchars($day, ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <?php foreach ($mealCategories as $category): ?>
+                        <?php if (!isset($mealPlanByDayAndCategory[$day][$category])) { continue; } ?>
+                        <?php $meal = $mealPlanByDayAndCategory[$day][$category]; ?>
+                        <?php $totalTime = (int) $meal['prep_time'] + (int) $meal['cook_time']; ?>
+                        <div class="mobile-meal-card">
+                            <div class="mobile-meal-meta"><?php echo htmlspecialchars($meal['meal_category'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <strong><?php echo htmlspecialchars($meal['recipe_title'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <div class="mobile-meal-time">Gesamtzeit: <?php echo $totalTime; ?> Min.</div>
+                            <div class="mobile-meal-block">
+                                <span class="mobile-meal-label">Zutaten</span>
+                                <div><?php echo nl2br(htmlspecialchars((string) $meal['ingredients'], ENT_QUOTES, 'UTF-8')); ?></div>
+                            </div>
+                            <div class="mobile-meal-block">
+                                <span class="mobile-meal-label">Zubereitung</span>
+                                <div><?php echo nl2br(htmlspecialchars((string) $meal['instructions'], ENT_QUOTES, 'UTF-8')); ?></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </article>
+            <?php endforeach; ?>
+        </section>
+
         <table class="meal-plan-table">
             <thead>
                 <tr>
