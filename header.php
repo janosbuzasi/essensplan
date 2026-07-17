@@ -49,6 +49,12 @@ $pageTitle = isset($title) ? "$title | $domain" : $domain;
             <li><a href="/essensplan/src/view_categories.php"><i class="fas fa-list"></i> Kategorien</a></li>
             <li><a href="/essensplan/src/view_weeks.php"><i class="fas fa-calendar-alt"></i> Wochenpläne</a></li>
             <li><a href="/essensplan/src/archived_weeks.php"><i class="fas fa-archive"></i> Archiv</a></li>
+            <li class="menu-group">
+                <button class="submenu-toggle" type="button" aria-expanded="false"><span><i class="fas fa-toolbox"></i> Tools</span><span class="submenu-chevron" aria-hidden="true"></span></button>
+                <ul class="submenu">
+                    <li><a href="/checker/">Website Checker</a></li><li><a href="/essensplan/">Essensplan</a></li><li><a href="/password/">Passwort-Generator</a></li><li><a href="/swiss-business-checker/">Swiss Business Checker</a></li><li><a href="/cve-watch-demo/">CVE Watch Demo</a></li><li><a href="/tracks/">Tracks</a></li>
+                </ul>
+            </li>
             <?php if ($userLoggedIn): ?>
                 <?php if ($isAdmin): ?>
                     <li class="menu-separator"><a href="/essensplan/src/user_management.php"><i class="fas fa-users-cog"></i> Benutzerverwaltung</a></li>
@@ -67,6 +73,7 @@ $pageTitle = isset($title) ? "$title | $domain" : $domain;
 document.addEventListener('DOMContentLoaded', function () {
     const button = document.querySelector('.menu-toggle');
     const menu = document.getElementById('menu');
+    const submenuButtons = document.querySelectorAll('.submenu-toggle');
 
     if (!button || !menu) return;
 
@@ -74,6 +81,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const open = menu.classList.toggle('active');
         button.setAttribute('aria-expanded', String(open));
         button.querySelector('.sr-only').textContent = open ? 'Menü schließen' : 'Menü öffnen';
+    });
+
+    submenuButtons.forEach(function (submenuButton) {
+        submenuButton.addEventListener('click', function () {
+            const group = submenuButton.closest('.menu-group');
+            const open = group.classList.toggle('open');
+            submenuButton.setAttribute('aria-expanded', String(open));
+        });
     });
 
     document.addEventListener('keydown', function (event) {
