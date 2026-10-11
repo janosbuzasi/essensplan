@@ -52,7 +52,7 @@ $pageTitle = isset($title) ? "$title | $domain" : $domain;
             <li class="menu-group">
                 <button class="submenu-toggle" type="button" aria-expanded="false"><span><i class="fas fa-toolbox"></i> Tools</span><span class="submenu-chevron" aria-hidden="true"></span></button>
                 <ul class="submenu">
-                    <li><a href="/checker/">Website Checker</a></li><li><a href="/essensplan/">Essensplan</a></li><li><a href="/password/">Passwort-Generator</a></li><li><a href="/swiss-business-checker/">Swiss Business Checker</a></li><li><a href="/cnc/">Mini CNC Studio</a></li><li><a href="/tracks/">Tracks</a></li><li><a href="/bitcoin-dashboard/">Bitcoin Dashboard</a></li><li><a href="/music/">JanYmed Music</a></li>
+                    <li><a href="/checker/">Website Checker</a></li><li><a href="/essensplan/">Essensplan</a></li><li><a href="/password/">Passwort-Generator</a></li><li><a href="/swiss-business-checker/">Swiss Business Checker</a></li><li><a href="/cnc/">Mini CNC Studio</a></li><li><a href="/tracks/">Tracks</a></li><li><a href="/notenpiano/">Notenpiano</a></li><li><a href="/webtrash-acid-lab/">Webtrash ACID LAB</a></li><li><a href="/bitcoin-dashboard/">Bitcoin Dashboard</a></li><li><a href="/music/">JanYmed Music</a></li>
                 </ul>
             </li>
             <?php if ($userLoggedIn): ?>
@@ -93,6 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
+            menu.classList.remove('active');
+            button.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.remove('active');
             button.setAttribute('aria-expanded', 'false');
         }
